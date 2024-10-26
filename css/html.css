@@ -23,6 +23,15 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
 }
 
+h2.dialog-header {
+  background-color: var(--cSecondary);
+  padding: .25em;
+  line-height: 22px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  margin: 0;
+}
+
 .screen-reader-only {
   position: absolute;
   inset-inline-start: -100000px;

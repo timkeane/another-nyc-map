@@ -3,7 +3,7 @@ import {showLoad} from './Dialog';
 import {nextId} from './util';
 
 const HTML = `<div class="legend">
-  <h2>Layers</h2>
+  <h2 class="dialog-header">Layers</h2>
   <a class="btn-close corner"></a>
   <ul>
     <li>

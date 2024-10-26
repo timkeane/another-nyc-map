@@ -165,6 +165,8 @@ class Basemap extends Map {
     const ext = files[0].name.split('.').pop().toLowerCase();
     if (ext === 'json' || ext === 'geojson') {
       Storage.loadGeoJsonFile(this, callback, files[0]);
+    } else if (ext === 'csv') {
+      Storage.loadCsvFile(this, callback, files[0]);
     } else {
       Storage.loadShapeFile(this, callback, files);
     }

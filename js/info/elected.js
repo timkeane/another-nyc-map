@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import {replace} from '../util';
 
 const env = import.meta.env;
 const officials = {};
@@ -15,8 +16,8 @@ const memberUrls = {
     senate: 'https://www.nysenate.gov/senators/',
   },
   federal: {
-    house: 'https://${lastname}.house.gov/',
-    senate: 'https://${lastname}.senate.gov/'  
+    house: 'https://${0}.house.gov/',
+    senate: 'https://${0}.senate.gov/'  
   }
 };
 const jurisdictions = {
@@ -31,14 +32,31 @@ const jurisdictions = {
   }
 };
 
+function replaceSpecial(name) {
+  return name.replace(/\./g, '')
+  .replace(/\'/g, '')
+  .replace(/ /g, '-')
+  .replace(/\'/g, '')
+  .replace(/á/g, '')
+  .replace(/é/g, '')
+  .replace(/í/g, '')
+  .replace(/é/g, '')
+  .replace(/ó/g, '')
+  .replace(/ú/g, '')
+  .replace(/ü/g, '')
+  .replace(/ñ/g, '');
+
+}
+
 function nyUrl(name, chamber) {
-  let folder = name.replace(/\./g, '').replace(/ /g, '-');
-  if (chamber === 'senate') folder = folder.toLowerCase()
+  let folder = replaceSpecial(name);
+  if (chamber === 'senate') folder = folder.toLowerCase();
   return `${memberUrls.state[chamber]}${folder}`;
 }
 
 function usUrl(lastname, chamber) {
-  return memberUrls.federal[chamber].replace(/\$\{lastname\}/, lastname.toLowerCase());
+  lastname = replaceSpecial(lastname.toLowerCase());
+  return replace(memberUrls.federal[chamber], [lastname]);
 }
 
 function flip(name) {

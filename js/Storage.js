@@ -3,6 +3,7 @@ import {addPrjDef} from './project';
 import Source from 'ol/source/Vector';
 import Layer from 'ol/layer/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
+import WKT from 'ol/format/WKT';
 
 const Storage = {
   /**
@@ -97,7 +98,17 @@ const Storage = {
    */
   loadGeoJsonFile(map, callback, file) {
     this.readTextFile(geoJson => {
-      const layer = this.addToMap(map, geoJson)
+      console.warn(geoJson);
+      
+      const layer = this.addToMap(map, geoJson, 'json')
+      if (callback) {
+        callback(layer)
+      }
+    }, file)
+  },
+  loadCsvFile(map, callback, file) {
+    this.readTextFile(csv => {
+      const layer = this.addToMap(map, csv, 'csv')
       if (callback) {
         callback(layer)
       }
@@ -214,7 +225,7 @@ const Storage = {
         source.read()
           .then(function collect(result) {
             if (result.done) {
-              const layer = me.addToMap(map, features, prjDef)
+              const layer = me.addToMap(map, features, 'shp', prjDef)
               if (callback) {
                 callback(layer)
               }
@@ -236,17 +247,18 @@ const Storage = {
    * @param {string=} prjDef The projection
    * @return {ol.layer.Vector|L.Layer} The new layer
   */
-  addToMap(map, features, prjDef) {
+  addToMap(map, features, src, prjDef) {
+    const format = src  === 'csv' ? new WKT() : new GeoJSON();
     const options = {
       featureProjection: map.getView().getProjection().getCode(),
       dataProjection: addPrjDef(prjDef)
     };
-    if (typeof features === 'object') {
+    if (src  === 'shp') {
       features = {type: 'FeatureCollection', features: features}
     }
     const source = new Source()
     const layer = new Layer({source})
-    source.addFeatures(new GeoJSON().readFeatures(features, options))
+    source.addFeatures(format.readFeatures(features, options))
     map.addLayer(layer)
     return layer
   }

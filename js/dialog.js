@@ -4,7 +4,7 @@ import {nextId} from './util';
 const HTML = `<div id="dialog" class="modal fade" data-bs-keyboard="false" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
   <div id="modal" class="modal-dialog">
     <div class="modal-content">
-      <h2>Load Layer</h2>
+      <h2 class="dialog-header">Load Layer</h2>
       <a class="btn-close corner"></a>
       <div class="modal-body">
         <form>
@@ -30,6 +30,8 @@ $('body').append(HTML);
 
 const dialog = new bootstrap.Modal('#dialog');
 const form = $('#dialog form');
+
+$('#dialog .btn-close').on('click', () => dialog.hide());
 
 function loadLayer(event) {
   const frm = form.get(0);

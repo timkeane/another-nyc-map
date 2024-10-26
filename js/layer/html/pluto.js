@@ -71,10 +71,6 @@ function getOfficials(p) {
   return $('<div></div>').append(h3).append(ul).html();
 }
 
-function getBbl(p) {
-  return `<h3>${boroughName(p.Borough)} Block: ${p.bblTaxBlock} Lot: ${p.bblTaxLot}</h3>`;
-}
-
 function getOwner(p) {
   return `<div><strong>Owner:</strong> ${p.OwnerName}</div>`;
 }
@@ -90,10 +86,14 @@ function getCommunityBoard(p) {
   return `<div><strong><a href="${url}" target="_blank" rel="noopener">${boro} Community Board ${board}</a></strong></div>`;
 }
 
+export function bbl(feature) {
+  const p = feature.getProperties();
+  return `<h3>${boroughName(p.Borough)} Block: ${p.bblTaxBlock} Lot: ${p.bblTaxLot}</h3>`;
+}
+
 export function html(feature) {
   const p = feature.getProperties();
   return $('<div class="feature-html"></div>')
-    .append(getBbl(p))
     .append(getAddress(p))
     .append(getOwner(p))
     .append(getZoning(p))

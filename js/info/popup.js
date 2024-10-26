@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import GeoJSON from 'ol/format/GeoJSON';
 import Overlay from 'ol/Overlay';
-import {html as plutoHtml} from '../layer/html/pluto';
+import {html as plutoHtml, bbl} from '../layer/html/pluto';
 
 const HTML = `<div class="popup-overlay">
   <div class="popup">
@@ -98,7 +98,7 @@ function embelish(map, coordinate, feature) {
   fetch(`${env.VITE_GEOCLIENT_URL}${encodeURIComponent(address)}`)
     .then(response => response.json().then(json => {
       Object.entries(json.results[0].response).forEach(entry => feature.set(entry[0], entry[1]));
-      createPopup(map, coordinate, 'PLUTO', html(feature, plutoHtml));
+      createPopup(map, coordinate, bbl(feature), html(feature, plutoHtml));
     }));
 }
 

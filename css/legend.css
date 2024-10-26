@@ -11,15 +11,6 @@ div.legend {
   background-color: var(--tipBg);
 }
 
-div.legend h2 {
-  background-color: var(--cSecondary);
-  padding: .25em;
-  line-height: 22px;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  margin: 0;
-}
-
 button.legend-opener {
   position: fixed;
   bottom: .25em;

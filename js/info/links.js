@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import {replace} from '../util';
 
 const links = {
   zoneMap: 'https://s-media.nyc.gov/agencies/dcp/assets/files/pdf/zoning/zoning-maps/map${0}.pdf',
@@ -8,11 +9,6 @@ const links = {
 
 export default function link(id, text, parameters) {
   let link = links[id];
-  if (parameters) {
-    parameters.forEach((param, i) => {
-      const regexp = new RegExp(`\\$\\{${i}\\}`);
-      link = link.replace(regexp, param);
-    });
-  }
+  if (parameters) link = replace(link, parameters);
   return `<a href="${link}" target="_blank" rel="noopener">${text}</a>`;
 }
