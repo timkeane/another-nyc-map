@@ -1,0 +1,69 @@
+div.legend {
+  position: fixed;
+  top: .25em;
+  bottom: .25em;
+  inset-inline-end: .25em;
+  width: 300px;
+  background-color: var(--cOnPrimary);
+  display: none;
+  border: 1px solid var(--cPrimary);
+  border-radius: .25em;
+  background-color: var(--tipBg);
+}
+
+div.legend h2 {
+  background-color: var(--cSecondary);
+  padding: .25em;
+  line-height: 22px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+button.legend-opener {
+  position: fixed;
+  bottom: .25em;
+  inset-inline-end: .25em;
+  background-image: url(../img/layers.svg);
+}
+
+button.legend-opener:hover {
+  background-image: url(../img/layers-hover.svg);
+}
+
+div.legend ul {
+  padding: 0;
+  margin: 1em;;
+}
+
+div.legend li {
+  list-style-type: none;
+  padding: .5em 0;
+}
+
+div.legend li.disabled {
+  opacity: .5;
+}
+
+.form-check-input {
+  border-color: var(--cPrimary);
+  width: 1.5em;
+  height: 1.5em;
+  margin: 0;
+}
+
+div.legend .form-check-input:disabled {
+  opacity: 1;
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 3px var(--cPrimary);
+  background-color: var(--cSecondary);
+}
+
+.form-check-input:checked:focus {
+  background-image: var(--checkFocus);
+}
+
+div.legend label {
+  padding-inline-start: .5em;
+}

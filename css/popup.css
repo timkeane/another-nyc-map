@@ -1,0 +1,51 @@
+.active-popup {
+  z-index: 10000 !important;
+}
+
+.popup-overlay {
+  position: absolute;
+  inset-block-end: -10px;
+  inset-inline-start: -30px;
+}
+
+.popup-overlay svg {
+  fill: var(--cOnPrimary);
+  stroke: var(--popupBorder);
+  stroke-width: 1px;
+  margin-top: -20px;
+  height: 10px;
+  overflow: visible;
+}
+
+.popup {
+  background-color: var(--cOnPrimary);
+  border: 1px solid var(--popupBorder);
+  color: var(--cPrimary);
+  padding: .5em;
+  border-radius: .25em;
+}
+
+.popup-content {
+  max-height: 380px;
+  width: 305px;
+  overflow: auto;
+}
+
+.popup-content td {
+  white-space: nowrap;
+}
+
+.popup-content td.field {
+  font-weight: bold;
+}
+
+.popup-content .feature-html h3,
+.popup-content .feature-html div,
+.popup-content .feature-html address {
+  margin: .5em 0;
+}
+
+.popup-content .feature-html ul {
+  padding-inline-start: 1em;
+  margin: 0;
+}
