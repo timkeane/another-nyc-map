@@ -37,10 +37,7 @@ export function nextId(prefix) {
 export function replace(str, values) {
   Object.keys(values).forEach(name => {
     const value = values[name] !== undefined ? values[name] : '';
-    console.warn(str,value);
-    
     str = str.replace(new RegExp('\\$\\{' + name + '\\}', 'g'), value);
-    console.info(str)
   });
   return str;
 }

@@ -3,7 +3,7 @@ import {addPrjDef} from './project';
 import Source from 'ol/source/Vector';
 import Layer from 'ol/layer/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
-import WKT from 'ol/format/WKT';
+import CsvPoint from './layer/format/CsvPoint';
 
 const Storage = {
   /**
@@ -98,8 +98,6 @@ const Storage = {
    */
   loadGeoJsonFile(map, callback, file) {
     this.readTextFile(geoJson => {
-      console.warn(geoJson);
-      
       const layer = this.addToMap(map, geoJson, 'json')
       if (callback) {
         callback(layer)
@@ -248,7 +246,7 @@ const Storage = {
    * @return {ol.layer.Vector|L.Layer} The new layer
   */
   addToMap(map, features, src, prjDef) {
-    const format = src  === 'csv' ? new WKT() : new GeoJSON();
+    const format = src  === 'csv' ? new CsvPoint() : new GeoJSON();
     const options = {
       featureProjection: map.getView().getProjection().getCode(),
       dataProjection: addPrjDef(prjDef)

@@ -1,50 +1,52 @@
-import Papa from 'papaparse'
-import OlFeature from 'ol/Feature'
-import OlFormatFeature from 'ol/format/Feature'
-import {get as olProjGet} from 'ol/proj'
-import Point from 'ol/geom/Point'
+import Papa from 'papaparse';
+import Feature from 'ol/Feature';
+import FormatFeature from 'ol/format/Feature';
+import {get as getProjection} from 'ol/proj';
+import Point from 'ol/geom/Point';
 
-class CsvPoint extends OlFormatFeature {
+class CsvPoint extends FormatFeature {
   constructor(options) {
-    super()
-    this.dataProjection = olProjGet(options.dataProjection || 'EPSG:4326')
-    this.featureProjection = 'EPSG:3857'
+    options = options || {};
+    super(options);
+    this.dataProjection = getProjection(options.dataProjection || 'EPSG:4326');
+    this.featureProjection = getProjection(options.featureProjection || 'EPSG:3857');
   }
   readFeature(source, options) {
-    const feature = new OlFeature(source)
-    this.setGeometry(feature, source, options)
-    return feature
+    const feature = new Feature(source);
+    this.setGeometry(feature, source, options);
+    return feature;
   }
   setGeometry(feature, source, options) {
     try {
-      const x = source[this.x] = parseFloat(source[this.x])
-      const y = source[this.y] = parseFloat(source[this.y])
-      feature.setGeometry(new Point([x, y]))
+      const x = source[this.x] = parseFloat(source[this.x]);
+      const y = source[this.y] = parseFloat(source[this.y]);
+      const point = new Point([x,y]).transform(this.dataProjection, this.featureProjection);
+      feature.setGeometry(point);
     } catch(error) {
-      console.warn('Failed to parse location from source', source);
+      console.warn('Failed to parse location from source', source, error);
     }
   }
   readFeatures(source, options) {
-    const features = []
-    source = this.parseSource(source)
+    const features = [];
+    source = this.parseSource(source);
     source.forEach((row) => {
       try {
-        features.push(this.readFeature(row, options))
+        features.push(this.readFeature(row, options));
       } catch (error) {
-        console.error(error, row)
+        console.error(error, row);
       }
     })
-    return features
+    return features;
   }
   parseSource(source) {
     if (source instanceof ArrayBuffer) {
-      source = new TextDecoder().decode(source)
+      source = new TextDecoder().decode(source);
     }
     if (typeof source === 'string') {
-      source = Papa.parse(source, {header: true}).data
+      source = Papa.parse(source, {header: true}).data;
     }
-    this.detectCsvFormat(source)
-    return source
+    this.detectCsvFormat(source);
+    return source;
   }
   detectCsvFormat(source) {
     if (source[0].longitude) this.x = 'longitude';
@@ -56,19 +58,19 @@ class CsvPoint extends OlFormatFeature {
     if (source[0].LONGITUDE) this.x = 'LONGITUDE';
     if (source[0].LONG) this.x = 'LONG';
     if (source[0].LNG) this.x = 'LNG';
-    if (source[0].latitude) this.x = 'latitude';
-    if (source[0].lat) this.x = 'lat';
-    if (source[0].Latitude) this.x = 'Latitude';
-    if (source[0].Lat) this.x = 'Lat';
-    if (source[0].LATITUDE) this.x = 'LATITUDE';
-    if (source[0].LAT) this.x = 'LAT';
+    if (source[0].latitude) this.y = 'latitude';
+    if (source[0].lat) this.y = 'lat';
+    if (source[0].Latitude) this.y = 'Latitude';
+    if (source[0].Lat) this.y = 'Lat';
+    if (source[0].LATITUDE) this.y = 'LATITUDE';
+    if (source[0].LAT) this.y = 'LAT';
   }
   readProjection(source) {
-    return this.dataProjection
+    return this.dataProjection;
   }
   getType() {
-    return 'arraybuffer'
+    return 'arraybuffer';
   }
 }
 
-export default CsvPoint
+export default CsvPoint;
