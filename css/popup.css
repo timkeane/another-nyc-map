@@ -49,3 +49,8 @@
   padding-inline-start: 1em;
   margin: 0;
 }
+
+.popup .btn-close.corner {
+  top: 0;
+  inset-inline-end: .1em;
+}

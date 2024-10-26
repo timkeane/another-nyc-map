@@ -21,8 +21,8 @@ const subwayLine = new WebGLVectorLayer({
 });
 
 subwayLine.set('name', 'Subway Line');
-// subwayLine.set('html', subwayLineHtml);
-// subwayLine.set('tip', subwayLineHtml);
+subwayLine.set('html', subwayLineHtml);
+subwayLine.set('tip', subwayLineTip);
 
 const subwayStation = new WebGLVectorLayer({
   source: new Source({
@@ -33,8 +33,8 @@ const subwayStation = new WebGLVectorLayer({
 });
 
 subwayStation.set('name', 'Subway Station');
-// subwayStation.set('html', subwayStationHtml);
-// subwayStation.set('tip', subwayStationHtml);
+subwayStation.set('html', subwayStationHtml);
+subwayStation.set('tip', subwayStationTip);
 
 const group = new LayerGroup({layers: [subwayLine, subwayStation]});
 group.set('name', 'Subway');

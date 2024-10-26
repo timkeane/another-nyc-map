@@ -63,10 +63,6 @@ div.legend .form-check-input:disabled {
   background-color: var(--cSecondary);
 }
 
-.form-check-input:checked:focus {
-  background-image: var(--checkFocus);
-}
-
 div.legend label {
   padding-inline-start: .5em;
 }

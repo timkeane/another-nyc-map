@@ -111,7 +111,7 @@ function bringToTop(event) {
 
 function createPopup(map, coordinate, name, html) {
   const popup = $(HTML);
-  const h2 = popup.find('h2').html(name);
+  popup.find('h2').html(name);
   popup.find('.popup-content').html(html);
 
   const overlay = new Overlay({

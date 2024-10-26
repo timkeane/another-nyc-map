@@ -116,3 +116,20 @@ ul.possible li:hover {
  background-color: var(--cSecondary);
   color: var(--cOnSecondary);
 }
+
+.form-check-input:checked {
+  background-color: var(--cPrimary);
+  border-color: var(--cPrimary);
+}
+.form-check-input:checked:focus {
+  background-color: var(--cSecondary);
+  border-color: var(--cPrimary);
+}
+
+.form-check-input[type="checkbox"]:checked:focus {
+  background-image: var(--checkFocus);
+}
+
+.form-check-input[type="radio"]:checked:focus {
+  background-image: var(--radioFocus);
+}

@@ -13,7 +13,7 @@ import Layer from 'ol/layer/Tile';
 import Source from 'ol/source/XYZ';
 import GeoJSON from 'ol/format/GeoJSON';
 import ScaleLine from 'ol/control/ScaleLine';
-import {show as showTip} from './info/tip';
+import createFeatureTips from './info/tip';
 import showPopup from './info/popup';
 
 const env = import.meta.env;
@@ -143,7 +143,7 @@ class Basemap extends Map {
     this.getView().fit(Basemap.EXTENT, this.getSize());
   }
   hookupEvents(node) {
-    this.on('pointermove', showTip);
+    createFeatureTips(this);
     this.on('singleclick', showPopup);
     $(node).on('drop', this.loadLayer.bind(this));
     $(node).on('dragover', event => event.preventDefault());

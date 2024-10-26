@@ -8,15 +8,15 @@ const subwayLineStyle = [
     ],
     'stroke-color': [
       'case', 
-      ['==', ['get', 'rt_symbol'], '1'], 'red',
-      ['==', ['get', 'rt_symbol'], '4'], 'green',
-      ['==', ['get', 'rt_symbol'], '7'], 'purple',
-      ['==', ['get', 'rt_symbol'], 'A'], 'blue',
-      ['==', ['get', 'rt_symbol'], 'B'], 'orange',
-      ['==', ['get', 'rt_symbol'], 'G'], 'darkgreen',
-      ['==', ['get', 'rt_symbol'], 'J'], 'maroon',
-      ['==', ['get', 'rt_symbol'], 'L'], 'grey',
-      ['==', ['get', 'rt_symbol'], 'N'], 'yellow',
+      ['==', ['get', 'rt_symbol'], '1'], '#EE352E',
+      ['==', ['get', 'rt_symbol'], '4'], '#00933C',
+      ['==', ['get', 'rt_symbol'], '7'], '#B933AD',
+      ['==', ['get', 'rt_symbol'], 'A'], '#0039A6',
+      ['==', ['get', 'rt_symbol'], 'B'], '#FF6319',
+      ['==', ['get', 'rt_symbol'], 'G'], '#6CBE45',
+      ['==', ['get', 'rt_symbol'], 'J'], '#963',
+      ['==', ['get', 'rt_symbol'], 'L'], '#A7A9AC',
+      ['==', ['get', 'rt_symbol'], 'N'], '#FCCC0A',
       'green'
     ]
   }

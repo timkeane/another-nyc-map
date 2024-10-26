@@ -1,0 +1,36 @@
+.feature-tip {
+  border-radius: 3px;
+  padding: 3px;
+  min-inline-size: 50px;
+  background-color: var(--tipBg);
+  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 4px;
+  margin: 0.5em;
+  max-inline-size: 300px;
+}
+
+.feature-tip .title {
+  font-weight: bold;
+}
+
+.feature-tip .name {
+  max-inline-size: 295px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.feature-tip .tip-props {
+  font-size: 85%;
+}
+
+.feature-tip.subway-line-tip {
+  background-color: transparent;
+  box-shadow: none;
+  overflow: visible;
+  padding: 0;
+}
+
+.feature-tip.subway-line-tip div {
+  position: absolute;
+  top: -3px;
+}
