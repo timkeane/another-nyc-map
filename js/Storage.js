@@ -14,23 +14,12 @@ const geocode = new Geocode({
   appKey: env.VITE_GEOCLIENT_KEY
 });
 
+let lastShp;
+
 const Storage = {
-  /**
-   * @desc Check if download is available
-   * @public
-   * @method
-   * @return {boolean} True if download is available
-   */
   canDownload() {
     return 'download' in $('<a></a>').get(0);
   },
-  /**
-   * @desc Save GeoJSON data to a file prompting the user with a file dialog
-   * @public
-   * @method
-   * @param {string} name File name
-   * @param {string} data JSON data to write to file
-   */
   saveGeoJson(name, data) {
     const href = `data:application/jsoncharset=utf-8,${encodeURIComponent(data)}`
     const a = $('<a class="file-dwn"><img></a>')
@@ -38,48 +27,21 @@ const Storage = {
     a.attr({href: href, download: name}).find('img').trigger('click')
     a.remove()
   },
-  /**
-   * @desc Set data in browser's localStorage if available
-   * @public
-   * @method
-   * @param {string} key Storage key
-   * @param {string} data Data to store
-   */
   setItem(key, data) {
     if ('localStorage' in window) {
       localStorage.setItem(key, data)
     }
   },
-  /**
-   * @desc Get data from browser's localStorage if available
-   * @public
-   * @method
-   * @param {string} key Storage key
-   * @return {string} The value of the key in local storage
-   */
   getItem(key) {
     if ('localStorage' in window) {
       return localStorage.getItem(key)
     }
   },
-  /**
-   * @desc Remove data from browser's localStorage if available
-   * @public
-   * @method
-   * @param {string} key Storage key
-   */
   removeItem(key) {
     if ('localStorage' in window) {
       localStorage.removeItem(key)
     }
   },
-  /**
-   * @desc Open a text file from filesystem
-   * @public
-   * @method
-   * @param {module:js/Storage~Storage#readTextFileCallback} callback The callback function to receive file content
-   * @param {File=} file File - if not provided the user will be prompted with a file dialog
-   */
   readTextFile(callback, file) {
     const reader = new FileReader()
     reader.onload = () => {
@@ -97,17 +59,9 @@ const Storage = {
       reader.readAsText(file)
     }
   },
-  /**
-   * @desc Open a GeoJSON file from filesystem
-   * @public
-   * @method
-   * @param {ol.Map|L.Map} map The map in which the data will be displayed
-   * @param {module:js/Storage~Storage#loadGeoJsonFileCallback} callback The callback function to receive the new layer
-   * @param {File=} file File - if not provided the user will be prompted with a file dialog
-   */
   loadGeoJsonFile(map, callback, file) {
     this.readTextFile(geoJson => {
-      const layer = this.addToMap(map, geoJson, 'json')
+      const layer = this.addToMap(map, geoJson, file.name)
       if (callback) {
         callback(layer)
       }
@@ -115,21 +69,12 @@ const Storage = {
   },
   loadCsvFile(map, callback, file) {
     this.readTextFile(csv => {
-      const layer = this.addToMap(map, csv, 'csv')
+      const layer = this.addToMap(map, csv, file.name)
       if (callback) {
         callback(layer)
       }
     }, file)
   },
-  /**
-   * @desc Open a shapefile from filesystem
-   * @public
-   * @method
-   * @param {ol.Map|L.Map} map The map in which the data will be displayed
-   * @param {module:js/Storage~Storage#loadShapeFileCallback} callback The callback function to receive the new layer
-   * @param {FileList=} files Files (.shp, .dbf, .prj) - if not provided the user will be prompted with a file dialog
-   * @see https://github.com/mbostock/shapefile
-   */
   loadShapeFile(map, callback, files) {
     if (!files) {
       const me = this
@@ -144,13 +89,6 @@ const Storage = {
       this.getShpDbfPrj(map, files, callback)
     }
   },
-  /**
-   * @private
-   * @method
-   * @param {ol.Map|L.Map} map The map
-   * @param {FileList} files List of files
-   * @param {function} callback Callback function
-  */
   getShpDbfPrj(map, files, callback) {
     let shp, dbf, prj;
     Object.values(files).forEach(file => {
@@ -158,6 +96,7 @@ const Storage = {
       const ext = name.substring(name.length - 4).toLowerCase();
       if (ext === '.shp') {
         shp = file
+        lastShp = file
       } else if (ext === '.dbf') {
         dbf = file
       } else if (ext === '.prj') {
@@ -172,12 +111,6 @@ const Storage = {
       callback()
     }
   },
-  /**
-   * @private
-   * @method
-   * @param {File} prj Prj file
-   * @param {function} callback Callback function
-  */
   readPrj(prj, callback) {
     if (prj) {
       this.readTextFile(callback, prj)
@@ -185,15 +118,6 @@ const Storage = {
       callback()
     }
   },
-  /**
-   * @private
-   * @method
-   * @param {ol.Map|L.Map} map The map
-   * @param {File} shp The shp file
-   * @param {File} dbf The dbf file
-   * @param {string} prjDef Proj coordinate reference system
-   * @param {function} callback Callback function
-  */
   readShpDbf(map, shp, dbf, prjDef, callback) {
     let shpBuffer, dbfBuffer
     const shpReader = new FileReader()
@@ -215,15 +139,6 @@ const Storage = {
       dbfReader.readAsArrayBuffer(dbf)
     }
   },
-  /**
-   * @private
-   * @method
-   * @param {ol.Map|L.Map} map The map
-   * @param {string|ArrayBuffer} shp The shp file
-   * @param {string|ArrayBuffer} dbf The dbf file
-   * @param {string} prjDef Proj coordinate reference system
-   * @param {function} callback Callback function
-  */
   readShp(map, shp, dbf, prjDef, callback) {
     const me = this
     const features = []
@@ -232,7 +147,7 @@ const Storage = {
         source.read()
           .then(function collect(result) {
             if (result.done) {
-              const layer = me.addToMap(map, features, 'shp', prjDef)
+              const layer = me.addToMap(map, features, lastShp.name, prjDef)
               if (callback) {
                 callback(layer)
               }
@@ -243,31 +158,25 @@ const Storage = {
             return source.read().then(collect)
           })
       }).catch(error => {
-        console.error(error)
-      })
+        console.error(error);
+      });
   },
-  /**
-   * @public
-   * @method
-   * @param {ol.Map|L.Map} map The map on which to display the new layer
-   * @param {string|Array<Object>} features The features from which to create the new layer
-   * @param {string=} prjDef The projection
-   * @return {ol.layer.Vector|L.Layer} The new layer
-  */
-  addToMap(map, features, src, prjDef) {
-    const format = src  === 'csv' ? new CsvAddr({geocode}) : new GeoJSON();
+  addToMap(map, features, fileName, prjDef) {
+    const ext = fileName.substring(fileName.lastIndexOf('.'));
+    const format = ext  === '.csv' ? new CsvAddr({geocode}) : new GeoJSON();
     const options = {
       featureProjection: map.getView().getProjection().getCode(),
       dataProjection: addPrjDef(prjDef)
     };
-    if (src  === 'shp') {
-      features = {type: 'FeatureCollection', features: features}
+    if (ext  === '.shp') {
+      features = {type: 'FeatureCollection', features: features};
     }
-    const source = new Source()
-    const layer = new Layer({source})
-    source.addFeatures(format.readFeatures(features, options))
-    map.addLayer(layer)
-    return layer
+    const source = new Source();
+    const layer = new Layer({source});
+    layer.set('name', fileName);
+    source.addFeatures(format.readFeatures(features, options));
+    map.addLayer(layer);
+    return layer;
   }
 }
 

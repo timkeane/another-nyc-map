@@ -49,7 +49,8 @@ $('#dialog .btn-close').on('click', () => dialog.hide());
 function loadLayer(event) {
   const form = loadForm.get(0);
   const callback = layer => {
-    layer.set('name', form.name.value || nextId('layer-'));
+    const name = form.name.value;
+    if (name) layer.set('name', form.name.value);
     maplegend.addLayer(layer);
   }
   event.preventDefault();
