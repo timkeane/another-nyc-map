@@ -16,8 +16,7 @@ $('.ol-control button').addClass('btn btn-primary');
 const geocode = new Geocode({
   url: env.VITE_GEOCLIENT_URL,
   appId: env.VITE_GEOCLIENT_ID,
-  appKey: env.VITE_GEOCLIENT_KEY,
-  target: '#map'
+  appKey: env.VITE_GEOCLIENT_KEY
 });
 
 const form = new Form({map, geocode});

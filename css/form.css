@@ -34,8 +34,7 @@ form.locate-form.bbl-search .form-control.bbl {
   display: inline;
 }
 
-.form-control.boro,
-.form-control.photo {
+select.form-control {
   height: 31px;
   padding: 0 12px;
 }
@@ -44,15 +43,15 @@ form.locate-form.bbl-search .form-control.bbl {
   width: 120px;
 }
 
-.form-control.boro {
+form.locate-form .form-control.boro {
   width: 155px;
 }
 
-.form-control.block {
+form.locate-form .form-control.block {
   width: 80px;
 }
 
-.form-control.lot {
+form.locate-form .form-control.lot {
   width: 85px;
 }
 

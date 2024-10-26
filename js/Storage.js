@@ -3,7 +3,16 @@ import {addPrjDef} from './project';
 import Source from 'ol/source/Vector';
 import Layer from 'ol/layer/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
-import CsvPoint from './layer/format/CsvPoint';
+import CsvAddr from './layer/format/CsvAddr';
+import Geocode from './locate/Geocode';
+
+const env = import.meta.env;
+
+const geocode = new Geocode({
+  url: env.VITE_GEOCLIENT_URL,
+  appId: env.VITE_GEOCLIENT_ID,
+  appKey: env.VITE_GEOCLIENT_KEY
+});
 
 const Storage = {
   /**
@@ -246,7 +255,7 @@ const Storage = {
    * @return {ol.layer.Vector|L.Layer} The new layer
   */
   addToMap(map, features, src, prjDef) {
-    const format = src  === 'csv' ? new CsvPoint() : new GeoJSON();
+    const format = src  === 'csv' ? new CsvAddr({geocode}) : new GeoJSON();
     const options = {
       featureProjection: map.getView().getProjection().getCode(),
       dataProjection: addPrjDef(prjDef)

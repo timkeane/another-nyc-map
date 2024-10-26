@@ -7,7 +7,14 @@ const HTML = `<div id="dialog" class="modal fade" data-bs-keyboard="false" data-
       <h2 class="dialog-header">Load Layer</h2>
       <a class="btn-close corner"></a>
       <div class="modal-body">
-        <form>
+        <form class="template-form">
+          <select class="form-control form-select address" name="address"></select>
+          <select class="form-control form-select boro" name="boro"></select>
+          <div class="submit">
+            <button class="btn btn-primary template">OK</button>
+          </div>
+        </form>
+        <form class="load-form">
           <input class="form-control name" name="name" type="text" placeholder="Enter a layer name...">
           <input id="load-file" class="form-check-input" name="load" type="radio" value="file" checked>
           <label for="load-file">File</label>
@@ -24,39 +31,64 @@ const HTML = `<div id="dialog" class="modal fade" data-bs-keyboard="false" data-
   </div>
 </div>`;
 
-let basemap, maplegend;
+let basemap, maplegend, returnColumns;
 
 $('body').append(HTML);
 
 const dialog = new bootstrap.Modal('#dialog');
-const form = $('#dialog form');
+const loadForm = $('#dialog form.load-form');
+const templateForm = $('#dialog form.template-form');
+
+loadForm.find('input[type="radio"]').on('click', () => {
+  $('input.url, input.file').hide();
+  $(`input.${loadForm.get(0).load.value}`).show();
+});
 
 $('#dialog .btn-close').on('click', () => dialog.hide());
 
 function loadLayer(event) {
-  const frm = form.get(0);
+  const form = loadForm.get(0);
   const callback = layer => {
-    layer.set('name', frm.name.value || nextId('layer-'));
+    layer.set('name', form.name.value || nextId('layer-'));
     maplegend.addLayer(layer);
   }
   event.preventDefault();
-  if (frm.load.value === 'file') {
-    basemap.loadFile(frm.file.files, callback);
+  if (form.load.value === 'file') {
+    basemap.loadFile(form.file.files, callback);
   } else {
-    console.warn(frm.url.value);
+    console.warn(form.url.value);
   }
   dialog.hide();
 }
 
-$('#dialog input[type="radio"]').on('click', () => {
-  $('input.url, input.file').hide();
-  $(`input.${form.get(0).load.value}`).show();
-  
-});
+function getColumns(event) {
+  event.preventDefault();
+  const form = templateForm.get(0);
+  returnColumns(form.address.value, form.boro.value);
+  dialog.hide();
+}
 
 export function showLoad(map, legend) {
   basemap = map;
   maplegend = legend;
+  returnColumns = null;
+  loadForm.show();
+  templateForm.hide();
   dialog.show();
-  form.one('submit', loadLayer);
+  loadForm.one('submit', loadLayer);
+}
+
+export function showLocationTemplate(format, source, callback) {
+  basemap = null;
+  maplegend = null;
+  returnColumns = callback;
+  templateForm.find('select.address').append('<option value="0">Choose the adddress column...</option>');
+  templateForm.find('select.boro').append('<option value="0">Choose the borough or city column...</option>');
+  Object.keys(source).forEach(column => {
+    templateForm.find('select').append(`<option>${column}</option>`);
+  });
+  loadForm.hide();
+  templateForm.show();
+  dialog.show();
+  templateForm.one('submit', getColumns);
 }

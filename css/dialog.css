@@ -17,3 +17,7 @@
   text-align: end;
   margin-top: 1em;
 }
+
+#dialog .template-form select:first-of-type {
+  margin-bottom: .5em;
+}
