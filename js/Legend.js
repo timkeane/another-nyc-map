@@ -1,4 +1,6 @@
 import $ from 'jquery';
+import {showLoad} from './Dialog';
+import {nextId} from './util';
 
 const HTML = `<div class="legend">
   <h2>Layers</h2>
@@ -10,31 +12,37 @@ const HTML = `<div class="legend">
       </select>
     </li>
   </ul>
+  <button class="ol-control btn btn-primary load-layer" aria-label="Load Layer"></button>
   <button class="ol-control btn btn-primary legend-opener" aria-label="Show legend"></button>
 </div>`;
 
 class Legend {
   constructor(options) {
     const legend = $(HTML);
-    const button = legend.find('button.legend-opener');
-    $(options.target).append(legend).append(button);
+    const openBtn = legend.find('button.legend-opener');
+    const loadBtn = legend.find('button.load-layer');
+
+    $(options.target).append(legend).append(openBtn);
     $(options.target).append();
 
-    this.legend = legend;
-    this.button = button;
     legend.find('.btn-close').on('click', this.close.bind(this));
-    button.on('click', this.open.bind(this));
+    openBtn.on('click', this.open.bind(this));
+    loadBtn.on('click', this.load.bind(this));
+
+    this.map = options.map;
+    this.legend = legend;
+    this.openBtn = openBtn;
 
     this.setupBasemap(legend, options.map);
-    this.setupLayers(legend, options.layers, options.map.getView());
+    this.setupLayers(options.layers, options.map.getView());
   }
   open() {
     this.legend.fadeIn();
-    this.button.fadeOut();
+    this.openBtn.fadeOut();
   }
   close() {
     this.legend.fadeOut();
-    this.button.fadeIn();
+    this.openBtn.fadeIn();
   }
   setupBasemap(legend, map) {
     const basemapSelect = legend.find('select');
@@ -52,18 +60,19 @@ class Legend {
       }
     });
   }
-  setupLayers(legend, layers, view) {
-    const layerList = legend.find('ul');
-    layers.forEach((layer, i) => {
-      const li = $('<li></li>');
-      const checked = layer.getVisible() ? 'checked' : '';
-      const check = $(`<input id="legend-layer-${i}" type="checkbox" class="form-check-input layer-check" ${checked}>`);
-      const label = $(`<label for="legend-layer-${i}">${layer.get('name')}</label>`);
-      layerList.append(li.append(check).append(label));
-      layer.set('checkbox', check);
-      check.on('click', () => layer.setVisible(check.is(':checked')));
-    });
-
+  addLayer(layer) {
+    const layerList = this.legend.find('ul');
+    const li = $('<li></li>');
+    const checked = layer.getVisible() ? 'checked' : '';
+    const id = nextId('legend-layer');
+    const check = $(`<input id="${id}" type="checkbox" class="form-check-input layer-check" ${checked}>`);
+    const label = $(`<label for="${id}">${layer.get('name')}</label>`);
+    layerList.append(li.append(check).append(label));
+    layer.set('checkbox', check);
+    check.on('click', () => layer.setVisible(check.is(':checked')));
+  }
+  setupLayers(layers, view) {
+    layers.forEach(layer => this.addLayer(layer));
     view.on('change:resolution', () => {
       const zoom = view.getZoom();
       layers.forEach(layer => {
@@ -73,6 +82,9 @@ class Legend {
         check.parent()[disabled ? 'addClass' : 'removeClass']('disabled');
       });
     });
+  }
+  load() {
+    showLoad(this.map, this);
   }
 }
 

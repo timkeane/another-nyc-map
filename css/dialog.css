@@ -1,0 +1,21 @@
+#dialog {}
+
+#dialog .modal-dialog {
+  width: 400px;
+}
+
+#dialog input.form-check-input {
+  margin: 1em 0;
+}
+#dialog label {
+  margin: 1em 1em 1em .25em;
+}
+
+#dialog .url {
+  display: none;
+}
+
+#dialog .submit {
+  text-align: end;
+  margin-top: 1em;
+}

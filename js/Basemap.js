@@ -158,13 +158,15 @@ class Basemap extends Map {
     const transfer = event.originalEvent.dataTransfer;
     event.preventDefault();
     if (transfer && transfer.files.length) {
-      const files = transfer.files;
-      const ext = files[0].name.split('.').pop().toLowerCase();
-      if (ext === 'json' || ext === 'geojson') {
-        Storage.loadGeoJsonFile(this, null, files[0]);
-      } else {
-        Storage.loadShapeFile(this, null, files);
-      }
+      this.loadFile(transfer.files);
+    }
+  }
+  loadFile(files, callback) {
+    const ext = files[0].name.split('.').pop().toLowerCase();
+    if (ext === 'json' || ext === 'geojson') {
+      Storage.loadGeoJsonFile(this, callback, files[0]);
+    } else {
+      Storage.loadShapeFile(this, callback, files);
     }
   }
   saveGeoJson(source, name) {

@@ -17,6 +17,7 @@ div.legend h2 {
   line-height: 22px;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+  margin: 0;
 }
 
 button.legend-opener {
@@ -30,9 +31,20 @@ button.legend-opener:hover {
   background-image: url(../img/layers-hover.svg);
 }
 
+button.load-layer {
+  position: absolute;
+  bottom: .5em;
+  inset-inline-end: .5em;
+  background-image: url(../img/open.svg);
+}
+
+button.load-layer:hover {
+  background-image: url(../img/open-hover.svg);
+}
+
 div.legend ul {
   padding: 0;
-  margin: 1em;;
+  margin: .5em;
 }
 
 div.legend li {

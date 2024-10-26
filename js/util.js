@@ -27,3 +27,9 @@ export function pad(string, length) {
   }
   return result;
 }
+
+const uniqeIds = {};
+export function nextId(prefix) {
+  uniqeIds[prefix] = uniqeIds[prefix] ? uniqeIds[prefix] + 1 : 1;
+  return `${prefix}${uniqeIds[prefix]}`;
+}
