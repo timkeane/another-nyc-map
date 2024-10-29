@@ -46,7 +46,7 @@ class CsvAddr extends CsvPoint {
         if (!this.showDialog) {
           this.showDialog = true;
           setTimeout(() => {
-            showLocationTemplate(this, source, this.createTemplate.bind(this));
+            showLocationTemplate(source, this.createTemplate.bind(this));
           }, 1000);
         }
       } else {

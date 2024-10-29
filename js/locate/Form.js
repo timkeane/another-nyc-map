@@ -2,6 +2,7 @@ import $ from 'jquery';
 import Overlay from 'ol/Overlay';
 import {pad} from '../util';
 import Control from 'ol/control/Control';
+import { showAlert } from '../dialog';
 
 const HTML = `<form class="locate-form input" style="pointer-events: auto;">
   <input name="input" class="form-control input" placeholder="Enter a location...">
@@ -83,7 +84,10 @@ class Form {
           } else {
             this.showPossible(result);
           }
-        }).catch(error => console.warn(error));
+        }).catch(error => {
+          console.warn(error);
+          showAlert(`"${this.input.val()}" could not be located`);
+        });
       }
     }
   }

@@ -2,6 +2,10 @@
   width: 400px;
 }
 
+#dialog .modal-content {
+  border-radius: .25em;
+}
+
 #dialog input.form-check-input {
   margin: 1em 0;
 }
