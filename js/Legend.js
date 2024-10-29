@@ -1,6 +1,7 @@
 import $ from 'jquery';
-import {showLoad} from './Dialog';
+import {showLoad} from './dialog';
 import {nextId} from './util';
+import csvTable from './csv';
 
 const HTML = `<div class="legend">
   <h2 class="dialog-header">Layers</h2>
@@ -69,7 +70,19 @@ class Legend {
     const label = $(`<label for="${id}">${layer.get('name')}</label>`);
     layerList.append(li.append(check).append(label));
     layer.set('checkbox', check);
+    this.editableCsv(layer, li);
     check.on('click', () => layer.setVisible(check.is(':checked')));
+  }
+  editableCsv(layer, li) {
+    const fileName = layer.get('file') || '';
+    const ext = fileName.substring(fileName.lastIndexOf('.'));
+    if (ext === '.csv') {
+      const btn = $('<button class="btn btn-primary edit" aria-label="Edit" title="Edit"></button>')
+        .data('layer', layer)
+        .data('legend', this)
+        .on('click', csvTable);
+      li.append(btn);
+    }
   }
   setupLayers(layers, view) {
     layers.forEach(layer => this.addLayer(layer));

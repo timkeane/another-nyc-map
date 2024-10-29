@@ -23,11 +23,11 @@ class CsvAddr extends CsvPoint {
     const source = feature.get('_source');
     feature.set('_geocodeesp', geocode);
     if (geocode.type === 'geocode') {
-      console.info('Geocoded:', input, source, 'geocode response:', geocode)
-      feature.setGeometry(new Point(geocode.coordinate))
+      console.info('Geocoded:', input, source, 'geocode response:', geocode);
+      feature.setGeometry(new Point(geocode.coordinate));
     } else {
-      console.warn('Ambiguous location:', input, source, 'geocode response:', geocode)
-      feature.dispatchEvent('change', {target: feature})
+      console.warn('Ambiguous location:', input, source, 'geocode response:', geocode);
+      feature.dispatchEvent('change', {target: feature});
     }
   }
   createTemplate(address, borough) {
@@ -55,29 +55,29 @@ class CsvAddr extends CsvPoint {
     }
   }
   geocodeFeature(feature) {
-    let changed = false
+    let changed = false;
     const source = feature.getProperties();
-    const input = replace(this.locationTemplate, source)
-    feature.set('_input', input)
-    feature.set('_source', source)
+    const input = replace(this.locationTemplate, source);
+    feature.set('_input', input);
+    feature.set('_source', source);
     if (input.replace(/\,/g, '').trim() === '') {
-      feature.dispatchEvent({type: 'change', target: feature})
-      console.error('Invalid location:', input, 'Bad record:', source)
+      feature.dispatchEvent({type: 'change', target: feature});
+      console.error('Invalid location:', input, 'Bad record:', source);
     } else {
       this.geocode.locate(input).then(geocode => {
-        this.setGeocode(feature, geocode)
-        changed = true
+        this.setGeocode(feature, geocode);
+        changed = true;
       }).catch(error => {
-        console.error('Geocoding error:', input, source, 'geocode response:', error)
+        console.error('Geocoding error:', input, source, 'geocode response:', error);
       }).finally(() => {
         if (!changed) {
-          feature.dispatchEvent({type: 'change', target: feature})
+          feature.dispatchEvent({type: 'change', target: feature});
         }
-        this.geocodedCount = this.geocodedCount + 1
+        this.geocodedCount = this.geocodedCount + 1;
         if (this.geocodedCount === this.featureCount) {
           // this.dispatchEvent({type: 'geocode-complete', target: this})
         }
-      })
+      });
     }
   }
 }

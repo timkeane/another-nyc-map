@@ -1,0 +1,35 @@
+div.csv-table {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--cOnPrimary);
+  overflow: auto;
+  margin: 0;
+  padding: 0;
+}
+
+div.csv-table table {
+  border-collapse: collapse;
+}
+
+div.csv-table td,
+div.csv-table th {
+  border: 1px solid var(--cPrimary);
+  padding: 0;
+}
+
+div.csv-table th {
+  padding: .25em;
+  background-color: var(--cPrimary);
+  color: var(--cOnPrimary);
+  border-right-color: var(--cOnPrimary);
+}
+
+div.csv-table td input {
+  padding: .25em;
+  margin: 0;
+  background-color: transparent;
+  border: none;
+}
