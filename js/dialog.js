@@ -121,7 +121,8 @@ export function showLocationTemplate(source, callback) {
   templateForm.find('select.address').append('<option value="0">Choose the adddress column...</option>');
   templateForm.find('select.boro').append('<option value="0">Choose the borough or city column...</option>');
   Object.keys(source).forEach(column => {
-    templateForm.find('select').append(`<option>${column}</option>`);
+    if (column !== 'undefined') templateForm.find('select')
+      .append(`<option>${column}</option>`);
   });
   show(templateForm);
 }

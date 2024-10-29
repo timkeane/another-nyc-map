@@ -2,6 +2,7 @@ import $ from 'jquery';
 import GeoJSON from 'ol/format/GeoJSON';
 import Overlay from 'ol/Overlay';
 import {html as plutoHtml, bbl} from '../layer/html/pluto';
+import highlightLayer from '../layer/highlight';
 
 const HTML = `<div class="popup-overlay">
   <div class="popup">
@@ -98,7 +99,8 @@ function embelish(map, coordinate, feature) {
   fetch(`${env.VITE_GEOCLIENT_URL}${encodeURIComponent(address)}`)
     .then(response => response.json().then(json => {
       Object.entries(json.results[0].response).forEach(entry => feature.set(entry[0], entry[1]));
-      createPopup(map, coordinate, bbl(feature), html(feature, plutoHtml));
+      highlightLot(feature);
+      createPopup(map, coordinate, bbl(feature), html(feature, plutoHtml), feature);
     }));
 }
 
@@ -109,7 +111,7 @@ function bringToTop(event) {
   $(event.delegateTarget).parent().addClass('active-popup');
 }
 
-function createPopup(map, coordinate, name, html) {
+function createPopup(map, coordinate, name, html, highlight) {
   const popup = $(HTML);
   popup.find('h2').html(name);
   popup.find('.popup-content').html(html);
@@ -119,6 +121,7 @@ function createPopup(map, coordinate, name, html) {
     autoPan: {animation: {duration: 250}},
     className: 'ol ol-overlay-container ol-selectable'
   });
+  overlay.highlight = highlight;
   map.addOverlay(overlay);
   drag(popup.parent());
 
@@ -131,10 +134,15 @@ function createPopup(map, coordinate, name, html) {
   
   popup.find('.btn-close').on('click', () => {
     popup.fadeOut(() => {
+      highlightLayer.getSource().removeFeature(overlay.highlight);
       map.removeOverlay(overlay);
       popup.remove();
     });
   });
+}
+
+function highlightLot(feature) {
+  highlightLayer.getSource().addFeature(feature);
 }
 
 export default function show(event) {

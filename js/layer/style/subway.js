@@ -26,8 +26,8 @@ const subwayStationStyle = {
   'circle-radius': [
     'interpolate',
     ['exponential', 2], ['zoom'],
-    10, 2,
-    17, 20
+    10, 1,
+    17, 14
   ],
   'circle-stroke-width': [
     'interpolate',
