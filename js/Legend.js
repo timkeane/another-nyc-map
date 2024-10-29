@@ -4,8 +4,10 @@ import {nextId} from './util';
 import csvTable from './csv';
 
 const HTML = `<div class="legend">
-  <h2 class="dialog-header">Layers</h2>
-  <a class="btn-close corner"></a>
+  <h2 class="dialog-header">
+    Layers
+    <a class="btn-close corner"></a>
+  </h2>
   <ul>
     <li>
       <select class="form-control form-select basemap">

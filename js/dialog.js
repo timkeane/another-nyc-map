@@ -55,6 +55,7 @@ function show(content) {
   templateForm.hide();
   content.show();
   dialog.show();
+  setTimeout(() => content.children().first().trigger('focus'), 500);
 }
 
 function hide() {
@@ -129,4 +130,5 @@ export function showAlert(message) {
   title.html('&nbsp;');
   $('#dialog .alert-form .message').html(message);
   show(alertForm);
+  setTimeout(() => $('#dialog .alert-form button').trigger('focus'), 500);
 }
