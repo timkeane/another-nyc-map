@@ -98,6 +98,7 @@ class Form {
     const center = result.coordinate;
     this.map.getView().animate({center, zoom: 17});
     if (result.data.bbl) {
+    this.pinOverlay.setPosition(undefined);
       highlightByBbl(result.data.bbl);
     } else {
     this.pinOverlay.setPosition(center);
