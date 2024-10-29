@@ -1,50 +1,77 @@
 form.locate-form {
   position: absolute;
-  padding-top: 1px;
-}
-
-form.locate-form {
   top: .25em;
   inset-inline-start: 2.5em;
-  width: 355px;
+  width: 333px;
 }
 
-form.locate-form * {
+form.locate-form .form-control {
+  height: 31px;
+  display: inline;
   background-color: var(--tipBg);
 }
 
-form.locate-form input {
-  height: 31px;
+form.locate-form select.form-control.form-select.type {
+  position: absolute;
+  right: 0;
+  top: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  width: 0;
+  padding: 14px;
+  background-color: var(--cPrimary);
+  color: var(--onPrimary);
+  -moz-appearance: none; /* Firefox */
+  -webkit-appearance: none; /* Safari and Chrome */
+  appearance: none;
+  background-image: var(--downArrow);
+  background-position: center;
+  color: transparent;
+  border: 1px solid var(--cSecondary);
 }
 
-form.locate-form input.input {
-  width: 330px;
+form.locate-form select.form-control.form-select.type:hover {
+  border: 1px solid var(--cPrimary);
+  background-color: var(--cSecondary);
+  background-image: var(--downArrowHover);
+}
+
+form.locate-form select.form-control.form-select.type option {
+  background-color: var(--cOnPrimary);
+  color: var(--cPrimary);
+}
+
+form.locate-form select.form-control.form-select.type option:first-of-type {
+  border-top-left-radius: .25em;
+  border-top-right-radius: .25em;
+}
+
+form.locate-form select.form-control.form-select.type option:first-of-type {
+  border-bottom-left-radius: .25em;
+  border-bottom-right-radius: .25em;
 }
 
 form.locate-form .form-control.input,
-form.locate-form .form-control.bbl {
+form.locate-form .form-control.lot {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+form.locate-form .form-control.input {
+  width: 304px;
+}
+
+form.locate-form.input .form-control.bbl {
   display: none;
 }
 
-form.locate-form.text-search .form-control.input {
-  display: inline;
-}
-
-form.locate-form.bbl-search .form-control.bbl {
-  display: inline;
-}
-
-select.form-control {
-  height: 31px;
-  padding: 0 12px;
-}
-
-.form-control.photo {
-  width: 120px;
+form.locate-form.bbl .form-control.input {
+  display: none;
 }
 
 form.locate-form .form-control.boro {
   width: 155px;
+  padding: 0 .75em;
 }
 
 form.locate-form .form-control.block {
@@ -52,44 +79,12 @@ form.locate-form .form-control.block {
 }
 
 form.locate-form .form-control.lot {
-  width: 85px;
+  width: 61px;
 }
 
-.corner {
-  position: absolute;
-  top: 0;
-  inset-inline-end: 0;
-  background-size: .7em;
-  background-position-y: .6em;
-}
-
-form.locate-form .btn-close.corner,
-form.locate-form .form-select.corner {
-  border: none;
-  border-radius: 50%;
-  background-color: transparent;
-  width: 1em;
-  background-position: center;
-  margin: .2em 0;
-}
-
-form.locate-form .btn-close.corner {
-  top: .1em;
-  inset-inline-end: 30px;
-}
-
-form.locate-form .form-select.corner {
-  inset-inline-end:-.2em;
-  padding: 0 12px;
-}
-
-form.locate-form .btn-close.corner:hover,
-form.locate-form .form-select.corner:hover {
-  background-color: var(--cSecondary);
-}
-
-form.locate-form .form-select.corner option {
-  font-size: 2em;
+form.locate-form .form-control.block,
+form.locate-form .form-control.lot {
+  margin-top: -5px;
 }
 
 form.locate-form input.input {
@@ -117,6 +112,15 @@ ul.possible li:hover {
   color: var(--cOnSecondary);
 }
 
+
+
+
+
+
+.form-control.photo {
+  width: 120px;
+}
+
 .form-check-input:checked {
   background-color: var(--cPrimary);
   border-color: var(--cPrimary);
@@ -133,3 +137,4 @@ ul.possible li:hover {
 .form-check-input[type="radio"]:checked:focus {
   background-image: var(--radioFocus);
 }
+

@@ -9,7 +9,7 @@
     "url": "https://github.com/timkeane/another-nyc-map"
   },
   "keywords": [],
-  "main": "index.js", 
+  "main": "index.js",
   "scripts": {
     "start": "vite --host",
     "build": "vite build",
@@ -19,6 +19,7 @@
     "knip": "knip"
   },
   "dependencies": {
+    "another-nyc-map": "file:",
     "i18next": "23.7.7",
     "jquery": "^3.7.1",
     "jquery-i18next": "^1.2.1",

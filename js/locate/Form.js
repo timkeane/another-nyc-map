@@ -3,14 +3,9 @@ import Overlay from 'ol/Overlay';
 import {pad} from '../util';
 import Control from 'ol/control/Control';
 
-const HTML = `<form class="locate-form text-search">
-  <select class="form-select corner search-type">
-    <option value="text-search">Search by location</option>
-    <option value="bbl-search">Search by BBL</option>
-  </select>
-  <a class="btn-close corner"></a>
+const HTML = `<form class="locate-form input" style="pointer-events: auto;">
   <input name="input" class="form-control input" placeholder="Enter a location...">
-  <select name="boro" class="form-control form-select bbl boro">
+  <select name="boro" class="form-control form-select bbl boro" title="Borough" aria-label="Borough">
     <option value="0">Borough...</option>
     <option value="2">Bronx</option>
     <option value="3">Brooklyn</option>
@@ -20,8 +15,11 @@ const HTML = `<form class="locate-form text-search">
   </select>
   <input name="block" class="form-control bbl block" placeholder="Block...">
   <input name="lot" class="form-control bbl lot" placeholder="Lot...">
+  <select class="form-control form-select type">
+    <option value="input">Search by location&nbsp;&nbsp;&nbsp;&nbsp;</option>
+    <option value="bbl">Search by BBL</option>
+  </select>
   <ul class="list-group possible"></ul>
-  <div id="location"></div>
 </form>`;
 
 class Form {
@@ -32,8 +30,7 @@ class Form {
       $(options.target).append(form);
     };
     form.on('keyup', this.search.bind(this));
-    form.find('.btn-close').on('click', this.clear.bind(this));
-    this.searchType = form.find('.search-type');
+    this.searchType = form.find('select.type');
     this.searchType.on('change', this.setSearchType.bind(this));
     this.input = form.find('.input');
     this.boro = form.find('.boro');
@@ -94,13 +91,9 @@ class Form {
     this.map.getView().animate({center, zoom: 17});
     this.pinOverlay.setPosition(center);
   }
-  clear() {
-    this.form.find('input').val('').trigger('focus');
-    this.form.find('select.boro').val('0').trigger('focus');
-  }
   setSearchType() {
     const searchType = this.searchType.val();
-    this.form.removeClass('bbl-search').removeClass('text-search');
+    this.form.removeClass('bbl').removeClass('input');
     this.form.addClass(searchType);
     this.input.trigger('focus');
     this.boro.trigger('focus');

@@ -20,6 +20,10 @@ button.ol-control  {
   background-size: 16px;
 }
 
+.ol-control button:hover, .ol-control button:focus {
+  outline: none;
+}
+
 .ol-zoom-in {
   background-image: url(../img/zoom-in.svg);  
 }
@@ -37,7 +41,7 @@ button.ol-control  {
 }
 
 .ol-zoom button div {
-  color: transparent;
+  display: none;
 }
 
 .ol-zoom {
