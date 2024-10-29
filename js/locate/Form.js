@@ -19,6 +19,7 @@ const HTML = `<form class="locate-form input" style="pointer-events: auto;">
     <option value="input">Search by location&nbsp;&nbsp;&nbsp;&nbsp;</option>
     <option value="bbl">Search by BBL</option>
   </select>
+  <div id="location"></div>
   <ul class="list-group possible"></ul>
 </form>`;
 
