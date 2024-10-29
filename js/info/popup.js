@@ -1,8 +1,8 @@
 import $ from 'jquery';
 import GeoJSON from 'ol/format/GeoJSON';
 import Overlay from 'ol/Overlay';
-import {html as plutoHtml, bbl} from '../layer/html/pluto';
-import highlightLayer from '../layer/highlight';
+import {plutoHtml, bbl} from '../layer/html/pluto';
+import {highlightByCoordinate, removeHighlight} from './pluto';
 
 const HTML = `<div class="popup-overlay">
   <div class="popup">
@@ -17,8 +17,11 @@ const HTML = `<div class="popup-overlay">
 
 const env = import.meta.env;
 const format = new GeoJSON();
-
 let dragElem, dragHandle, pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+const layerFilter = function(layer) {
+  return layer.get('name') !== 'highlight';
+};
 
 function down(event) {
   event.preventDefault();
@@ -86,7 +89,7 @@ function generic(feature) {
     const value = getValue(prop, entry[1]);
     tbody.append(`<tr class="${prop}"><td class="field">${prop}</td><td class="value">${value}</td></tr>`);
   });
-  return $(`<div class="feature-html"></div>`).append(table);
+  return $(`<div class="feature-html generic"></div>`).append(table);
 }
 
 function html(feature, html) {
@@ -99,7 +102,6 @@ function embelish(map, coordinate, feature) {
   fetch(`${env.VITE_GEOCLIENT_URL}${encodeURIComponent(address)}`)
     .then(response => response.json().then(json => {
       Object.entries(json.results[0].response).forEach(entry => feature.set(entry[0], entry[1]));
-      highlightLot(feature);
       createPopup(map, coordinate, bbl(feature), html(feature, plutoHtml), feature);
     }));
 }
@@ -134,15 +136,11 @@ function createPopup(map, coordinate, name, html, highlight) {
   
   popup.find('.btn-close').on('click', () => {
     popup.fadeOut(() => {
-      highlightLayer.getSource().removeFeature(overlay.highlight);
+      removeHighlight(overlay.highlight);
       map.removeOverlay(overlay);
       popup.remove();
     });
   });
-}
-
-function highlightLot(feature) {
-  highlightLayer.getSource().addFeature(feature);
 }
 
 export default function show(event) {
@@ -151,14 +149,8 @@ export default function show(event) {
   const hit = map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
     createPopup(map, coordinate, layer.get('name'), html(feature, layer.get('html')));
     return true;
-  });
+  },  {layerFilter});
   if (!hit) {
-    fetch(`${env.VITE_PLUTO_INTERSECT_URL}${coordinate.join()}`)
-      .then(response => response.json().then(json => {
-        if (json.features.length > 0) {
-          const feature = format.readFeature(json.features[0]);
-          embelish(map, coordinate, feature);
-        }
-      }));
+    highlightByCoordinate(coordinate, feature => embelish(map, coordinate, feature));
   }
 }

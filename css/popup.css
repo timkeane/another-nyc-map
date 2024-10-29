@@ -37,6 +37,10 @@
   overflow: auto;
 }
 
+.popup-content .feature-html.generic {
+  max-width: 320px;
+}
+
 .popup-content td {
   white-space: nowrap;
 }

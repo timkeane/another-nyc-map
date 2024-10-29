@@ -2,7 +2,7 @@ form.locate-form {
   position: absolute;
   top: .25em;
   inset-inline-start: 2.5em;
-  width: 333px;
+  width: 353px;
 }
 
 form.locate-form .form-control {
@@ -58,7 +58,7 @@ form.locate-form .form-control.lot {
 }
 
 form.locate-form .form-control.input {
-  width: 304px;
+  width: 324px;
 }
 
 form.locate-form.input .form-control.bbl {
@@ -70,16 +70,16 @@ form.locate-form.bbl .form-control.input {
 }
 
 form.locate-form .form-control.boro {
-  width: 155px;
+  width: 162px;
   padding: 0 .75em;
 }
 
 form.locate-form .form-control.block {
-  width: 80px;
+  width: 87px;
 }
 
 form.locate-form .form-control.lot {
-  width: 61px;
+  width: 67px;
 }
 
 form.locate-form .form-control.block,

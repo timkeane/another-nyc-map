@@ -2,7 +2,10 @@ import $ from 'jquery';
 import Overlay from 'ol/Overlay';
 import {pad} from '../util';
 import Control from 'ol/control/Control';
-import { showAlert } from '../dialog';
+import {showAlert} from '../dialog';
+import {highlightByBbl} from '../info/pluto';
+
+const env = import.meta.env;
 
 const HTML = `<form class="locate-form input" style="pointer-events: auto;">
   <input name="input" class="form-control input" placeholder="Enter a location...">
@@ -92,9 +95,13 @@ class Form {
     }
   }
   goTo(result) {;
-    const center = result.coordinate
+    const center = result.coordinate;
     this.map.getView().animate({center, zoom: 17});
+    if (result.data.bbl) {
+      highlightByBbl(result.data.bbl);
+    } else {
     this.pinOverlay.setPosition(center);
+  }
   }
   setSearchType() {
     const searchType = this.searchType.val();

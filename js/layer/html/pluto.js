@@ -76,7 +76,9 @@ function getOwner(p) {
 }
 
 function getAddress(p) {
-    return `<address>${p.Address}<br>${p.uspsPreferredCityName}, NY ${p.zipCode}</address>`;
+    const city = p.uspsPreferredCityName;
+    if (city) return `<address>${p.Address}<br>${p.uspsPreferredCityName}, NY ${p.zipCode}</address>`;
+    return `${p.Address}, ${boroughName(p.Borough)}`;
 }
 
 function getCommunityBoard(p) {
@@ -88,10 +90,13 @@ function getCommunityBoard(p) {
 
 export function bbl(feature) {
   const p = feature.getProperties();
-  return `<h3>${boroughName(p.Borough)} Block: ${p.bblTaxBlock} Lot: ${p.bblTaxLot}</h3>`;
+  const bbl = `${p.BBL}`;
+  const block = bbl.substring(1, 6);
+  const lot = bbl.substring(6);
+  return `${boroughName(p.Borough)} Block: ${block} Lot: ${lot}`;
 }
 
-export function html(feature) {
+export function plutoHtml(feature) {
   const p = feature.getProperties();
   return $('<div class="feature-html"></div>')
     .append(getAddress(p))
@@ -99,4 +104,9 @@ export function html(feature) {
     .append(getZoning(p))
     .append(getCommunityBoard(p))
     .append(getOfficials(p));
+}
+
+export function plutoTip(feature) {
+  const p = feature.getProperties();
+  return {html: `${bbl(feature)}<br>${getAddress(p)}`};
 }
