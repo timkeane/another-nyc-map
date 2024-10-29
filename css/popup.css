@@ -18,6 +18,8 @@
 }
 
 .popup {
+  width: fit-content;
+  block-size: fit-content;
   background-color: var(--cOnPrimary);
   border: 1px solid var(--popupBorder);
   color: var(--cPrimary);
@@ -25,9 +27,13 @@
   border-radius: .25em;
 }
 
+.popup h2 {
+  white-space: nowrap;
+  padding-inline-end: 30px;
+}
+
 .popup-content {
   max-height: 380px;
-  width: 305px;
   overflow: auto;
 }
 
@@ -51,6 +57,5 @@
 }
 
 .popup .btn-close.corner {
-  top: 0;
-  inset-inline-end: .1em;
+  float: inline-end;
 }

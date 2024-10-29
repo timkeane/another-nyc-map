@@ -5,8 +5,8 @@ import {html as plutoHtml, bbl} from '../layer/html/pluto';
 
 const HTML = `<div class="popup-overlay">
   <div class="popup">
-    <h2></h2>
     <a class="btn-close corner"></a>
+    <h2></h2>
     <div class="popup-content"></div>
   </div>
   <svg>

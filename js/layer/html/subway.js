@@ -28,8 +28,9 @@ export function subwayLineTip(feature) {
 }
 
 function appendAda(html, north, south, notes) {
-  if (north) html.append('<div><img src="img/accessible.svg" alt="Accessible"> Northbound</div>');
-  if (south) html.append('<div><img src="img/accessible.svg" alt="Accessible"> Southbound</div>');
+  if (north && south) html.append('<div><img src="img/accessible.svg" alt="Accessible"></div>');
+  else if (north) html.append('<div><img src="img/accessible.svg" alt="Accessible"> Northbound</div>');
+  else if (south) html.append('<div><img src="img/accessible.svg" alt="Accessible"> Southbound</div>');
   if (notes) html.append(`<div>${notes}</div>`);
 }
 
