@@ -21,14 +21,14 @@ const memberUrls = {
   }
 };
 const jurisdictions = {
-  city: 'New York City Council',
+  city: 'city',
   state: {
-    assembly: 'New York State Assembly',
-    senate: 'New York State Senate',
+    assembly: 'state.assembly',
+    senate: 'state.senate',
   },
   federal: {
-    house: 'U.S. House of Representatives',
-    senate: 'U.S. Senate'  
+    house: 'federal.house',
+    senate: 'federal.senate'  
   }
 };
 
@@ -69,7 +69,7 @@ fetch(services.city).then(response => response.json().then(data => {
   data.rows.forEach(row => {
     const district = row.district;
     members[district] = {
-      title: 'Councilmember',
+      title: 'title.council',
       name: row.member,
       link: `${memberUrls.city}${district}`
     };
@@ -85,11 +85,11 @@ fetch(services.state).then(response => response.json().then(data => {
     const name = row.fullName;
     const member = {name};
     if (row.chamber === 'ASSEMBLY') {
-      member.title = 'Assemblymember',
+      member.title = 'title.assembly',
       member.link = nyUrl(name, 'assembly');
       assembly[district] = member;
     } else {
-      member.title = 'Senator',
+      member.title = 'title.senator',
       member.link = nyUrl(name, 'senate');
       senate[district] = member;
     }
@@ -107,11 +107,11 @@ fetch(services.federal).then(response => response.json().then(data => {
       name: `${row.person.firstname} ${lastname}`
     };
     if (row.role_type === 'senator') {
-      member.title = `${row.senator_rank_label} ${row.role_type_label}`;
+      member.title = `title.${row.senator_rank_label.toLowerCase()}.${row.role_type_label.toLowerCase()}`;
       member.link = usUrl(lastname, 'senate');
       senate[row.senator_rank] = member;
     } else {
-      member.title = row.role_type_label;
+      member.title = `title.${row.role_type_label.toLowerCase()}`;
       member.link = usUrl(lastname, 'house');
       house[row.district] = member;
     }

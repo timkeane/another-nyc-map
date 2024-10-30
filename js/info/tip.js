@@ -36,11 +36,10 @@ class FeatureTip extends Overlay {
       return layer.getVisible() ? tip(feature) : null;
     });
     if (label) {
-      this.tip.html(label.html);
+      this.tip.html(label.html).localize();
       this.tip.get(0).className = `feature-tip ${label.css || ''}`;
       this.setPosition(event.coordinate);
       this.tip.show();
-      // this.tip.localize().show();
       this.position();
     } else {
       this.hide();

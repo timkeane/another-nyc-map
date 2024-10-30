@@ -51,8 +51,8 @@ function getOfficial(types, district) {
   });
   const member = members[district];
   return $('<li></li>')
-  .append(`<strong>${jurisdiction}</strong><br>`)
-    .append(`<a href="${member.link}" target="_blank" rel="noopener">${member.title} ${member.name}</a>`);
+    .append(`<strong data-i18n="jurisdiction.${jurisdiction}"></strong><br>`)
+    .append(`<a href="${member.link}" target="_blank" rel="noopener" data-i18n="[prepend]${member.title}"> ${member.name}</a>`);
 }
 
 function getOfficials(p) {

@@ -6,32 +6,34 @@ const HTML = `<div id="dialog" class="modal fade" data-bs-keyboard="false" data-
     <div class="modal-content">
       <h2 class="dialog-header">
         <span class="title"></span>
-        <a class="btn-close corner"></a>
+        <a class="btn-close corner" href="#"
+          data-i18n="[title]close;[aria-label]close">
+        </a>
       </h2>
       <div class="modal-body">
         <form class="template-form">
-          <select class="form-control form-select address" name="address"></select>
-          <select class="form-control form-select boro" name="boro"></select>
+          <select class="form-control form-select address" name="address" data-i18n="[title]address.column;[aria-label]address.column"></select>
+          <select class="form-control form-select boro" name="boro" data-i18n="[title]city.column;[aria-label]city.column"></select>
           <div class="submit">
-            <button class="btn btn-primary template">OK</button>
+            <button class="btn btn-primary template" name="submit">OK</button>
           </div>
         </form>
         <form class="load-form">
-          <input class="form-control name" name="name" type="text" placeholder="Enter a layer name...">
+          <input class="form-control name" name="name" type="text" data-i18n="[placeholder]placeholder.layer.name" autocomplete="on">
           <input id="load-file" class="form-check-input" name="load" type="radio" value="file" checked>
-          <label for="load-file">File</label>
-          <input id="load-url" class="form-check-input" name="load" type="radio" value="url">
-          <label for="load-url">URL</label>
+          <label for="load-file" data-i18n="input.file"></label>
+          <input id="load-url" class="form-check-input" name="load" type="radio" value="input.url">
+          <label for="load-url" data-i18n="input.url"></label>
           <input class="form-control file" name="file" type="file" multiple accept=".shp,.dbf,.prj,.json,.geojson,.csv">
-          <input class="form-control url" name="url" type="text" placeholder="Enter a URL to a GeoJSON FeatureCollection...">
+          <input class="form-control url" name="url" type="text" data-i18n="[placeholder]placeholder.url" autocomplete="on">
           <div class="submit">
-            <button class="btn btn-primary load">Load Layer</button>
+            <button class="btn btn-primary load" data-i18n="load.layer" name="submit"></button>
           </div>
         </form>
         <form class="alert-form">
           <div class="message"></div>
           <div class="submit">
-            <button class="btn btn-primary load">OK</button>
+            <button class="btn btn-primary load" name="submit">OK</button>
           </div>
         </form>
       </div>
@@ -53,7 +55,8 @@ function show(content) {
   alertForm.hide();
   loadForm.hide();
   templateForm.hide();
-  content.show();
+  title.localize();
+  content.localize().show();
   dialog.show();
   setTimeout(() => content.children().first().trigger('focus'), 500);
 }
@@ -92,6 +95,7 @@ function loadLayer(event) {
       basemap.loadFile(form.file.files, callback);
     } else {
       console.warn(form.url.value);
+      basemap.loadUrl(form.url.value, callback);
     }
     dialog.hide();
   }
@@ -111,15 +115,15 @@ loadForm.on('submit', loadLayer);
 export function showLoad(map, legend) {
   basemap = map;
   maplegend = legend;
-  title.html('Load Layer');
+  title.attr('data-i18n', 'load.layer');
   show(loadForm);
 }
 
 export function showLocationTemplate(source, callback) {
   returnColumns = callback;
-  title.html('Geocode CSV');
-  templateForm.find('select.address').append('<option value="0">Choose the adddress column...</option>');
-  templateForm.find('select.boro').append('<option value="0">Choose the borough or city column...</option>');
+  title.attr('data-i18n', 'geocode.csv');
+  templateForm.find('select.address').append('<option value="0" data-i18n="address.column"></option>');
+  templateForm.find('select.boro').append('<option value="0" data-i18n="city.column"></option>');
   Object.keys(source).forEach(column => {
     if (column !== 'undefined') templateForm.find('select')
       .append(`<option>${column}</option>`);

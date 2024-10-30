@@ -6,7 +6,9 @@ import {highlightByCoordinate, removeHighlight} from './pluto';
 
 const HTML = `<div class="popup-overlay">
   <div class="popup">
-    <a class="btn-close corner"></a>
+    <a class="btn-close corner" href="#"
+      data-i18n="[title]close;[aria-label]close">
+    </a>
     <h2></h2>
     <div class="popup-content"></div>
   </div>
@@ -57,7 +59,6 @@ function tail() {
 function up() {
   $(document).off('mouseup', up);
   $(document).off('mousemove', dragIt);
-  // dragHandle.off('mousedown', down);
 }
 
 function drag(element) {
@@ -115,8 +116,8 @@ function bringToTop(event) {
 
 function createPopup(map, coordinate, name, html, highlight) {
   const popup = $(HTML);
-  popup.find('h2').html(name);
-  popup.find('.popup-content').html(html);
+  popup.find('h2').html(name).localize();
+  popup.find('.popup-content').html(html).localize();
 
   const overlay = new Overlay({
     element: popup.get(0),

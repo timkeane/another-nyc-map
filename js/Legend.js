@@ -6,22 +6,26 @@ import csvTable from './csv';
 const HTML = `<div class="legend">
   <h2 class="dialog-header">
     Layers
-    <a class="btn-close corner"></a>
+    <a class="btn-close corner" href="#"
+      data-i18n="[title]close;[aria-label]close">
+    </a>
   </h2>
-  <ul>
-    <li>
-      <select class="form-control form-select basemap">
-        <option value="basemap">Basemap</option>
-      </select>
-    </li>
-  </ul>
-  <button class="ol-control btn btn-primary load-layer" aria-label="Load Layer"></button>
-  <button class="ol-control btn btn-primary legend-opener" aria-label="Show legend"></button>
+    <select class="form-control form-select basemap" name="basemap"
+      data-i18n="[title]legend.basemap.choose;[aria-label]legend.basemap.choose">
+      <option value="basemap" data-i18n="layer.basemap"></option>
+    </select>
+  <ul></ul>
+  <button class="ol-control btn btn-primary load-layer"
+    data-i18n="[title]legend.layer.load;[aria-label]legend.layer.load">
+  </button>
+  <button class="ol-control btn btn-primary legend-opener"
+    data-i18n="[title]legend.open;[aria-label]legend.open">
+  </button>
 </div>`;
 
 class Legend {
   constructor(options) {
-    const legend = $(HTML);
+    const legend = $(HTML).localize();
     const openBtn = legend.find('button.legend-opener');
     const loadBtn = legend.find('button.load-layer');
 
@@ -35,12 +39,15 @@ class Legend {
     this.map = options.map;
     this.legend = legend;
     this.openBtn = openBtn;
+    this.basemap = legend.find('select');
 
     this.setupBasemap(legend, options.map);
     this.setupLayers(options.layers, options.map.getView());
   }
   open() {
-    this.legend.fadeIn();
+    this.legend.fadeIn(() => {
+      this.basemap.trigger('focus');
+    });
     this.openBtn.fadeOut();
   }
   close() {
@@ -48,14 +55,13 @@ class Legend {
     this.openBtn.fadeIn();
   }
   setupBasemap(legend, map) {
-    const basemapSelect = legend.find('select');
     map.sortedPhotos().forEach(photo => {
       const year = photo.get('name');
       const option = $(`<option value="${year}">${year}</option>`);
-      basemapSelect.append(option);
+      this.basemap.append(option);
     });
-    basemapSelect.on('change', () => {
-      const year = basemapSelect.val();
+    this.basemap.on('change', () => {
+      const year = this.basemap.val();
       if (year === 'basemap') {
         map.hidePhoto();
       } else {
@@ -64,16 +70,18 @@ class Legend {
     });
   }
   addLayer(layer) {
-    const layerList = this.legend.find('ul');
-    const li = $('<li></li>');
-    const checked = layer.getVisible() ? 'checked' : '';
-    const id = nextId('legend-layer');
-    const check = $(`<input id="${id}" type="checkbox" class="form-check-input layer-check" ${checked}>`);
-    const label = $(`<label for="${id}">${layer.get('name')}</label>`);
-    layerList.append(li.append(check).append(label));
-    layer.set('checkbox', check);
-    this.editableCsv(layer, li);
-    check.on('click', () => layer.setVisible(check.is(':checked')));
+    if (layer.get('name') !== 'highlight') {
+      const layerList = this.legend.find('ul');
+      const li = $('<li></li>');
+      const checked = layer.getVisible() ? 'checked' : '';
+      const id = nextId('legend-layer');
+      const check = $(`<input id="${id}" name="${id}" type="checkbox" class="form-check-input layer-check" ${checked}>`);
+      const label = $(`<label for="${id}" data-i18n="layer.${layer.get('name')}"></label>`).localize();
+      layerList.append(li.append(check).append(label));
+      layer.set('checkbox', check);
+      this.editableCsv(layer, li);
+      check.on('click', () => layer.setVisible(check.is(':checked')));
+    }
   }
   editableCsv(layer, li) {
     const fileName = layer.get('file') || '';
@@ -91,10 +99,12 @@ class Legend {
     view.on('change:resolution', () => {
       const zoom = view.getZoom();
       layers.forEach(layer => {
-        const disabled = zoom <= layer.getMinZoom() || zoom > layer.getMaxZoom();
-        const check = layer.get('checkbox');
-        check.prop('disabled', disabled);
-        check.parent()[disabled ? 'addClass' : 'removeClass']('disabled');
+        if (layer.get('name') !== 'highlight') {
+          const disabled = zoom <= layer.getMinZoom() || zoom > layer.getMaxZoom();
+          const check = layer.get('checkbox');
+          check.prop('disabled', disabled);
+          check.parent()[disabled ? 'addClass' : 'removeClass']('disabled');
+        }
       });
     });
   }

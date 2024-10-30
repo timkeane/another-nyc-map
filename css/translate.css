@@ -1,0 +1,16 @@
+.translate {
+  position: absolute;
+  top: .25em;
+  inset-inline-end: .25em;
+  inline-size: 100px;
+  padding: .1em .75em .2em 0;
+}
+
+button.translate div {
+  display: inline-block;
+  width: 100%;
+}
+
+.translate.dropdown-toggle:after {
+  margin-inline-start: -.5em;
+}

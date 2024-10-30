@@ -7,21 +7,21 @@ import {highlightByBbl} from '../info/pluto';
 
 const env = import.meta.env;
 
-const HTML = `<form class="locate-form input" style="pointer-events: auto;">
-  <input name="input" class="form-control input" placeholder="Enter a location...">
-  <select name="boro" class="form-control form-select bbl boro" title="Borough" aria-label="Borough">
-    <option value="0">Borough...</option>
+const HTML = `<form class="locate-form location" style="pointer-events: auto;">
+  <input name="location" class="form-control location" data-i18n="[placeholder]placeholder.location" autocomplete="on">
+  <select name="boro" class="form-control form-select bbl boro" data-i18n="[title]boro;[aria-label]boro" autocomplete="on">
+    <option value="0" data-i18n="[prepend]boro">...</option>
     <option value="2">Bronx</option>
     <option value="3">Brooklyn</option>
     <option value="1">Manhattan</option>
     <option value="4">Queens</option>
     <option value="5">Staten Island</option>
   </select>
-  <input name="block" class="form-control bbl block" placeholder="Block...">
-  <input name="lot" class="form-control bbl lot" placeholder="Lot...">
-  <select class="form-control form-select type">
-    <option value="input">Search by location&nbsp;&nbsp;&nbsp;&nbsp;</option>
-    <option value="bbl">Search by BBL</option>
+  <input name="block" class="form-control bbl block" data-i18n="[placeholder]placeholder.block" autocomplete="on">
+  <input name="lot" class="form-control bbl lot" data-i18n="[placeholder]placeholder.lot" autocomplete="on">
+  <select name="type" class="form-control form-select btn type" data-i18n="[title]search.type;[aria-label]search.type">
+    <option value="location" data-i18n="[prepend]search.location">&nbsp;&nbsp;&nbsp;&nbsp;</option>
+    <option value="bbl" data-i18n="search.bbl"></option>
   </select>
   <div id="location"></div>
   <ul class="list-group possible"></ul>
@@ -29,7 +29,7 @@ const HTML = `<form class="locate-form input" style="pointer-events: auto;">
 
 class Form {
   constructor(options) {
-    const form = $(HTML);
+    const form = $(HTML).localize();
     const map = options.map;
     if (options.target) {
       $(options.target).append(form);
@@ -37,7 +37,7 @@ class Form {
     form.on('keyup', this.search.bind(this));
     this.searchType = form.find('select.type');
     this.searchType.on('change', this.setSearchType.bind(this));
-    this.input = form.find('.input');
+    this.location = form.find('.location');
     this.boro = form.find('.boro');
     this.block = form.find('.block');
     this.lot = form.find('.lot');
@@ -59,8 +59,8 @@ class Form {
     }));
   }
   val() {
-    if (this.input.is(':visible')) {
-      return this.input.val();
+    if (this.location.is(':visible')) {
+      return this.location.val();
     }
     return this.bbl();
   }
@@ -82,14 +82,14 @@ class Form {
       if (input.length > 0) {
         this.geocode.locate(input).then(result => {
           if (result.type !== 'ambiguous') {
-            this.input.val(result.name);
+            this.location.val(result.name);
             this.goTo(result);
           } else {
             this.showPossible(result);
           }
         }).catch(error => {
           console.warn(error);
-          showAlert(`"${this.input.val()}" could not be located`);
+          showAlert($(`<span data-i18n="[append]geocode.fail">"${this.location.val()}" </span>`));
         });
       }
     }
@@ -105,10 +105,11 @@ class Form {
   }
   }
   setSearchType() {
-    const searchType = this.searchType.val();
-    this.form.removeClass('bbl').removeClass('input');
-    this.form.addClass(searchType);
-    this.input.trigger('focus');
+    this.form.removeClass('bbl').removeClass('location');
+    console.warn(this.searchType.val());
+    
+    this.form.addClass(this.searchType.val());
+    this.location.trigger('focus');
     this.boro.trigger('focus');
   }
   showPossible(result) {
@@ -118,7 +119,7 @@ class Form {
       const li = $(`<li class="list-group-item focus-ring" tabindex="0">${name}</li>`);
       this.possible.append(li);
       li.on('click', () => {
-        this.input.val(name);
+        this.location.val(name);
         this.goTo(possible);
         this.possible.slideUp();
       });

@@ -31,13 +31,13 @@ export default function csvTable(event) {
   });
   legend.close();
 
-  features.forEach(feature => {
+  features.forEach((feature, i) => {
     const props = feature.getProperties();
     const tr = $('<tr></tr>');
     tbody.append(tr);
     Object.keys(props).forEach(prop => {
       if (prop !== 'geometry' && prop.substring(0, 1) !== '_') {
-        const input = $(`<input data-prop="${prop}" type="text" value="${props[prop]}"></input>`)
+        const input = $(`<input name="prop${i}" data-prop="${prop}" type="text" value="${props[prop]}" autocomplete="off"></input>`)
           .data('feature', feature)
           .on('change', updateFeature);
         tr.append($('<td></td>').append(input));

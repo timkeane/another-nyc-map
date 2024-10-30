@@ -1,6 +1,5 @@
 div.legend {
   position: fixed;
-  top: .25em;
   bottom: .25em;
   inset-inline-end: .25em;
   width: 300px;
@@ -9,6 +8,7 @@ div.legend {
   border: 1px solid var(--cPrimary);
   border-radius: .25em;
   background-color: var(--tipBg);
+  padding-bottom: 40px;
 }
 
 button.legend-opener {
@@ -33,14 +33,26 @@ button.load-layer:hover {
   background-image: url(../img/open-hover.svg);
 }
 
+div.legend select,
+div.legend li {
+  margin: .25em .5em;
+  width: calc(300px - 1.25em);
+}
+
+div.legend select {
+  margin-top: .5em;
+  margin-bottom: 0;
+}
+
 div.legend ul {
   padding: 0;
-  margin: .5em;
+  max-height: calc(100% - 48px);
+  overflow: auto;
 }
 
 div.legend li {
   list-style-type: none;
-  padding: .5em 0;
+  padding: .25em 0;
 }
 
 div.legend li.disabled {

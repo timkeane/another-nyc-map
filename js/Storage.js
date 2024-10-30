@@ -162,7 +162,7 @@ const Storage = {
       });
   },
   addToMap(map, features, fileName, prjDef) {
-    const ext = fileName.substring(fileName.lastIndexOf('.'));
+    const ext = fileName?.substring(fileName.lastIndexOf('.'));
     const format = ext  === '.csv' ? new CsvAddr({geocode}) : new GeoJSON();
     const options = {
       featureProjection: map.getView().getProjection().getCode(),

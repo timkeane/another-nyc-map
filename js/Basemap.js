@@ -161,6 +161,12 @@ class Basemap extends Map {
       this.loadFile(transfer.files);
     }
   }
+  loadUrl(url, callback) {
+    fetch(url).then(response => response.text().then(text => {
+      const layer = Storage.addToMap(this, text);
+      if (callback) callback(layer);
+    }));
+  }
   loadFile(files, callback) {
     const ext = files[0].name.split('.').pop().toLowerCase();
     if (ext === 'json' || ext === 'geojson') {
