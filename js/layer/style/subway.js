@@ -1,3 +1,13 @@
+const sirLineStyle = {
+  'stroke-width': [
+    'interpolate',
+    ['exponential', 2], ['zoom'],
+    10, 2,
+    17, 10
+  ],
+  'stroke-color': '#000'
+};
+
 const subwayLineStyle = [
   {
     'stroke-width': [
@@ -17,7 +27,7 @@ const subwayLineStyle = [
       ['==', ['get', 'rt_symbol'], 'J'], '#963',
       ['==', ['get', 'rt_symbol'], 'L'], '#A7A9AC',
       ['==', ['get', 'rt_symbol'], 'N'], '#FCCC0A',
-      'green'
+      '#D3D3D3'
     ]
   }
 ];
@@ -40,4 +50,4 @@ const subwayStationStyle = {
 };
 
 
-export {subwayLineStyle, subwayStationStyle};
+export {sirLineStyle, subwayLineStyle, subwayStationStyle};

@@ -4,6 +4,7 @@ import {replace} from '../util';
 const env = import.meta.env;
 const officials = {};
 const year = new Date().getFullYear();
+
 const services = {
   city: 'https://nyc-council.carto.com/api/v2/sql?q=SELECT%20coundist%20as%20district,%20council_member%20as%20member%20FROM%20council_districts_post_2024',
   state: `https://legislation.nysenate.gov/api/3/members/${year}?full=true&limit=1000&key=${env.VITE_NY_SENATE_KEY}`,

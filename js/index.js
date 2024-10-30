@@ -30,7 +30,10 @@ initI18n().then(() => {
   new Form({map, geocode});
   new Legend({target: 'body', map, layers});
 
-  map.on('rendercomplete', () => $('body').removeClass('loading'));
+  map.on('rendercomplete', () => {
+    $('body').removeClass('loading');
+  });
 });
 
-window.$=$
+window.$=$;
+window.map=map;

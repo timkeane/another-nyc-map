@@ -1,6 +1,8 @@
 import $ from 'jquery';
+import {replace} from '../../util';
 
-const subwayLineUrl = 'https://new.mta.info/maps/subway-line-maps';
+const subwayLineUrl = 'https://new.mta.info/maps/subway-line-maps/${subway}-line';
+const sirLineUrl = 'https://new.mta.info/agency/staten-island-railway';
 
 export function subwayLineHtml(feature) {
   const html = $('<div></div>');
@@ -9,11 +11,18 @@ export function subwayLineHtml(feature) {
   return html;
 }
 
+export function sirLineHtml(feature) {
+  const html = $('<div></div>');
+  appendRouteIcons(html, ['SIR'], sirLineUrl);
+  return html;
+}
+
 function appendRouteIcons(html, subways, url) {
   subways.forEach(subway => {
     const img = `<img src="img/subway-${subway}.svg" alt="${subway}">`;
     if (url) {
-      const a = `<a href="${url}/${subway}-line" target="_blank" rel="noopener">${img}</a>`;
+      url = replace(url, {subway});
+      const a = `<a href="${url}" target="_blank" rel="noopener">${img}</a>`;
       html.append(a);
     } else {
       html.append(img);
@@ -24,6 +33,12 @@ export function subwayLineTip(feature) {
   const html = $('<div></div>');
   const subways = feature.get('name').split('-');
   appendRouteIcons(html, subways);
+  return {html, css: 'subway-line-tip'};
+}
+
+export function sirLineTip(feature) {
+  const html = $('<div></div>');
+  appendRouteIcons(html, ['SIR']);
   return {html, css: 'subway-line-tip'};
 }
 

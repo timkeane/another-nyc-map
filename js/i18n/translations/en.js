@@ -22,6 +22,7 @@ export const translation = {
   "legend.basemap.choose": "Choose basemap or aerial photo layer",
   "layer.basemap": "Basemap",
   "layer.subway": "Subway",
+  "layer.subway.sir": "Staten Island Railway",
   "layer.subway.station": "Subway Station",
   "layer.subway.line": "Subway Line",
   "zoning": "Zoning",
