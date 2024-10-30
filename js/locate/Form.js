@@ -106,8 +106,6 @@ class Form {
   }
   setSearchType() {
     this.form.removeClass('bbl').removeClass('location');
-    console.warn(this.searchType.val());
-    
     this.form.addClass(this.searchType.val());
     this.location.trigger('focus');
     this.boro.trigger('focus');

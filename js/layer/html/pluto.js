@@ -1,11 +1,8 @@
 import $ from 'jquery';
-import {boroughName} from '../../util';
-import link from '../../info/links';
+import {boroughName, enAlphabet} from '../../util';
+import {links, parameterizeLink} from '../../info/links';
 import elected from '../../info/elected';
 import {replace} from '../../util';
-
-const communityBoardUrl = 'https://www.nyc.gov/site/${boro}cb${board}/index.page';
-const electionDistrictUrl = 'https://findmypollsite.vote.nyc/?hn=${houseNumber}&sn=${streetName1In}&zip=${zipCode}';
 
 function noNulls(list) {
   const result = [];
@@ -15,11 +12,20 @@ function noNulls(list) {
   return result;
 }
 
+function nameForUrl(name, stateOrFedral, chamber) {
+  if (stateOrFedral === 'state') {
+    let folder = enAlphabet(name.trim().replace(/ /g, '-'));
+    if (chamber === 'senate') folder = folder.toLowerCase();
+    return folder;
+  }
+  return enAlphabet(name.toLowerCase());
+}
+
 function zoningLinks(s, linkId) {
   const result = [];
   const values = noNulls(s);
   values.forEach(value => {
-    const a = link(linkId, value, [value.split('-')[0].toLowerCase()]);
+    const a = parameterizeLink(links.zone[linkId], value, [value.split('-')[0].toLowerCase()]);
     result.push(a);
   });
   return result.join(', ');
@@ -27,12 +33,12 @@ function zoningLinks(s, linkId) {
 
 function getZoning(p) {
   const map = p.ZoneMap;
-  const a = link('zoneMap', `${map}`, [map]);
+  const a = parameterizeLink(links.zone.map, `${map}`, [map]);
 
   const h3 = $('<h3 data-i18n="zoning"></h3>');
   const ul = $(`<ul><li><strong data-i18n="[prepend]map">:</strong> ${a}</li></ul>`);
 
-  const zone = zoningLinks([p.ZoneDist1, p.ZoneDist2, p.ZoneDist3, p.ZoneDist4], 'zoneDist');
+  const zone = zoningLinks([p.ZoneDist1, p.ZoneDist2, p.ZoneDist3, p.ZoneDist4], 'district');
   ul.append(`<li><strong data-i18n="[prepend]district">:</strong> ${zone}</li>`);
 
   const overlay = noNulls([p.Overlay1, p.Overlay2]).join(', ');
@@ -51,17 +57,28 @@ function getOfficial(types, district, ul) {
     members = (members || elected.officials)[type];
     jurisdiction = (jurisdiction || elected.jurisdictions)[type];
   });
+  
   const member = members[district];
   const css = types.join('-');
   const li = ul.find(`.${css}`);
   const jurisdictionCreated = li.length === 1;
-  const official = `<br><a href="${member.link}" target="_blank" rel="noopener" data-i18n="[prepend]${member.title}"> ${member.name}</a>`
+  const memberName = member.name;
+  let link;
+  if (types.length == 1) {
+    link = parameterizeLink(links.political.person[types[0]], memberName, {district});
+  } else {
+    const name = nameForUrl(member.lastname || memberName, types[0], types[1]);
+    link = parameterizeLink(links.political.person[types[0]][types[1]], ` ${memberName}`, {name});
+  }
+  
+  const official = $(link);
+  official.attr('data-i18n',`[prepend]${member.title}`);
   if (jurisdictionCreated) {
-    li.append(official);
+    li.append('<br>').append(official);
   } else {    
     const more = !isNaN(district) ? ` <span data-i18n="[prepend]district"> ${district}</span>` : '';
     return $(`<li class="${css}"></li>`)
-      .append(`<strong><span data-i18n="jurisdiction.${jurisdiction}"></span>${more}</strong>`)
+      .append(`<strong><span data-i18n="jurisdiction.${jurisdiction}"></span>${more}</strong><br>`)
       .append(official);
   }
 }
@@ -96,14 +113,14 @@ function getAddress(p) {
 function getCommunityBoard(p) {
   const boro = boroughName(p.Borough);
   const board = p.communityDistrictNumber * 1;
-  const url = replace(communityBoardUrl, {boro: boro.toLowerCase(), board});
+  const url = replace(links.district.community, {boro: boro.toLowerCase(), board});
   return `<h3><a href="${url}" target="_blank" rel="noopener">${boro} <span data-i18n="community.board"></span> ${board}</a></h3>`;
 }
 
 function getElectionDistrict(p) {
   return $(`<li></li>`)
     .append(`<strong data-i18n="[prepend]election.district"> ${p.electionDistrict}</strong><br>`)
-    .append(`<a href="${replace(electionDistrictUrl, p)}" target="_blank" rel="noopener" data-i18n="election.poll"></a>`);
+    .append(`<a href="${replace(links.political.pollsite, p)}" target="_blank" rel="noopener" data-i18n="election.poll"></a>`);
 }
 
 export function bbl(feature) {

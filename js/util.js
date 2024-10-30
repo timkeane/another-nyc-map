@@ -41,3 +41,18 @@ export function replace(str, values) {
   });
   return str;
 }
+
+export function enAlphabet(name) {
+  return name.replace(/\./g, '')
+  .replace(/\'/g, '')
+  .replace(/ /g, '-')
+  .replace(/\'/g, '')
+  .replace(/á/g, '')
+  .replace(/é/g, '')
+  .replace(/í/g, '')
+  .replace(/é/g, '')
+  .replace(/ó/g, '')
+  .replace(/ú/g, '')
+  .replace(/ü/g, '')
+  .replace(/ñ/g, '');
+}

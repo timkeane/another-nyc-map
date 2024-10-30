@@ -87,8 +87,6 @@ function loadLayer(event) {
   if (form.file?.files.length > 0 || form.url.value.length > 0) {
     const callback = layer => {
       const name = form.name.value;
-      console.warn(name);
-      
       if (name) layer.set('name', form.name.value);
       maplegend.addLayer(layer);
     }

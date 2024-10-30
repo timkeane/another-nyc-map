@@ -1,28 +1,24 @@
 import $ from 'jquery';
-import {replace} from '../../util';
-
-const subwayLineUrl = 'https://new.mta.info/maps/subway-line-maps/${subway}-line';
-const sirLineUrl = 'https://new.mta.info/agency/staten-island-railway';
+import{links, parameterizeLink} from '../../info/links';
 
 export function subwayLineHtml(feature) {
   const html = $('<div></div>');
   const subways = feature.get('name').split('-');
-  appendRouteIcons(html, subways, subwayLineUrl);
+  appendRouteIcons(html, subways, 'subwayLine');
   return html;
 }
 
 export function sirLineHtml(feature) {
   const html = $('<div></div>');
-  appendRouteIcons(html, ['SIR'], sirLineUrl);
+  appendRouteIcons(html, ['SIR'], 'sirLine');
   return html;
 }
 
-function appendRouteIcons(html, subways, url) {
+function appendRouteIcons(html, subways, linkId) {
   subways.forEach(subway => {
     const img = `<img src="img/subway-${subway}.svg" alt="${subway}">`;
-    if (url) {
-      url = replace(url, {subway});
-      const a = `<a href="${url}" target="_blank" rel="noopener">${img}</a>`;
+    if (linkId) {
+      const a = parameterizeLink(links.layer[linkId], img, {subway});
       html.append(a);
     } else {
       html.append(img);
@@ -57,7 +53,7 @@ export function subwayStationHtml(feature) {
   html.append(icons)
     .append(`<div>${p.north_direction_label}/${p.south_direction_label}</div>`);
   appendAda(html, p.ada_northbound, p.ada_southbound, p.ada_notes);
-  appendRouteIcons(icons, subways, subwayLineUrl);
+  appendRouteIcons(icons, subways, 'subwayLine');
   return html;
 }
 

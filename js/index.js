@@ -34,6 +34,3 @@ initI18n().then(() => {
     $('body').removeClass('loading');
   });
 });
-
-window.$=$;
-window.map=map;
