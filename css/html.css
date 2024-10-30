@@ -65,3 +65,46 @@ body.loading * {
   color: var(--cOnSecondary);
   background-color: var(--cSecondary);
 }
+
+.form-check-input:checked {
+  background-color: var(--cPrimary);
+  border-color: var(--cPrimary);
+}
+.form-check-input:checked:focus {
+  background-color: var(--cSecondary);
+  border-color: var(--cPrimary);
+}
+
+.form-check-input[type="checkbox"]:checked:focus {
+  background-image: var(--checkFocus);
+}
+
+.form-check-input[type="radio"]:checked:focus {
+  background-image: var(--radioFocus);
+}
+
+select.form-control.form-select.btn {
+  background-color: var(--cPrimary);
+  color: var(--cOnPrimary);
+  -moz-appearance: none; /* Firefox */
+  -webkit-appearance: none; /* Safari and Chrome */
+  appearance: none;
+  background-image: var(--downArrow);
+  border: 1px solid var(--cSecondary);
+  background-position: calc(100% - .25em) center;
+}
+
+input.form-control:autofill,
+input.form-control:autofill:focus,
+input.form-control:autofill:hover,
+input.form-control:-webkit-autofill,
+input.form-control:-webkit-autofill:hover, 
+input.form-control:-webkit-autofill:focus,
+input.form-control:-internal-autofill-selected,
+input.form-control:-internal-autofill-selected:hover,
+input.form-control:-internal-autofill-selected:focus {
+  appearance: unset !important;
+  background-image: none !important;
+  background-color: var(--tipBg) !important;
+  color: var(--cOnSecondary) !important;
+}

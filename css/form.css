@@ -57,16 +57,16 @@ form.locate-form.bbl .form-control.location {
 }
 
 form.locate-form .form-control.boro {
-  width: 162px;
+  width: 156px;
   padding: 0 .75em;
 }
 
 form.locate-form .form-control.block {
-  width: 87px;
+  width: 90px;
 }
 
 form.locate-form .form-control.lot {
-  width: 67px;
+  width: 70px;
 }
 
 form.locate-form .form-control.block,
@@ -82,59 +82,19 @@ form.locate-form input.location {
   padding-inline-start: 1.25em;
 }
 
-ul.possible {
+form.locate-form ul.possible {
   display: none;
   background-color: transparent;
 }
 
-ul.possible li.list-group-item {
+form.locate-form ul.possible li.list-group-item {
   padding: 3px .5em;
   cursor: pointer;
 }
 
-ul.possible li:hover {
+form.locate-form ul.possible li:hover {
  background-color: var(--cSecondary);
   color: var(--cOnSecondary);
-}
-
-
-
-
-
-
-.form-control.photo {
-  width: 120px;
-}
-
-.form-check-input:checked {
-  background-color: var(--cPrimary);
-  border-color: var(--cPrimary);
-}
-.form-check-input:checked:focus {
-  background-color: var(--cSecondary);
-  border-color: var(--cPrimary);
-}
-
-.form-check-input[type="checkbox"]:checked:focus {
-  background-image: var(--checkFocus);
-}
-
-.form-check-input[type="radio"]:checked:focus {
-  background-image: var(--radioFocus);
-}
-
-
-
-
-select.form-control.form-select.btn {
-  background-color: var(--cPrimary);
-  color: var(--cOnPrimary);
-  -moz-appearance: none; /* Firefox */
-  -webkit-appearance: none; /* Safari and Chrome */
-  appearance: none;
-  background-image: var(--downArrow);
-  border: 1px solid var(--cSecondary);
-  background-position: calc(100% - .25em) center;
 }
 
 form.locate-form select.form-control.form-select.btn:hover {
