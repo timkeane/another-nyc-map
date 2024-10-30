@@ -107,8 +107,11 @@ function bringToTop(event) {
 
 function createPopup(map, coordinate, name, html, highlight) {
   const popup = $(HTML);
-  popup.find('h2').html(name).localize();
-  popup.find('.popup-content').html(html).localize();
+  const title = popup.find('h2');
+  title.attr('data-i18n', `layer.${name}`);
+  popup.find('.popup-content').html(html);
+  popup.localize();
+  if (title.html() === '') title.html(name);
 
   const overlay = new Overlay({
     element: popup.get(0),
