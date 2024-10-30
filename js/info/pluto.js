@@ -50,3 +50,12 @@ export function highlightByCoordinate(coordinate, callback) {
   removeSearchFeatures();
   fromCoordinate(coordinate, callback);
 }
+
+export function embelishWithGeoclient(feature, callback) {
+  const address = `${feature.get('Address')}, ${feature.get('Borough')}`;
+  fetch(`${env.VITE_GEOCLIENT_URL}${encodeURIComponent(address)}`)
+    .then(response => response.json().then(json => {
+      Object.entries(json.results[0].response).forEach(entry => feature.set(entry[0], entry[1]));
+      callback(feature);
+    }));
+}

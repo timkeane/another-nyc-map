@@ -23,8 +23,7 @@
     "i18next": "23.7.7",
     "jquery": "^3.7.1",
     "jquery-i18next": "^1.2.1",
-    "ol": "^9.0.0",
-    "ol-mapbox-style": "^12.1.1",
+    "ol": "^10.2.1",
     "papaparse": "^5.4.1",
     "proj4": "^2.12.1",
     "shapefile": "^0.6.6"

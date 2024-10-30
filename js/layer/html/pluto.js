@@ -4,6 +4,7 @@ import link from '../../info/links';
 import elected from '../../info/elected';
 
 const communityBoardUrl = 'https://www.nyc.gov/site/${board}/index.page';
+const electionDistrictUrl = 'https://findmypollsite.vote.nyc/?hn=${0}&sn=${1}&zip=${2}';
 
 function noNulls(list) {
   const result = [];
@@ -27,22 +28,22 @@ function getZoning(p) {
   const map = p.ZoneMap;
   const a = link('zoneMap', `${map}`, [map]);
 
-  const h3 = $('<h3>Zoning</h3>');
-  const ul = $(`<ul><li><strong>Map:</strong> ${a}</li></ul>`);
+  const h3 = $('<h3 data-i18n="zoning"></h3>');
+  const ul = $(`<ul><li><strong data-i18n="[prepend]map">:</strong> ${a}</li></ul>`);
 
   const zone = zoningLinks([p.ZoneDist1, p.ZoneDist2, p.ZoneDist3, p.ZoneDist4], 'zoneDist');
-  ul.append(`<li><strong>District:</strong> ${zone}</li>`);
+  ul.append(`<li><strong data-i18n="[prepend]district">:</strong> ${zone}</li>`);
 
   const overlay = noNulls([p.Overlay1, p.Overlay2]).join(', ');
-  ul.append(overlay ? `<li><strong>Overlay:</strong> ${overlay}</li>` : '');
+  ul.append(overlay ? `<li><strong data-i18n="[prepend]overlay">:</strong> ${overlay}</li>` : '');
 
   const special = noNulls([p.SPDist1, p.SPDist2, p.SPDist3]).join(', ');
-  ul.append(special ? `<li><strong>Special:</strong> ${special}</li>` : '');
+  ul.append(special ? `<li><strong data-i18n="[prepend]special">:</strong> ${special}</li>` : '');
 
   return $('<div></div>').append(h3).append(ul).html();
 }
 
-function getOfficial(types, district) {
+function getOfficial(types, district, ul) {
   let members;
   let jurisdiction;
   types.forEach(type => {
@@ -50,9 +51,18 @@ function getOfficial(types, district) {
     jurisdiction = (jurisdiction || elected.jurisdictions)[type];
   });
   const member = members[district];
-  return $('<li></li>')
-    .append(`<strong data-i18n="jurisdiction.${jurisdiction}"></strong><br>`)
-    .append(`<a href="${member.link}" target="_blank" rel="noopener" data-i18n="[prepend]${member.title}"> ${member.name}</a>`);
+  const css = types.join('-');
+  const li = ul.find(`.${css}`);
+  const jurisdictionCreated = li.length === 1;
+  const official = `<br><a href="${member.link}" target="_blank" rel="noopener" data-i18n="[prepend]${member.title}"> ${member.name}</a>`
+  if (jurisdictionCreated) {
+    li.append(official);
+  } else {    
+    const more = !isNaN(district) ? ` <span data-i18n="[prepend]district"> ${district}</span>` : '';
+    return $(`<li class="${css}"></li>`)
+      .append(`<strong><span data-i18n="jurisdiction.${jurisdiction}"></span>${more}</strong>`)
+      .append(official);
+  }
 }
 
 function getOfficials(p) {
@@ -60,19 +70,19 @@ function getOfficials(p) {
   const assembly = p.assemblyDistrict * 1;
   const senate = p.stateSenatorialDistrict * 1;
   const congress = p.congressionalDistrict * 1;
-  const h3 = $('<h3>Elected Officials</h3>');
-  const ul = $('<ul></ul>')
-    .append(getOfficial(['city'], council))
-    .append(getOfficial(['state', 'assembly'], assembly))
-    .append(getOfficial(['state', 'senate'], senate))
-    .append(getOfficial(['federal', 'house'], congress))
-    .append(getOfficial(['federal', 'senate'], 'senior'))
-    .append(getOfficial(['federal', 'senate'], 'junior'));
+  const h3 = $('<h3 data-i18n="elected.officials"></h3>');
+  const ul = $('<ul></ul>');
+  ul.append(getOfficial(['city'], council, ul))
+    .append(getOfficial(['state', 'assembly'], assembly, ul))
+    .append(getOfficial(['state', 'senate'], senate, ul))
+    .append(getOfficial(['federal', 'house'], congress, ul))
+    .append(getOfficial(['federal', 'senate'], 'senior', ul))
+    .append(getOfficial(['federal', 'senate'], 'junior', ul));
   return $('<div></div>').append(h3).append(ul).html();
 }
 
 function getOwner(p) {
-  return `<div><strong>Owner:</strong> ${p.OwnerName}</div>`;
+  return `<div><strong data-i18n="[prepend]owner">:</strong> ${p.OwnerName}</div>`;
 }
 
 function getAddress(p) {
@@ -85,7 +95,11 @@ function getCommunityBoard(p) {
   const boro = boroughName(p.Borough);
   const board = p.communityDistrictNumber * 1;
   const url = communityBoardUrl.replace(/\${board\}/, `${boro.toLowerCase()}cb${board}`);
-  return `<div><strong><a href="${url}" target="_blank" rel="noopener">${boro} Community Board ${board}</a></strong></div>`;
+  return `<h3><a href="${url}" target="_blank" rel="noopener">${boro} <span data-i18n="community.board"></span> ${board}</a></h3>`;
+}
+
+function getElectionDistrict(p) {
+
 }
 
 export function bbl(feature) {
@@ -103,6 +117,7 @@ export function plutoHtml(feature) {
     .append(getOwner(p))
     .append(getZoning(p))
     .append(getCommunityBoard(p))
+    .append(getElectionDistrict(p))
     .append(getOfficials(p));
 }
 

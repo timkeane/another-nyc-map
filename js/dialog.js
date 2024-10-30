@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import {nextId} from './util';
 
 const HTML = `<div id="dialog" class="modal fade" data-bs-keyboard="false" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
   <div id="modal" class="modal-dialog">
@@ -22,7 +21,7 @@ const HTML = `<div id="dialog" class="modal fade" data-bs-keyboard="false" data-
           <input class="form-control name" name="name" type="text" data-i18n="[placeholder]placeholder.layer.name" autocomplete="on">
           <input id="load-file" class="form-check-input" name="load" type="radio" value="file" checked>
           <label for="load-file" data-i18n="input.file"></label>
-          <input id="load-url" class="form-check-input" name="load" type="radio" value="input.url">
+          <input id="load-url" class="form-check-input" name="load" type="radio" value="url">
           <label for="load-url" data-i18n="input.url"></label>
           <input class="form-control file" name="file" type="file" multiple accept=".shp,.dbf,.prj,.json,.geojson,.csv">
           <input class="form-control url" name="url" type="text" data-i18n="[placeholder]placeholder.url" autocomplete="on">
@@ -88,13 +87,14 @@ function loadLayer(event) {
   if (form.file?.files.length > 0 || form.url.value.length > 0) {
     const callback = layer => {
       const name = form.name.value;
+      console.warn(name);
+      
       if (name) layer.set('name', form.name.value);
       maplegend.addLayer(layer);
     }
     if (form.load.value === 'file') {
       basemap.loadFile(form.file.files, callback);
     } else {
-      console.warn(form.url.value);
       basemap.loadUrl(form.url.value, callback);
     }
     dialog.hide();

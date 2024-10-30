@@ -77,6 +77,8 @@ class Legend {
       const id = nextId('legend-layer');
       const check = $(`<input id="${id}" name="${id}" type="checkbox" class="form-check-input layer-check" ${checked}>`);
       const label = $(`<label for="${id}" data-i18n="layer.${layer.get('name')}"></label>`).localize();
+      if (label.html() === '') label.html(layer.get('name'));
+      if (label.html() === '') label.html(layer.get('file'));
       layerList.append(li.append(check).append(label));
       layer.set('checkbox', check);
       this.editableCsv(layer, li);

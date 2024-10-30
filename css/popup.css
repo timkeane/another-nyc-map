@@ -35,6 +35,7 @@
 .popup-content {
   max-height: 380px;
   overflow: auto;
+  font-size: .75em;
 }
 
 .popup-content .feature-html.generic {

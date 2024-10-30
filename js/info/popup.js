@@ -2,7 +2,7 @@ import $ from 'jquery';
 import GeoJSON from 'ol/format/GeoJSON';
 import Overlay from 'ol/Overlay';
 import {plutoHtml, bbl} from '../layer/html/pluto';
-import {highlightByCoordinate, removeHighlight} from './pluto';
+import {embelishWithGeoclient, highlightByCoordinate, removeHighlight} from './pluto';
 
 const HTML = `<div class="popup-overlay">
   <div class="popup">
@@ -98,15 +98,6 @@ function html(feature, html) {
   return html(feature);
 }
 
-function embelish(map, coordinate, feature) {
-  const address = `${feature.get('Address')}, ${feature.get('Borough')}`;
-  fetch(`${env.VITE_GEOCLIENT_URL}${encodeURIComponent(address)}`)
-    .then(response => response.json().then(json => {
-      Object.entries(json.results[0].response).forEach(entry => feature.set(entry[0], entry[1]));
-      createPopup(map, coordinate, bbl(feature), html(feature, plutoHtml), feature);
-    }));
-}
-
 function bringToTop(event) {
   $('.popup-overlay').each((i, popup) => {
     $(popup).parent().removeClass('active-popup');
@@ -152,6 +143,8 @@ export default function show(event) {
     return true;
   },  {layerFilter});
   if (!hit) {
-    highlightByCoordinate(coordinate, feature => embelish(map, coordinate, feature));
+    highlightByCoordinate(coordinate, feature => embelishWithGeoclient(feature, embelished => {
+      createPopup(map, coordinate, bbl(embelished), html(embelished, plutoHtml), embelished);
+    }));
   }
 }

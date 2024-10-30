@@ -173,8 +173,8 @@ const Storage = {
     }
     const source = new Source();
     const layer = new Layer({source});
-    layer.set('name', fileName);
-    layer.set('file', fileName);
+    console.warn(fileName);
+    if (!layer.get('name') && fileName) layer.set('file', fileName);
     source.addFeatures(format.readFeatures(features, options));
     map.addLayer(layer);
     return layer;
