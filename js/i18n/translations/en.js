@@ -36,6 +36,7 @@ export const translation = {
   "title.junior.senator": "Junior Senator",
   "title.senior.senator": "Senior Senator",
   "translate": "Translate",
+  "translate.en": "Translate",
   "translate.es": "Traducir",
   "translate.pl": "Tłumaczyć",
   "translate.he": "לְתַרְגֵם",
