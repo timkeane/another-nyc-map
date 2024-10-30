@@ -31,6 +31,8 @@ export const translation = {
   "special": "Special",
   "owner": "Owner",
   "elected.officials": "Elected Officials",
+  "election.district": "Election District",
+  "election.poll": "Polling Location",
   "jurisdiction.city": "New York City Council",
   "jurisdiction.state.assembly": "New York State Assembly",
   "jurisdiction.state.senate": "New York State Senate",
