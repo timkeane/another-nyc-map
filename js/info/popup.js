@@ -108,8 +108,9 @@ function bringToTop(event) {
 function createPopup(map, coordinate, name, html, highlight) {
   const popup = $(HTML);
   const title = popup.find('h2');
+  const css = name.replace(/ /g, '-').replace(/\./g, '-');
   title.attr('data-i18n', `layer.${name}`);
-  popup.find('.popup-content').html(html);
+  popup.find('.popup-content').html(html).addClass(css);
   popup.localize();
   if (title.html() === '') title.html(name);
 

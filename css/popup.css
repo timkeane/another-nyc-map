@@ -56,7 +56,15 @@
   margin: .5em 0;
 }
 
-.popup-content .feature-html ul {
-  padding-inline-start: 1em;
-  margin: 0;
+.popup-content.subway-line a:hover img,
+.popup-content.sir-line a:hover img,
+.popup-content.subway-station a:hover img {
+  background: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));
+}
+
+.popup-content.subway-line a img,
+.popup-content.sir-line a img,
+.popup-content.subway-station a img {
+  padding: 1px;
+  border-radius: 50%;
 }
