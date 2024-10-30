@@ -2,9 +2,10 @@ import $ from 'jquery';
 import {boroughName} from '../../util';
 import link from '../../info/links';
 import elected from '../../info/elected';
+import {replace} from '../../util';
 
-const communityBoardUrl = 'https://www.nyc.gov/site/${board}/index.page';
-const electionDistrictUrl = 'https://findmypollsite.vote.nyc/?hn=${0}&sn=${1}&zip=${2}';
+const communityBoardUrl = 'https://www.nyc.gov/site/${boro}cb${board}/index.page';
+const electionDistrictUrl = 'https://findmypollsite.vote.nyc/?hn=${houseNumber}&sn=${streetName1In}&zip=${zipCode}';
 
 function noNulls(list) {
   const result = [];
@@ -65,14 +66,15 @@ function getOfficial(types, district, ul) {
   }
 }
 
-function getOfficials(p) {
+function getPolitical(p) {
   const council = p.cityCouncilDistrict * 1;
   const assembly = p.assemblyDistrict * 1;
   const senate = p.stateSenatorialDistrict * 1;
   const congress = p.congressionalDistrict * 1;
   const h3 = $('<h3 data-i18n="elected.officials"></h3>');
   const ul = $('<ul></ul>');
-  ul.append(getOfficial(['city'], council, ul))
+  ul.append(getElectionDistrict(p))
+    .append(getOfficial(['city'], council, ul))
     .append(getOfficial(['state', 'assembly'], assembly, ul))
     .append(getOfficial(['state', 'senate'], senate, ul))
     .append(getOfficial(['federal', 'house'], congress, ul))
@@ -94,12 +96,14 @@ function getAddress(p) {
 function getCommunityBoard(p) {
   const boro = boroughName(p.Borough);
   const board = p.communityDistrictNumber * 1;
-  const url = communityBoardUrl.replace(/\${board\}/, `${boro.toLowerCase()}cb${board}`);
+  const url = replace(communityBoardUrl, {boro: boro.toLowerCase(), board});
   return `<h3><a href="${url}" target="_blank" rel="noopener">${boro} <span data-i18n="community.board"></span> ${board}</a></h3>`;
 }
 
 function getElectionDistrict(p) {
-
+  return $(`<li></li>`)
+    .append(`<strong data-i18n="[prepend]election.district"> ${p.electionDistrict}</strong><br>`)
+    .append(`<a href="${replace(electionDistrictUrl, p)}" target="_blank" rel="noopener" data-i18n="election.poll"></a>`);
 }
 
 export function bbl(feature) {
@@ -115,10 +119,9 @@ export function plutoHtml(feature) {
   return $('<div class="feature-html"></div>')
     .append(getAddress(p))
     .append(getOwner(p))
-    .append(getZoning(p))
     .append(getCommunityBoard(p))
-    .append(getElectionDistrict(p))
-    .append(getOfficials(p));
+    .append(getPolitical(p))
+    .append(getZoning(p));
 }
 
 export function plutoTip(feature) {
