@@ -78,7 +78,7 @@ function createPopup(map, coordinate, name, html, highlight) {
   new Drag(popup.parent(), title);
 
   popup.parent().css('z-index', $('.popup-overlay').length);
-  popup.on('click', bringToTop);
+  popup.on('mousedown', bringToTop);
   overlay.setPosition(coordinate);
 
   window.overlays = window.overlays || [];
