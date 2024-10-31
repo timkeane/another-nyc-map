@@ -30,6 +30,11 @@
 .popup h2 {
   white-space: nowrap;
   padding-inline-end: 30px;
+  cursor: pointer;
+}
+
+.popup h2:active {
+  cursor: grab;
 }
 
 .popup-content {

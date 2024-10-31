@@ -3,6 +3,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import Overlay from 'ol/Overlay';
 import {plutoHtml, bbl} from '../layer/html/pluto';
 import {embelishWithGeoclient, highlightByCoordinate, removeHighlight} from './pluto';
+import Drag from '../Drag';
 
 const HTML = `<div class="popup-overlay">
   <div class="popup">
@@ -19,57 +20,10 @@ const HTML = `<div class="popup-overlay">
 
 const env = import.meta.env;
 const format = new GeoJSON();
-let dragElem, dragHandle, pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
 const layerFilter = function(layer) {
   return layer.get('name') !== 'highlight';
 };
-
-function down(event) {
-  event.preventDefault();
-  pos3 = event.clientX;
-  pos4 = event.clientY;
-  $(document).on('mouseup', up);
-  $(document).on('mousemove', dragIt);
-}
-
-function dragIt(event) {
-  event = event || window.event;
-  event.preventDefault();
-  pos1 = pos3 - event.clientX;
-  pos2 = pos4 - event.clientY;
-  pos3 = event.clientX;
-  pos4 = event.clientY;
-  dragElem.css({
-    top: `${dragElem.get(0).offsetTop - pos2}px`,
-    left: `${dragElem.get(0).offsetLeft - pos1}px`
-  });
-  tail();
-}
-
-function tail() {
-  const svg = $(dragElem).find('path');
-  const path = svg.attr('d');
-  const parts = path.split(' ');
-  parts[2] = `L${(parts[2].substring(1) * 1) + pos1}`;
-  parts[3] = `${(parts[3] * 1) + pos2}`;
-  svg.attr('d', parts.join(' '));
-}
-
-function up() {
-  $(document).off('mouseup', up);
-  $(document).off('mousemove', dragIt);
-}
-
-function drag(element) {
-  dragElem = element;
-  dragHandle = element.find('h2');
-  pos1 = 0;
-  pos2 = 0;
-  pos3 = 0;
-  pos4 = 0;
-  dragHandle.on('mousedown', down);
-}
 
 function getValue(prop, value) {
   if (prop === 'geometry') {
@@ -121,7 +75,7 @@ function createPopup(map, coordinate, name, html, highlight) {
   });
   overlay.highlight = highlight;
   map.addOverlay(overlay);
-  drag(popup.parent());
+  new Drag(popup.parent(), title);
 
   popup.parent().css('z-index', $('.popup-overlay').length);
   popup.on('click', bringToTop);

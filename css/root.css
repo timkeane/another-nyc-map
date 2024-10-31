@@ -6,7 +6,7 @@
   --cOnSecondary: #111;
   --popupBg: #FFF;
   --popupActiveBg: #D3D3D3;
-  --popupBorder: #CCC;
+  --popupBorder: #AAA;
   --popupActiveBorder: var(--cPrimary);
   --borderSubtle: #DDD;
   --tipBg: rgba(255, 255, 255, .8);
