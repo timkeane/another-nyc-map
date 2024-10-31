@@ -22,6 +22,10 @@
   margin-top: 1em;
 }
 
-#dialog .template-form select:first-of-type {
+#dialog .template-form select {
   margin-bottom: .5em;
+}
+
+#dialog .template-form select:last-of-type {
+  margin-bottom: 0;
 }

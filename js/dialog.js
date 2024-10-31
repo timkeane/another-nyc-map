@@ -11,8 +11,18 @@ const HTML = `<div id="dialog" class="modal fade" data-bs-keyboard="false" data-
       </h2>
       <div class="modal-body">
         <form class="template-form">
-          <select class="form-control form-select address" name="address" data-i18n="[title]address.column;[aria-label]address.column"></select>
-          <select class="form-control form-select boro" name="boro" data-i18n="[title]city.column;[aria-label]city.column"></select>
+          <select class="form-control form-select" name="address" 
+            data-i18n="[title]csv.address;[aria-label]csv.address">
+          </select>
+          <select class="form-control form-select" name="borough"
+            data-i18n="[title]csv.borough;[aria-label]csv.borough">
+          </select>
+          <select class="form-control form-select" name="city"
+            data-i18n="[title]csv.city;[aria-label]csv.city">
+          </select>
+          <select class="form-control form-select" name="zip"
+            data-i18n="[title]csv.zip;[aria-label]csv.zip">
+          </select>
           <div class="submit">
             <button class="btn btn-primary template" name="submit">OK</button>
           </div>
@@ -101,8 +111,7 @@ function loadLayer(event) {
 
 function getColumns(event) {
   event.preventDefault();
-  const form = templateForm.get(0);
-  returnColumns(form.address.value, form.boro.value);
+  returnColumns(templateForm);
   dialog.hide();
 }
 
@@ -120,11 +129,14 @@ export function showLoad(map, legend) {
 export function showLocationTemplate(source, callback) {
   returnColumns = callback;
   title.attr('data-i18n', 'geocode.csv');
-  templateForm.find('select.address').append('<option value="0" data-i18n="address.column"></option>');
-  templateForm.find('select.boro').append('<option value="0" data-i18n="city.column"></option>');
-  Object.keys(source).forEach(column => {
-    if (column !== 'undefined') templateForm.find('select')
-      .append(`<option>${column}</option>`);
+  templateForm.find('select').each((i, select) => {
+    $(select).append(`<option value="0" data-i18n="csv.${select.name}"></option>`)
+      .append('<option value="0" data-i18n="csv.none"></option>');
+    Object.keys(source).forEach(column => {
+      if (column !== 'undefined') {
+        $(select).append(`<option>${column}</option>`);
+      }
+    });
   });
   show(templateForm);
 }

@@ -30,8 +30,16 @@ class CsvAddr extends CsvPoint {
       feature.dispatchEvent('change', {target: feature});
     }
   }
-  createTemplate(address, borough) {
-    this.locationTemplate = `\${${address}},\${${borough}}`;
+  createTemplate(form) {
+    const columns = {};
+    $(form).find('select').each((i, select) => {
+      const column = select.value;
+      if (column !== '0') {
+        columns[select.name] = column;
+      }
+    });
+    this.locationTemplate = `\${${columns.address}},\${${columns.city || columns.borough}}`;
+    if (columns.zip) this.locationTemplate = `${this.locationTemplate} \${${columns.zip}}`;
     this.notGeocoded.forEach(feature => {
       this.geocodeFeature(feature);
     });

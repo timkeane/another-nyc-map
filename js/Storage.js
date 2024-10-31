@@ -163,15 +163,16 @@ const Storage = {
   },
   addToMap(map, features, fileName, prjDef) {
     const ext = fileName?.substring(fileName.lastIndexOf('.'));
-    const format = ext  === '.csv' ? new CsvAddr({geocode}) : new GeoJSON();
     const options = {
       featureProjection: map.getView().getProjection().getCode(),
-      dataProjection: addPrjDef(prjDef)
+      dataProjection: addPrjDef(prjDef),
+      geocode
     };
+    const format = ext  === '.csv' ? new CsvAddr(options) : new GeoJSON();
     if (ext  === '.shp') {
       features = {type: 'FeatureCollection', features: features};
     }
-    const source = new Source();
+    const source = new Source({format});
     const layer = new Layer({source});
     if (!layer.get('name') && fileName) layer.set('file', fileName);
     source.addFeatures(format.readFeatures(features, options));

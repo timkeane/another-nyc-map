@@ -97,7 +97,8 @@ export default function show(event) {
   const map = event.map;
   const coordinate = event.coordinate;
   const hit = map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
-    createPopup(map, coordinate, layer.get('name'), html(feature, layer.get('html')));
+    const name = layer.get('name') || layer.get('file') || 'layer';
+    createPopup(map, coordinate, name, html(feature, layer.get('html')));
     return true;
   },  {layerFilter});
   if (!hit) {
