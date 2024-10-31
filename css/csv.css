@@ -33,3 +33,40 @@ div.csv-table td input {
   background-color: transparent;
   border: none;
 }
+
+div.csv-table td.status,
+div.csv-table th.status {
+  padding: .25em;
+  color: var(--cOnPrimary);
+}
+
+div.csv-table td.status,
+div.csv-table td.status select {
+  text-align: center;
+}
+
+div.csv-table td.status.geocode,
+div.csv-table th.status.geocode {
+  background-color: #008450;
+}
+
+div.csv-table td.status.ambiguous,
+div.csv-table th.status.ambiguous {
+  background-color: #F7B500;
+}
+
+div.csv-table td.status.error,
+div.csv-table th.status.ambiguous {
+  background-color: #CC0202;
+}
+
+div.csv-table td.status.ambiguous {
+  padding: 0;
+}
+
+div.csv-table td.status.ambiguous select {
+  border: none;
+  background-color: transparent;
+  padding: .25em;
+  width: 120px;
+}

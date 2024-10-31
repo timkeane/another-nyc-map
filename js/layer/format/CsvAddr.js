@@ -21,7 +21,7 @@ class CsvAddr extends CsvPoint {
   setGeocode(feature, geocode) {
     const input = feature.get('_input');
     const source = feature.get('_source');
-    feature.set('_geocodeesp', geocode);
+    feature.set('_geocode', geocode);
     if (geocode.type === 'geocode') {
       console.info('Geocoded:', input, source, 'geocode response:', geocode);
       feature.setGeometry(new Point(geocode.coordinate));

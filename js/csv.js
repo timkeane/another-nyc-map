@@ -1,13 +1,24 @@
 import $ from 'jquery';
-import createContextMenu from './contextMenu';
-import { nextId } from './util';
+import createMenu from './csvMenu';
+import {nextId} from './util';
 
 const HTML = `<div class="csv-table">
   <table>
-    <thead><tr></tr><theaad>
+    <thead><tr></tr></thead>
     <tbody></tbody>
   </table>
 </div>`;
+
+function compare(f0, f1) {
+  const status0 = f0.get('status');
+  const status1 = f1.get('status');
+  if (status0 < status1) {
+    return -1;
+  } else if (status0 > status1) {
+    return 1;
+  }
+  return 0;
+}
 
 function showHideColumn(event) {
   const check = $(event.target);
@@ -33,11 +44,42 @@ function columnsMenu(table, columns) {
 }
 
 function updateFeature(event) {
-  const input = $(event.target);
-  const feature = input.data('feature');
-  const prop = input.data('prop');
-  feature.set(prop, input.val());
+  const target = $(event.target);
+  const feature = target.data('feature');
+
+  console.warn({event,feature});
+}
+
+function showPossibile(event) {
+  const target = $(event.target);
+  const feature = target.data('feature');
+  const geocode = feature.get('_geocode');
+  const possible = geocode.possible;
+  possible.forEach(location => {
+
+  });
   
+}
+
+function appendStatus(tr, feature) {
+  const geocode = feature.get('_geocode');
+  
+  const status = geocode?.type || 'error';
+  const td = $(`<td data-prop="status" class="status ${status}">${status}</td>`)
+    .data('feature', feature);
+  if (status === 'ambiguous') {
+    const select = $(`<select><option value="-1">${status}</option></select>`)
+      .data('feature', feature);
+    geocode.possible.forEach((geo, i) => {
+      select.append(`<option value="${i}">${geo.name}</option>`);
+      select.on('change', updateFeature)
+    });
+    td.empty().append(select);
+  }
+    
+    // .on('click', showPossibile);
+  feature.set('status', status);
+  tr.append(td);
 }
 
 export default function csvTable(event) {
@@ -50,6 +92,7 @@ export default function csvTable(event) {
   const tbody = table.find('tbody');
   const props = features[0].getProperties();
   const columns = [];
+  header.append('<th class="status" data-i18n="csv.status"></th>');
   Object.keys(props).forEach(prop => {
     if (prop !== 'geometry' && prop.substring(0, 1) !== '_') {
       header.append(`<th data-prop="${prop}">${prop}</th>`);
@@ -57,11 +100,14 @@ export default function csvTable(event) {
     }
   });
   legend.close();
-  createContextMenu(header, columnsMenu(table, columns));
+  table.data('features', features);
+  createMenu(columnsMenu(table, columns));
 
+  features.sort(compare);
   features.forEach((feature, i) => {
     const props = feature.getProperties();
     const tr = $('<tr></tr>');
+    appendStatus(tr, feature);
     tbody.append(tr);
     Object.keys(props).forEach(prop => {
       if (prop !== 'geometry' && prop.substring(0, 1) !== '_') {
@@ -73,5 +119,5 @@ export default function csvTable(event) {
         }
     });
   });
-  $('body').append(table);
+  $('body').append(table.localize());
 }

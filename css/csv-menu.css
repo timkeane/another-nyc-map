@@ -1,0 +1,29 @@
+form.csv-menu {
+  position: fixed;
+  top: calc(50% - 41px);
+  inset-inline-start: .25em;
+  width: 200px;
+  z-index: 100000;
+  display: block;
+  background-color: transparent;
+}
+
+form.csv-menu button {
+  float: inline-start;
+  margin-inline-end: .25em;
+}
+
+form.csv-menu ul {
+  padding: 0;
+  max-height: 200px;
+  overflow: auto;
+}
+
+form.csv-menu li {
+  list-style: none;
+  padding: .25em;
+}
+
+form.csv-menu label {
+  padding-inline-start: .5em;
+}
