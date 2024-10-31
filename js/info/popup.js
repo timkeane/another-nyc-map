@@ -7,7 +7,7 @@ import Drag from '../Drag';
 
 const HTML = `<div class="popup-overlay">
   <div class="popup">
-    <a class="btn-close corner" href="#"
+    <a class="btn-close corner" href="#" aria-role="button"
       data-i18n="[title]close;[aria-label]close">
     </a>
     <h2></h2>

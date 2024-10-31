@@ -6,7 +6,7 @@ import csvTable from './csv';
 const HTML = `<div class="legend">
   <h2 class="dialog-header">
     Layers
-    <a class="btn-close corner" href="#"
+    <a class="btn-close corner" href="#" aria-role="button"
       data-i18n="[title]close;[aria-label]close">
     </a>
   </h2>

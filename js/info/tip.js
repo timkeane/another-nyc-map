@@ -52,6 +52,7 @@ class FeatureTip extends Overlay {
     const position = this.map.getPixelFromCoordinate(this.getPosition());
     const vert = position[1] + height > size[1] ? 'bottom' : 'top';
     const horz = position[0] + width > size[0] ? 'right' : 'left';
+    this.tip.attr('data-pos', `${vert}-${horz}`);
     this.setPositioning(`${vert}-${horz}`);
   }
 }

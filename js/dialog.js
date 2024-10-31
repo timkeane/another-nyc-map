@@ -5,7 +5,7 @@ const HTML = `<div id="dialog" class="modal fade" data-bs-keyboard="false" data-
     <div class="modal-content">
       <h2 class="dialog-header">
         <span class="title"></span>
-        <a class="btn-close corner" href="#"
+        <a class="btn-close corner" href="#" aria-role="button"
           data-i18n="[title]close;[aria-label]close">
         </a>
       </h2>

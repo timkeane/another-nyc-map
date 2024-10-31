@@ -1,0 +1,24 @@
+form.context-menu {
+  position: absolute;
+  z-index: 100000;
+  display: block;
+  background-color: var(--popupBg);
+  border-radius: .25em;
+  border: 1px solid var(--popupBorder);
+  padding: .5em;
+}
+
+form.context-menu ul {
+  padding: 0;
+  max-height: 200px;
+  overflow: auto;
+}
+
+form.context-menu li {
+  list-style: none;
+  padding: .25em;
+}
+
+form.context-menu label {
+  padding-inline-start: .5em;
+}

@@ -34,3 +34,8 @@
   position: absolute;
   top: -3px;
 }
+
+.feature-tip.subway-line-tip[data-pos="top-right"] div {
+  top: 3px;
+  right: 10px;
+}
