@@ -38,14 +38,18 @@ class CsvAddr extends CsvPoint {
         columns[select.name] = column;
       }
     });
+    this.templateColumns = columns;
     this.locationTemplate = `\${${columns.address}},\${${columns.city || columns.borough}}`;
     if (columns.zip) this.locationTemplate = `${this.locationTemplate} \${${columns.zip}}`;
+    console.warn(this.locationTemplate);
+    
     this.notGeocoded.forEach(feature => {
       this.geocodeFeature(feature);
     });
   }
   setGeometry(feature, source, options) {
     super.setGeometry(feature, source, options);
+    feature.set('format', this);
     const coordinate = feature.getGeometry().getCoordinates();
     this.mustGeocode = isNaN(coordinate[0]) || isNaN(coordinate[1]);
     if (this.mustGeocode) {
@@ -78,7 +82,7 @@ class CsvAddr extends CsvPoint {
       }).catch(error => {
         console.error('Geocoding error:', input, source, 'geocode response:', error);
       }).finally(() => {
-        if (!changed) {
+        if (changed) {
           feature.dispatchEvent({type: 'change', target: feature});
         }
         this.geocodedCount = this.geocodedCount + 1;

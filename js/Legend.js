@@ -37,12 +37,13 @@ class Legend {
     loadBtn.on('click', this.load.bind(this));
 
     this.map = options.map;
+    this.view = this.map.getView();
     this.legend = legend;
     this.openBtn = openBtn;
     this.basemap = legend.find('select');
 
     this.setupBasemap(legend, options.map);
-    this.setupLayers(options.layers, options.map.getView());
+    this.setupLayers(options.layers, this.view);
   }
   open() {
     this.legend.fadeIn(() => {

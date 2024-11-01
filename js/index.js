@@ -18,6 +18,7 @@ const geocode = new Geocode({
 
 initI18n().then(() => {
   const map = new Basemap({target: 'map'});
+  window.map=map;
 
   createTranslate(map);
 
