@@ -605,6 +605,7 @@ div.csv-table td.status,
 div.csv-table th.status {
   padding: .25em;
   color: var(--cOnPrimary);
+  width: 125px;
 }
 
 div.csv-table td.status,
