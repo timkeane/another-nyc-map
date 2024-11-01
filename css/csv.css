@@ -78,12 +78,12 @@ div.csv-table a.map-btn {
   background-color: transparent;
 }
 
-div.csv-table th[data-prop="longitude"],
+/* div.csv-table th[data-prop="longitude"],
 div.csv-table th[data-prop="latitude"],
 div.csv-table td[data-prop="longitude"],
 div.csv-table td[data-prop="latitude"] {
   display: none;
-}
+} */
 
 div.csv-table input[data-prop="longitude"],
 div.csv-table input[data-prop="latitude"] {

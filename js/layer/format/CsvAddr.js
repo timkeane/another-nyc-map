@@ -4,6 +4,16 @@ import Point from 'ol/geom/Point'
 import {replace} from '../../util';
 import {showLocationTemplate} from '../../dialog';
 
+const geoclientProps = {
+  borough: 'firstBoroughName',
+  city: 'uspsPreferredCityName',
+  zip: 'zipCode'
+};
+
+function getAddress(location) {
+  return `${location.houseNumber} ${location.firstStreetNameNormalized}`;
+}
+
 class CsvAddr extends CsvPoint {
   constructor(options) {
     super(options);
@@ -22,16 +32,24 @@ class CsvAddr extends CsvPoint {
     const input = feature.get('__input');
     const source = feature.get('__source');
     feature.set('__geocode', geocode);
-  if (geocode.type === 'geocode') {
+    if (geocode.type === 'geocode') {
+      const lngLat = new Point(geocode.coordinate).transform('EPSG:3857', 'EPSG:4326').getCoordinates();
+      const location = geocode.data;
       console.info('Geocoded:', input, source, 'geocode response:', geocode);
       feature.setGeometry(new Point(geocode.coordinate));
-      const lngLat = new Point(geocode.coordinate).transform('EPSG:3857', 'EPSG:4326').getCoordinates();
       feature.set('longitude', lngLat[0]);
       feature.set('latitude', lngLat[1]);
+      Object.keys(this.templateColumns).forEach(key => {
+        const prop = this.templateColumns[key];
+        const value = key === 'address' ? getAddress(location) : location[geoclientProps[key]];
+        feature.set(prop, value);
+      });
+      feature.dispatchEvent('geocode', {target: feature});
     } else {
       console.warn('Ambiguous location:', input, source, 'geocode response:', geocode);
-      feature.dispatchEvent('change', {target: feature});
+      feature.dispatchEvent('ambiguous', {target: feature});
     }
+    feature.dispatchEvent('change', {target: feature});
   }
   createTemplate(form) {
     const columns = {};
@@ -44,8 +62,6 @@ class CsvAddr extends CsvPoint {
     this.templateColumns = columns;
     this.locationTemplate = `\${${columns.address}},\${${columns.city || columns.borough}}`;
     if (columns.zip) this.locationTemplate = `${this.locationTemplate} \${${columns.zip}}`;
-    console.warn(this.locationTemplate);
-    
     this.notGeocoded.forEach(feature => {
       this.geocodeFeature(feature);
     });
@@ -75,6 +91,7 @@ class CsvAddr extends CsvPoint {
     const input = replace(this.locationTemplate, source);
     feature.set('__input', input);
     feature.set('__source', source);
+    feature.set('__geocode', undefined);
     feature.set('longitude', undefined);
     feature.set('latitude', undefined);
     if (input.replace(/\,/g, '').trim() === '') {
