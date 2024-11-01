@@ -41,8 +41,10 @@ function generic(feature) {
   const tbody = table.find('tbody');
   Object.entries(properties).forEach(entry => {
     const prop = entry[0];
-    const value = getValue(prop, entry[1]);
-    tbody.append(`<tr class="${prop}"><td class="field">${prop}</td><td class="value">${value}</td></tr>`);
+    if (prop.substring(0, 1) !== '_') {
+      const value = getValue(prop, entry[1]);
+      tbody.append(`<tr class="${prop}"><td class="field">${prop}</td><td class="value">${value}</td></tr>`);
+    }
   });
   return $(`<div class="feature-html generic"></div>`).append(table);
 }
