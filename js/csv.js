@@ -24,10 +24,11 @@ function compare(f0, f1) {
   return 0;
 }
 
-const columnState = {};
+let columnState;
 function columnsMenu(table, feature) {
   const ul = $('<ul></ul>');
   const props = feature.getProperties();
+  columnState = {};
   Object.keys(props).forEach(column => {
     if (isDisplayColumn(column)) {
       const id = nextId('column');
@@ -84,18 +85,8 @@ function updateFeature(event) {
   }
 }
 
-function updateGeocode(feature, geocode) {
-  const location = geocode.data;
-  if (location) {
-    featureRow(feature);
-  } else if (geocode.possible) {
-    
-  }
-}
-
 function appendStatus(tr, feature) {
   const geocode = feature.get('__geocode');
-  
   const status = geocode?.type || 'error';
   const td = $(`<td data-prop="status" class="status ${status}">${status}</td>`)
     .data('feature', feature);
@@ -107,7 +98,6 @@ function appendStatus(tr, feature) {
     });
     td.empty().append(select.on('change', updateFeature));
   }
-    
   feature.set('__status', status);
   tr.append(td);
 }
