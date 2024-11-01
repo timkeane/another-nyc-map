@@ -4,7 +4,7 @@ import {nextId} from './util';
 import Point from 'ol/geom/Point';
 
 const HTML = `<div class="csv-table">
-  <a class="btn-close corner" href="#" aria-role="button"
+  <a class="btn-close corner csv-table" href="#" aria-role="button"
     data-i18n="[title]close;[aria-label]close">
   </a>
   <table>
@@ -55,7 +55,7 @@ function updateFeature(event) {
   const target = $(event.target);
   const row = target.parent().parent();
   const feature = target.data('feature');
-  const format = feature.get('format');
+  const format = feature.get('_format');
   const templateColumns = feature.get('_templateColumns');
   if (target.hasClass('possible')) {
     const index = target.val() * 1;
@@ -91,7 +91,7 @@ function updateGeocode(row, feature, location, templateColumns) {
     const value = key === 'address' ? getAddress(geocode) : geocode[gocodeProps[key]];
     feature.set(prop, value);
     feature.set('_geocode', location);
-    feature.set('status', 'geocode');
+    feature.set('_status', 'geocode');
     row.find(`input[data-prop="${prop}"]`).val(value);
     row.find(`td.status`)
       .removeClass('ambiguous')
@@ -116,7 +116,7 @@ function appendStatus(tr, feature) {
     td.empty().append(select.on('change', updateFeature));
   }
     
-  feature.set('status', status);
+  feature.set('_status', status);
   tr.append(td);
 }
 
@@ -134,8 +134,8 @@ export default function csvTable(event) {
   const tbody = table.find('tbody');
   const props = features[0].getProperties();
   const columns = [];
+  const close = table.find('a.btn-close');
 
-  table.find('a.btn-close').on('click', () => table.fadeOut());
 
   header.append('<th>&nbsp</th><th class="status" data-i18n="csv.status"></th>');
   Object.keys(props).forEach(prop => {
@@ -146,7 +146,9 @@ export default function csvTable(event) {
   });
   legend.close();
   table.data('features', features);
-  createMenu(columnsMenu(table, columns));
+  
+  const form = createMenu(columnsMenu(table, columns));
+  close.on('click', () => form.fadeOut(() => table.fadeOut()));
 
   features.sort(compare);
   features.forEach((feature, i) => {

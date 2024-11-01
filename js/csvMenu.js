@@ -12,4 +12,5 @@ export default function create(ul) {
   const form = $(FORM);
   form.find('.dropdown').append(ul.addClass('dropdown-menu'));
   $('body').append(form.localize());
+  return form;
 }

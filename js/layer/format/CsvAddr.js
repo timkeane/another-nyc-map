@@ -49,7 +49,7 @@ class CsvAddr extends CsvPoint {
   }
   setGeometry(feature, source, options) {
     super.setGeometry(feature, source, options);
-    feature.set('format', this);
+    feature.set('_format', this);
     const coordinate = feature.getGeometry().getCoordinates();
     this.mustGeocode = isNaN(coordinate[0]) || isNaN(coordinate[1]);
     if (this.mustGeocode) {

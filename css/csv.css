@@ -127,7 +127,7 @@ button.translate div {
   margin-inline-start: -.5em;
 }
 
-a.btn-close.corner {
+a.btn-close.corner.csv-table {
   float: inline-end;
   font-size: .75em;
   padding: .5em .5em 0 0;
