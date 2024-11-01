@@ -5,6 +5,7 @@ import Layer from 'ol/layer/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
 import CsvAddr from './layer/format/CsvAddr';
 import Geocode from './locate/Geocode';
+import style from './layer/style/generic';
 
 const env = import.meta.env;
 
@@ -173,7 +174,7 @@ const Storage = {
       features = {type: 'FeatureCollection', features: features};
     }
     const source = new Source({format});
-    const layer = new Layer({source});
+    const layer = new Layer({source, style});
     if (!layer.get('name') && fileName) layer.set('file', fileName);
     source.addFeatures(format.readFeatures(features, options));
     map.addLayer(layer);

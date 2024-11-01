@@ -93,9 +93,14 @@ FeatureTip.Options;
 
 function generic(feature) {
   const properties = feature.getProperties();
-  const prop = properties.name ? 'name' : Object.keys(properties)[1];
-  const tip = properties[prop];
-  return {html: $(`<div><strong>${prop}:</strong> ${tip}</div>`)};
+  let prop = Object.keys(properties)[1];
+  if (Object.keys(properties).indexOf('name') > -1) prop = 'name';
+  if (Object.keys(properties).indexOf('Name') > -1) prop = 'Name';
+  if (Object.keys(properties).indexOf('NAME') > -1) prop = 'NAME';
+  if (Object.keys(properties).indexOf('address') > -1) prop = 'address';
+  if (Object.keys(properties).indexOf('Address') > -1) prop = 'Address';
+  if (Object.keys(properties).indexOf('ADDRESS') > -1) prop = 'ADDRESS';
+  return {html: $(`<div><strong>${prop}:</strong> ${properties[prop]}</div>`)};
 }
 
 export default function createFeatureTips(map) {
