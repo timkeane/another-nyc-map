@@ -7,6 +7,7 @@ const HTML = `<div class="csv-table">
   <a class="btn-close corner csv-table" href="#" aria-role="button"
     data-i18n="[title]close;[aria-label]close">
   </a>
+  <br>
   <table>
     <thead><tr></tr></thead>
     <tbody></tbody>
@@ -137,7 +138,7 @@ export default function csvTable(event) {
   const close = table.find('a.btn-close');
 
 
-  header.append('<th>&nbsp</th><th class="status" data-i18n="csv.status"></th>');
+  header.append('<th class="map">&nbsp</th><th class="status" data-i18n="csv.status"></th>');
   Object.keys(props).forEach(prop => {
     if (prop !== 'geometry' && prop.substring(0, 1) !== '_') {
       header.append(`<th data-prop="${prop}">${prop}</th>`);

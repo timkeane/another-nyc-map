@@ -1,6 +1,6 @@
 form.csv-menu {
   position: fixed;
-  top: calc(50% - 41px);
+  top: calc(50% - 17px);
   inset-inline-start: .25em;
   width: 200px;
   z-index: 100000;

@@ -594,6 +594,10 @@ div.csv-table th {
   border-right-color: var(--cOnPrimary);
 }
 
+div.csv-table th:last-of-type {
+  border-right-color: var(--cPrimary);
+}
+
 div.csv-table td input {
   padding: .25em;
   margin: 0;
@@ -605,7 +609,7 @@ div.csv-table td.status,
 div.csv-table th.status {
   padding: .25em;
   color: var(--cOnPrimary);
-  width: 125px;
+  width: 125  px;
 }
 
 div.csv-table td.status,
@@ -639,10 +643,14 @@ div.csv-table td.status.ambiguous select {
   width: 120px;
 }
 
-div.csv-table th:first-of-type,
+div.csv-table th.map,
 div.csv-table td.map {
   background-color: var(--cPrimary);
   border-color: var(--cOnPrimary);
+}
+
+div.csv-table th.map {
+  border-top-color: var(--cPrimary);
 }
 
 div.csv-table a.map-btn {
@@ -654,11 +662,11 @@ div.csv-table a.map-btn {
 
 div.csv-table td.map {
   background-image: url(/img/pin.svg);
-  background-image: url(/img/pin.svg);
   background-size: 1em;
   background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;
+  border-color: var(--cOnPrimary);
 }
 
 div.csv-table td.map:hover {
