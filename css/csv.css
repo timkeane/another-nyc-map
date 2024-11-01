@@ -16,16 +16,16 @@ div.csv-table table {
   border: 1px solid var(--cPrimary);
 }
 
-div.csv-table td {
-  border: 1px solid var(--cPrimary);
-  padding: 0;
-}
-
 div.csv-table th {
   padding: .25em;
   background-color: var(--cPrimary);
   color: var(--cOnPrimary);
   border-left: 1px solid var(--cOnPrimary);
+}
+
+div.csv-table td {
+  border: 1px solid var(--cPrimary);
+  padding: 0;
 }
 
 div.csv-table td input {
