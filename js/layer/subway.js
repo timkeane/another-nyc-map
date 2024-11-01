@@ -46,8 +46,9 @@ const subwayStation = new WebGLVectorLayer({
 subwayStation.set('name', 'subway.station');
 subwayStation.set('html', subwayStationHtml);
 subwayStation.set('tip', subwayStationTip);
+window.subwayStation=subwayStation;
 
 const group = new LayerGroup({layers: [sirLine, subwayLine, subwayStation]});
 group.set('name', 'subway');
 
-export default group ;
+export default group;

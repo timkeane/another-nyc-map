@@ -2,9 +2,10 @@ import $ from 'jquery';
 import createMenu from './csvMenu';
 import {nextId} from './util';
 import Point from 'ol/geom/Point';
+import proj4 from 'proj4';
 
 const HTML = `<div class="csv-table">
-  <a class="btn-close corner csv-table" href="#" aria-role="button"
+  <a class="btn-close corner white csv-table" href="#" aria-role="button"
     data-i18n="[title]close;[aria-label]close">
   </a>
   <br>
@@ -39,7 +40,8 @@ function columnsMenu(table, columns) {
   columns.forEach(column => {
     const id = nextId('column');
     const label = $(`<label for="${id}">${column}</label>`);
-    const check = $(`<input id="${id}" name="${id}" type="checkbox" class="form-check-input" checked>`)
+    const checked = ['longitude', 'latitude'].indexOf(column) === -1 ? 'checked' : '';
+    const check = $(`<input id="${id}" name="${id}" type="checkbox" class="form-check-input" ${checked}>`)
       .data('csv-table', table)
       .data('csv-column', column)
       .on('change', showHideColumn);
@@ -56,12 +58,12 @@ function updateFeature(event) {
   const target = $(event.target);
   const row = target.parent().parent();
   const feature = target.data('feature');
-  const format = feature.get('_format');
-  const templateColumns = feature.get('_templateColumns');
+  const format = feature.get('__format');
+  const templateColumns = feature.get('__templateColumns');
   if (target.hasClass('possible')) {
     const index = target.val() * 1;
     if (index > -1) {
-      const geocode = feature.get('_geocode');
+      const geocode = feature.get('__geocode');
       const location = geocode.possible[index];
       feature.setGeometry(new Point(location.coordinate));
       updateGeocode(row, feature, location, templateColumns);
@@ -75,7 +77,7 @@ function updateFeature(event) {
     feature.set(newFeature.getProperties());
     format.geocodeFeature(feature);
     feature.once('change', () => {
-      updateGeocode(row, feature, feature.get('_geocode'), templateColumns);
+      updateGeocode(row, feature, feature.get('__geocode'), templateColumns);
     });
     }
   }
@@ -86,13 +88,18 @@ function updateGeocode(row, feature, location, templateColumns) {
     city: 'uspsPreferredCityName',
     zip: 'zipCode'
   };
+  const lngLat = proj4('EPSG:3857', 'EPSG:4326', feature.getGeometry().getCoordinates());
+  feature.set('longitude', lngLat[0]);
+  feature.set('latitude', lngLat[1]);
+  row.find('input[data-prop="longitude"]').val(lngLat[0]);
+  row.find('input[data-prop="latitude"]').val(lngLat[1]);
   Object.keys(templateColumns).forEach(key => {
     const prop = templateColumns[key];
     const geocode = location.data;
     const value = key === 'address' ? getAddress(geocode) : geocode[gocodeProps[key]];
     feature.set(prop, value);
-    feature.set('_geocode', location);
-    feature.set('_status', 'geocode');
+    feature.set('__geocode', location);
+    feature.set('__status', 'geocode');
     row.find(`input[data-prop="${prop}"]`).val(value);
     row.find(`td.status`)
       .removeClass('ambiguous')
@@ -103,7 +110,7 @@ function updateGeocode(row, feature, location, templateColumns) {
 }
 
 function appendStatus(tr, feature) {
-  const geocode = feature.get('_geocode');
+  const geocode = feature.get('__geocode');
   
   const status = geocode?.type || 'error';
   const td = $(`<td data-prop="status" class="status ${status}">${status}</td>`)
@@ -117,7 +124,7 @@ function appendStatus(tr, feature) {
     td.empty().append(select.on('change', updateFeature));
   }
     
-  feature.set('_status', status);
+  feature.set('__status', status);
   tr.append(td);
 }
 
@@ -140,7 +147,7 @@ export default function csvTable(event) {
 
   header.append('<th class="map">&nbsp</th><th class="status" data-i18n="csv.status"></th>');
   Object.keys(props).forEach(prop => {
-    if (prop !== 'geometry' && prop.substring(0, 1) !== '_') {
+    if (prop !== 'geometry' && prop.substring(0, 2) !== '__') {
       header.append(`<th data-prop="${prop}">${prop}</th>`);
       columns.push(prop);
     }
@@ -165,9 +172,9 @@ export default function csvTable(event) {
     tr.append(td.append(a));
     appendStatus(tr, feature);
     tbody.append(tr);
-    feature.set('_templateColumns', templateColumns);
+    feature.set('__templateColumns', templateColumns);
     Object.keys(props).forEach(prop => {
-      if (prop !== 'geometry' && prop.substring(0, 1) !== '_') {
+      if (prop !== 'geometry' && prop.substring(0, 2) !== '__') {
         const templateAddress = prop === templateColumns[0] ? 'template-address' : '';
         const templateCity = prop === templateColumns[1] ? 'template-city' : '';
         const input = $(`<input class="${templateAddress} ${templateCity}" name="prop${i}" data-prop="${prop}" type="text" value="${props[prop]}" autocomplete="off"></input>`)
@@ -178,5 +185,8 @@ export default function csvTable(event) {
         }
     });
   });
+  tbody.find('input[data-prop="longitude"], input[data-prop="latitude"]').prop('readonly', true);
   $('body').append(table.localize());
 }
+
+window.$=$

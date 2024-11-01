@@ -130,7 +130,8 @@ export function showLocationTemplate(source, callback) {
   returnColumns = callback;
   title.attr('data-i18n', 'geocode.csv');
   templateForm.find('select').each((i, select) => {
-    $(select).append(`<option value="0" data-i18n="csv.${select.name}"></option>`)
+    $(select).empty()
+      .append(`<option value="0" data-i18n="csv.${select.name}"></option>`)
       .append('<option value="0" data-i18n="csv.none"></option>');
     Object.keys(source).forEach(column => {
       if (column !== 'undefined') {

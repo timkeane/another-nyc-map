@@ -1,7 +1,7 @@
 form.csv-menu {
   position: fixed;
-  top: calc(50% - 17px);
-  inset-inline-start: .25em;
+  top: calc(50% - 1em);
+  inset-inline-start: 0.2em;
   width: 200px;
   z-index: 100000;
   display: block;
@@ -10,7 +10,6 @@ form.csv-menu {
 
 form.csv-menu button {
   float: inline-start;
-  margin-inline-end: .25em;
 }
 
 form.csv-menu ul {

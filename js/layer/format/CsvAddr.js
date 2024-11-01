@@ -19,12 +19,15 @@ class CsvAddr extends CsvPoint {
     return features;
   }
   setGeocode(feature, geocode) {
-    const input = feature.get('_input');
-    const source = feature.get('_source');
-    feature.set('_geocode', geocode);
-    if (geocode.type === 'geocode') {
+    const input = feature.get('__input');
+    const source = feature.get('__source');
+    feature.set('__geocode', geocode);
+  if (geocode.type === 'geocode') {
       console.info('Geocoded:', input, source, 'geocode response:', geocode);
       feature.setGeometry(new Point(geocode.coordinate));
+      const lngLat = new Point(geocode.coordinate).transform('EPSG:3857', 'EPSG:4326').getCoordinates();
+      feature.set('longitude', lngLat[0]);
+      feature.set('latitude', lngLat[1]);
     } else {
       console.warn('Ambiguous location:', input, source, 'geocode response:', geocode);
       feature.dispatchEvent('change', {target: feature});
@@ -49,7 +52,7 @@ class CsvAddr extends CsvPoint {
   }
   setGeometry(feature, source, options) {
     super.setGeometry(feature, source, options);
-    feature.set('_format', this);
+    feature.set('__format', this);
     const coordinate = feature.getGeometry().getCoordinates();
     this.mustGeocode = isNaN(coordinate[0]) || isNaN(coordinate[1]);
     if (this.mustGeocode) {
@@ -70,8 +73,10 @@ class CsvAddr extends CsvPoint {
     let changed = false;
     const source = feature.getProperties();
     const input = replace(this.locationTemplate, source);
-    feature.set('_input', input);
-    feature.set('_source', source);
+    feature.set('__input', input);
+    feature.set('__source', source);
+    feature.set('longitude', undefined);
+    feature.set('latitude', undefined);
     if (input.replace(/\,/g, '').trim() === '') {
       feature.dispatchEvent({type: 'change', target: feature});
       console.error('Invalid location:', input, 'Bad record:', source);

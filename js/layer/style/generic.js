@@ -3,13 +3,15 @@ import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import Circle from 'ol/style/Circle';
 
+const env = import.meta.env;
+
 const fill = new Fill({
-  color: 'rgba(0, 0, 0, .25)',
+  color: env.VITE_GENERIC_FILL_COLOR,
 });
 
 const stroke = new Stroke({
-  color: 'rgba(0 0, 0 ,.5)',
-  width: 2,
+  color: env.VITE_GENERIC_STROKE_COLOR,
+  width: env.VITE_GENERIC_STROKE_WIDTH,
 });
    
 export default [
