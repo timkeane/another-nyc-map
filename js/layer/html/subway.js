@@ -18,7 +18,8 @@ function appendRouteIcons(html, subways, linkId) {
   subways.forEach(subway => {
     const img = `<img src="img/subway-${subway}.svg" alt="${subway}">`;
     if (linkId) {
-      const a = parameterizeLink(links.layer[linkId], img, {subway});
+      const id = subway === 'SIR' ? 'sirLine' : linkId;
+      const a = parameterizeLink(links.layer[id], img, {subway});
       html.append(a);
     } else {
       html.append(img);
