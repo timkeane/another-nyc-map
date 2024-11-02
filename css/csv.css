@@ -24,10 +24,14 @@ div.csv-table table {
 }
 
 div.csv-table th {
+  position: sticky;
+  top: 0;
   padding: .25em;
   background-color: var(--cPrimary);
   color: var(--cOnPrimary);
-  border-left: 1px solid var(--cOnPrimary);
+  border-top: 2px solid var(--cOnPrimary) !important;
+  border-bottom: 2px solid var(--cOnPrimary) !important;
+  border-left: 2px solid var(--cOnPrimary) !important;
 }
 
 div.csv-table td {
