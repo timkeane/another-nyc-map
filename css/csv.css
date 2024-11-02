@@ -1,6 +1,6 @@
 div.csv-table {
   position: fixed;
-  top: 50%;
+  top: 60%;
   left: 0;
   bottom: 0;
   max-width: 100%;
@@ -82,6 +82,64 @@ div.csv-table td.status.ambiguous {
   padding: 0;
 }
 
+div.csv-table input[data-prop="longitude"],
+div.csv-table input[data-prop="latitude"] {
+  text-align: end;
+}
+
+div.csv-table th.delete,
+div.csv-table td.delete,
+div.csv-table th.map,
+div.csv-table td.map {
+  background-color: var(--cPrimary);
+}
+
+div.csv-table th.delete,
+div.csv-table th.map {
+  border-bottom-color: var(--cOnPrimary);
+}
+
+div.csv-table th.delete {
+  border-right-color: var(--cPrimary);
+}
+
+div.csv-table th.map {
+  border-left-color: var(--cPrimary) !important;
+}
+
+div.csv-table td.delete,
+div.csv-table td.map {
+  border-color: var(--cOnPrimary);
+  background-size: 1em;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+div.csv-table td.delete {
+  background-image: url(/img/delete.svg);
+  background-size: 75%;
+}
+
+div.csv-table td.map {
+  background-image: url(/img/map.svg);
+}
+
+div.csv-table td.delete:hover,
+div.csv-table td.map:hover {
+  background-color: var(--cSecondary);
+  border-color: var(--cSecondary);
+}
+
+div.csv-table td.delete:hover {
+  background-image: url(/img/delete-hover.svg);
+}
+
+div.csv-table td.map:hover {
+  background-image: url(/img/map-hover.svg);
+}
+
+div.csv-table a.delete-btn,
 div.csv-table a.map-btn {
   width: 31px;
   height: 31px;
@@ -89,53 +147,3 @@ div.csv-table a.map-btn {
   background-color: transparent;
 }
 
-/* div.csv-table th[data-prop="longitude"],
-div.csv-table th[data-prop="latitude"],
-div.csv-table td[data-prop="longitude"],
-div.csv-table td[data-prop="latitude"] {
-  display: none;
-} */
-
-div.csv-table input[data-prop="longitude"],
-div.csv-table input[data-prop="latitude"] {
-  text-align: end;
-}
-/* 
-a.btn-close.csv-table {
-  background-color: var(--cPrimary);
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  position: absolute;
-  top: .5em;
-  inset-inline-end: 0;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-} */
-
- div.csv-table th.map,
-div.csv-table td.map {
-  background-color: var(--cPrimary);
-}
-
-div.csv-table th.map {
-  border-bottom-color: var(--cOnPrimary);
-}
-
-div.csv-table td.map {
-  border-color: var(--cOnPrimary);
-}
-
-div.csv-table td.map {
-  background-image: url(/img/pin.svg);
-  background-size: 1em;
-  background-position: center;
-  background-repeat: no-repeat;
-  cursor: pointer;
-}
-
-div.csv-table td.map:hover {
-  background-color: var(--cSecondary);
-  background-image: url(/img/pin-hover.svg);
-  border-color: var(--cSecondary);
-}

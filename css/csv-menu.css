@@ -1,14 +1,13 @@
 form.csv-menu {
   position: fixed;
-  top: calc(50% - 2.95em);
+  top: calc(60% - 2.95em);
   inset-inline-start: .25em;
   z-index: 100000;
   border-radius: .25em;
-  background-color: var(--tipBg);
-  border: 1px solid var(--borderSubtle);
+  background-color: var(--formBg);
   padding: .25em 0 .25em .25em;
   display: grid;
-  grid-template-columns: fit-content(1px) fit-content(1px) fit-content(1px) fit-content(1px);
+  grid-template-columns: fit-content(1px) fit-content(1px) fit-content(1px) fit-content(1px) fit-content(1px) fit-content(1px);
   grid-gap: 0;
   box-sizing: border-box;
 }
@@ -16,7 +15,8 @@ form.csv-menu {
 form.csv-menu a.btn-close,
 form.csv-menu h2,
 form.csv-menu .dropdown,
-form.csv-menu .save {
+form.csv-menu .save,
+form.csv-menu .add {
   margin-right: .25em;
 }
 
@@ -45,23 +45,61 @@ form.csv-menu label {
 }
 
 form.csv-menu .save,
+form.csv-menu .add,
+form.csv-menu .dropdown-toggle,
 form.csv-menu .dropdown,
 form.csv-menu .dropdown button {
   height: 33px;
+  width: 33px;
   padding: 0;
 }
 
-form.csv-menu .dropdown {
+form.csv-menu ul {
+  border-radius: .25em;
 }
 
 form.csv-menu .dropdown button {
   padding: 0 .5em;
 }
 
-form.csv-menu .save {
-  width: 33px;
-  background-image: url(../img/save.svg);
+form.csv-menu .save,
+form.csv-menu .add,
+form.csv-menu .dropdown-toggle {
   background-position: center;
-  background-size: 30px;
+  background-repeat: no-repeat;
+}
 
+form.csv-menu .save {
+  background-image: url(../img/save.svg);
+  background-size: 55%;
+}
+
+form.csv-menu .save:hover {
+  background-image: url(../img/save-hover.svg);
+}
+
+
+form.csv-menu .add {
+  background-image: url(../img/add.svg);
+  background-size: 70%;
+}
+
+form.csv-menu .add:hover {
+  background-image: url(../img/add-hover.svg);
+}
+
+
+
+
+form.csv-menu .dropdown-toggle {
+  background-image: url(../img/column.svg);
+  background-size: 60%;
+}
+
+form.csv-menu .dropdown-toggle:hover {
+  background-image: url(../img/column-hover.svg);
+}
+
+form.csv-menu .dropdown-toggle::after {
+  display: none;
 }

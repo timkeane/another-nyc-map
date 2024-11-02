@@ -12,7 +12,7 @@ const geoclientProps = {
 };
 
 function getAddress(location) {
-  return `${location.houseNumber} ${location.firstStreetNameNormalized}`;
+  return `${location.houseNumber || ''} ${location.firstStreetNameNormalized}`.trim();
 }
 
 function getCsvRow() {
@@ -48,12 +48,12 @@ class CsvAddr extends CsvPoint {
   }
   setGeocode(feature, geocode) {
     const input = feature.get('__input');
-    const source = feature.get('__source');
+    const props = feature.get('__props');
     feature.set('__geocode', geocode);
     if (geocode.type === 'geocode') {
       const lngLat = new Point(geocode.coordinate).transform('EPSG:3857', 'EPSG:4326').getCoordinates();
       const location = geocode.data;
-      console.info('Geocoded:', input, source, 'geocode response:', geocode);
+      console.info('Geocoded:', input, props, 'geocode response:', geocode);
       feature.setGeometry(new Point(geocode.coordinate));
       feature.set('longitude', lngLat[0]);
       feature.set('latitude', lngLat[1]);
@@ -64,7 +64,7 @@ class CsvAddr extends CsvPoint {
       });
       feature.dispatchEvent('geocode', {target: feature});
     } else {
-      console.warn('Ambiguous location:', input, source, 'geocode response:', geocode);
+      console.warn('Ambiguous location:', input, props, 'geocode response:', geocode);
       feature.dispatchEvent('ambiguous', {target: feature});
     }
     feature.dispatchEvent('change', {target: feature});
@@ -105,23 +105,23 @@ class CsvAddr extends CsvPoint {
   }
   geocodeFeature(feature) {
     let changed = false;
-    const source = feature.getProperties();
-    const input = replace(this.locationTemplate, source);
+    const props = feature.getProperties();
+    const input = replace(this.locationTemplate, props);
     feature.getCsvRow = getCsvRow.bind(feature);
     feature.set('__input', input);
-    feature.set('__source', source);
+    feature.set('__props', props);
     feature.set('__geocode', undefined);
     feature.set('longitude', undefined);
     feature.set('latitude', undefined);
     if (input.replace(/\,/g, '').trim() === '') {
       feature.dispatchEvent({type: 'change', target: feature});
-      console.error('Invalid location:', input, 'Bad record:', source);
+      console.error('Invalid location:', input, 'Bad record:', props);
     } else {
       this.geocode.locate(input).then(geocode => {
         this.setGeocode(feature, geocode);
         changed = true;
       }).catch(error => {
-        console.error('Geocoding error:', input, source, 'geocode response:', error);
+        console.error('Geocoding error:', input, props, 'geocode response:', error);
       }).finally(() => {
         if (changed) {
           feature.dispatchEvent({type: 'change', target: feature});

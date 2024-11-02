@@ -219,9 +219,6 @@ function createPopup(map, coordinate, name, html, highlight) {
   popup.on('mousedown', bringToTop);
   overlay.setPosition(coordinate);
 
-  window.overlays = window.overlays || [];
-  window.overlays.push(overlay);
-  
   popup.find('.btn-close').on('click', () => {
     popup.fadeOut(() => {
       removeHighlight(overlay.highlight);
