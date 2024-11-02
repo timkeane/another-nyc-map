@@ -1,11 +1,16 @@
 form.csv-menu {
   position: fixed;
-  top: calc(50% - 2.5em);
-  inset-inline-start: 0.2em;
-  width: 300px;
+  top: calc(50% - 2.95em);
+  inset-inline-start: .25em;
   z-index: 100000;
-  display: block;
   border-radius: .25em;
+  background-color: var(--tipBg);
+  border: 1px solid var(--borderSubtle);
+  padding: .25em 0 .25em .25em;
+  display: grid;
+  grid-template-columns: fit-content(1px) fit-content(1px) fit-content(1px) fit-content(1px);
+  grid-gap: 0;
+  box-sizing: border-box;
 }
 
 form.csv-menu a.btn-close,
@@ -13,7 +18,14 @@ form.csv-menu h2,
 form.csv-menu .dropdown,
 form.csv-menu .save {
   margin-right: .25em;
-  float: inline-start;
+}
+
+form.csv-menu h2 {
+  order: 99;
+}
+
+form.csv-menu a.btn-close {
+  order: 100;
 }
 
 form.csv-menu ul {
@@ -25,15 +37,29 @@ form.csv-menu ul {
 form.csv-menu li {
   list-style: none;
   padding: .25em;
+  white-space: nowrap;
 }
 
 form.csv-menu label {
   padding-inline-start: .5em;
 }
 
+form.csv-menu .save,
+form.csv-menu .dropdown,
+form.csv-menu .dropdown button {
+  height: 33px;
+  padding: 0;
+}
+
+form.csv-menu .dropdown {
+}
+
+form.csv-menu .dropdown button {
+  padding: 0 .5em;
+}
+
 form.csv-menu .save {
-  width: 37px;
-  height: 37px;
+  width: 33px;
   background-image: url(../img/save.svg);
   background-position: center;
   background-size: 30px;

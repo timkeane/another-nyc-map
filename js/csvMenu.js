@@ -2,9 +2,6 @@ import $ from 'jquery';
 import Storage from './Storage';
 
 const FORM = `<form class="csv-menu">
-  <a class="btn-close corner" href="#" aria-role="button"
-    data-i18n="[title]close;[aria-label]close">
-  </a>
   <h2></h2>
   <button class="btn btn-primary save"
   data-i18n="[title]csv.save;[aria-label]csv.save">
@@ -14,6 +11,9 @@ const FORM = `<form class="csv-menu">
       data-bs-toggle="dropdown" aria-expanded="false" data-i18n="csv.columns">
     </button>
   </div>
+  <a class="btn-close corner" href="#" aria-role="button"
+    data-i18n="[title]close;[aria-label]close">
+  </a>
 </form>`;
 
 function save(layer) {
