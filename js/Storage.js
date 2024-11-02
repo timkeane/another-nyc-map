@@ -21,12 +21,19 @@ const Storage = {
   canDownload() {
     return 'download' in $('<a></a>').get(0);
   },
+  saveCsv(name, csv) {
+    const href = `data:application/csv;charset=utf-8,${encodeURIComponent(csv)}`;
+    const a = $('<a class="file-dwn"><img></a>');
+    $('body').append(a);
+    a.attr({href: href, download: name}).find('img').trigger('click');
+    a.remove();
+  },
   saveGeoJson(name, data) {
-    const href = `data:application/jsoncharset=utf-8,${encodeURIComponent(data)}`
-    const a = $('<a class="file-dwn"><img></a>')
-    $('body').append(a)
-    a.attr({href: href, download: name}).find('img').trigger('click')
-    a.remove()
+    const href = `data:application/json;charset=utf-8,${encodeURIComponent(data)}`;
+    const a = $('<a class="file-dwn"><img></a>');
+    $('body').append(a);
+    a.attr({href: href, download: name}).find('img').trigger('click');
+    a.remove();
   },
   setItem(key, data) {
     if ('localStorage' in window) {

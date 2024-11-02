@@ -3,6 +3,7 @@ import CsvPoint from './CsvPoint'
 import Point from 'ol/geom/Point'
 import {replace} from '../../util';
 import {showLocationTemplate} from '../../dialog';
+import papa from 'papaparse';
 
 const geoclientProps = {
   borough: 'firstBoroughName',
@@ -14,6 +15,16 @@ function getAddress(location) {
   return `${location.houseNumber} ${location.firstStreetNameNormalized}`;
 }
 
+function getCsvRow() {
+  const row = {};
+  Object.keys(this.getProperties()).forEach(prop => {
+    if (prop !== 'geometry' && prop.substring(0, 2) !== '__') {
+      row[prop] = this.get(prop);
+    }
+  });
+  return row;
+}  
+
 class CsvAddr extends CsvPoint {
   constructor(options) {
     super(options);
@@ -22,6 +33,13 @@ class CsvAddr extends CsvPoint {
     this.featureCount = undefined;
     this.geocodedCount = 0;
     this.notGeocoded = [];
+  }
+  writeFeatures(features, options) {
+    const rows = [];
+    features.forEach(feature => {
+      rows.push(feature.getCsvRow());
+    });
+    return papa.unparse(rows, {header: true});
   }
   readFeatures(source, options) {
     const features = super.readFeatures(source, options);
@@ -89,6 +107,7 @@ class CsvAddr extends CsvPoint {
     let changed = false;
     const source = feature.getProperties();
     const input = replace(this.locationTemplate, source);
+    feature.getCsvRow = getCsvRow.bind(feature);
     feature.set('__input', input);
     feature.set('__source', source);
     feature.set('__geocode', undefined);

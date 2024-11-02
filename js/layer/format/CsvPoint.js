@@ -1,10 +1,10 @@
-import Papa from 'papaparse';
+import papa from 'papaparse';
 import Feature from 'ol/Feature';
-import FormatFeature from 'ol/format/Feature';
+import FeatureFormat from 'ol/format/Feature';
 import {get as getProjection} from 'ol/proj';
 import Point from 'ol/geom/Point';
 
-class CsvPoint extends FormatFeature {
+class CsvPoint extends FeatureFormat {
   constructor(options) {
     options = options || {};
     super(options);
@@ -43,7 +43,7 @@ class CsvPoint extends FormatFeature {
       source = new TextDecoder().decode(source);
     }
     if (typeof source === 'string') {
-      source = Papa.parse(source, {header: true}).data;
+      source = papa.parse(source, {header: true}).data;
     }
     this.detectCsvFormat(source);
     return source;

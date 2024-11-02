@@ -44,6 +44,7 @@ export const translation = {
   "title.representative": "Representative",
   "title.junior.senator": "Junior Senator",
   "title.senior.senator": "Senior Senator",
+  "csv.save": "Save",
   "csv.columns": "Columns",
   "csv.sort": "Sort",
   "csv.status": "status",

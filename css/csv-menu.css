@@ -10,7 +10,8 @@ form.csv-menu {
 
 form.csv-menu a.btn-close,
 form.csv-menu h2,
-form.csv-menu .dropdown {
+form.csv-menu .dropdown,
+form.csv-menu .save {
   margin-right: .25em;
   float: inline-start;
 }
@@ -28,4 +29,13 @@ form.csv-menu li {
 
 form.csv-menu label {
   padding-inline-start: .5em;
+}
+
+form.csv-menu .save {
+  width: 37px;
+  height: 37px;
+  background-image: url(../img/save.svg);
+  background-position: center;
+  background-size: 30px;
+
 }

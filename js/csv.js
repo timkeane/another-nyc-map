@@ -23,20 +23,18 @@ function compare(f0, f1) {
 let columnState;
 function columnsMenu(table, feature) {
   const ul = $('<ul></ul>');
-  const props = feature.getProperties();
+  const row = feature.getCsvRow();
   columnState = {};
-  Object.keys(props).forEach(column => {
-    if (isDisplayColumn(column)) {
-      const id = nextId('column');
-      const label = $(`<label for="${id}">${column}</label>`);
-      const checked = ['longitude', 'latitude'].indexOf(column) === -1 ? 'checked' : '';
-      const check = $(`<input id="${id}" name="${id}" type="checkbox" class="form-check-input" ${checked}>`)
-        .data('csv-table', table)
-        .data('csv-column', column)
-        .on('change', showHideColumn);
-      ul.append($(`<li></li>`).append(check).append(label));
-      columnState[column] = checked;
-    }
+  Object.keys(row).forEach(column => {
+    const id = nextId('column');
+    const label = $(`<label for="${id}">${column}</label>`);
+    const checked = ['longitude', 'latitude'].indexOf(column) === -1 ? 'checked' : '';
+    const check = $(`<input id="${id}" name="${id}" type="checkbox" class="form-check-input" ${checked}>`)
+      .data('csv-table', table)
+      .data('csv-column', column)
+      .on('change', showHideColumn);
+    ul.append($(`<li></li>`).append(check).append(label));
+    columnState[column] = checked;
   });
   return ul;
 }
@@ -98,17 +96,11 @@ function appendStatus(tr, feature) {
   tr.append(td);
 }
 
-function isDisplayColumn(name) {
-  return name !== 'geometry' && name.substring(0, 2) !== '__';
-}
-
 function headerRow(header, feature) {
-  const props = feature.getProperties();
+  const row = feature.getCsvRow();
   header.append('<th class="map">&nbsp</th><th class="status" data-i18n="csv.status"></th>');
-  Object.keys(props).forEach(prop => {
-    if (isDisplayColumn(prop)) {
+  Object.keys(row).forEach(prop => {
       header.append(`<th data-prop="${prop}">${prop}</th>`);
-    }
   });
 }
 
@@ -117,7 +109,7 @@ function featureRow(feature) {
   const view = feature.get('__view');
   const format = feature.get('__format');
   const templateColumns = format.templateColumns;
-  const props = feature.getProperties();
+  const row = feature.getCsvRow();
   const a = $('<a href="#" class="map-btn" aria-role="button" data-i18n="csv.map"></a>');
   const td = $('<td class="map"></td>');
   const tr = feature.get('__htmlRow') || $('<tr></tr>');
@@ -131,16 +123,14 @@ function featureRow(feature) {
   tr.append(td.append(a));
   appendStatus(tr, feature);
   feature.set('__templateColumns', templateColumns);
-  Object.keys(props).forEach(prop => {
-    if (isDisplayColumn(prop)) {
-      const templateAddress = prop === templateColumns[0] ? 'template-address' : '';
-      const templateCity = prop === templateColumns[1] ? 'template-city' : '';
-      const input = $(`<input class="${templateAddress} ${templateCity}" name="${name}" data-prop="${prop}" type="text" value="${props[prop]}" autocomplete="off"></input>`)
-        .data('feature', feature)
-        .on('focus', () => input.trigger('select'))
-        .on('change', updateFeature);
-      tr.append($(`<td data-prop="${prop}"></td>`).append(input));
-    }
+  Object.keys(row).forEach(prop => {
+    const templateAddress = prop === templateColumns[0] ? 'template-address' : '';
+    const templateCity = prop === templateColumns[1] ? 'template-city' : '';
+    const input = $(`<input class="${templateAddress} ${templateCity}" name="${name}" data-prop="${prop}" type="text" value="${row[prop]}" autocomplete="off"></input>`)
+      .data('feature', feature)
+      .on('focus', () => input.trigger('select'))
+      .on('change', updateFeature);
+    tr.append($(`<td data-prop="${prop}"></td>`).append(input));
   });
   setColumnVisibility(tr);
   return tr;
@@ -170,7 +160,7 @@ export default function csvTable(event) {
 
   legend.close();
   
-  const form = createMenu(layer.get('name') || layer.get('file'), html, columnsMenu(table, features[0]));
+  const form = createMenu(layer, html, columnsMenu(table, features[0]));
 
   headerRow(header, features[0]);
 
