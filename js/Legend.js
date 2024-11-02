@@ -2,22 +2,25 @@ import $ from 'jquery';
 import {showLoad} from './dialog';
 import {nextId} from './util';
 import csvTable from './csv';
+import Control from 'ol/control/Control';
 
-const HTML = `<div class="legend">
-  <h2 class="dialog-header">
-    Layers
-    <a class="btn-close corner" href="#" aria-role="button"
-      data-i18n="[title]close;[aria-label]close">
-    </a>
-  </h2>
-    <select class="form-control form-select basemap" name="basemap"
-      data-i18n="[title]legend.basemap.choose;[aria-label]legend.basemap.choose">
-      <option value="basemap" data-i18n="layer.basemap"></option>
-    </select>
-  <ul></ul>
-  <button class="ol-control btn btn-primary load-layer"
-    data-i18n="[title]legend.layer.load;[aria-label]legend.layer.load">
-  </button>
+const HTML = `<div>
+  <div class="legend">
+    <h2 class="dialog-header">
+      Layers
+      <a class="btn-close corner" href="#" aria-role="button"
+        data-i18n="[title]close;[aria-label]close">
+      </a>
+    </h2>
+      <select class="form-control form-select basemap" name="basemap"
+        data-i18n="[title]legend.basemap.choose;[aria-label]legend.basemap.choose">
+        <option value="basemap" data-i18n="layer.basemap"></option>
+      </select>
+    <ul></ul>
+    <button class="ol-control btn btn-primary load-layer"
+      data-i18n="[title]legend.layer.load;[aria-label]legend.layer.load">
+    </button>
+  </div>
   <button class="ol-control btn btn-primary legend-opener"
     data-i18n="[title]legend.open;[aria-label]legend.open">
   </button>
@@ -25,18 +28,19 @@ const HTML = `<div class="legend">
 
 class Legend {
   constructor(options) {
-    const legend = $(HTML).localize();
-    const openBtn = legend.find('button.legend-opener');
+    const html = $(HTML).localize();
+    const legend = html.find('.legend');
+    const openBtn = html.find('button.legend-opener');
     const loadBtn = legend.find('button.load-layer');
-
-    $(options.target).append(legend).append(openBtn);
-    $(options.target).append();
+    this.map = options.map;
+    this.map.addControl(new Control({
+      element: $('<div></div>').append(legend).append(openBtn).get(0)
+    }));
 
     legend.find('.btn-close').on('click', this.close.bind(this));
     openBtn.on('click', this.open.bind(this));
     loadBtn.on('click', this.load.bind(this));
 
-    this.map = options.map;
     this.view = this.map.getView();
     this.legend = legend;
     this.openBtn = openBtn;

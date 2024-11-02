@@ -3,7 +3,8 @@ import GeoJSON from 'ol/format/GeoJSON';
 import Overlay from 'ol/Overlay';
 import {plutoHtml, bbl} from '../layer/html/pluto';
 import {embelishWithGeoclient, highlightByCoordinate, removeHighlight} from './pluto';
-import Drag from '../Drag';
+import {nextId} from '../util';
+import LineString from 'ol/geom/LineString';
 
 const HTML = `<div class="popup-overlay">
   <div class="popup">
@@ -20,6 +21,139 @@ const HTML = `<div class="popup-overlay">
 
 const env = import.meta.env;
 const format = new GeoJSON();
+const instances = {};
+
+function drag(event) {
+  const instanceId = $(event.target).data('instanceId');
+  const instance = instances[instanceId];
+  if (instance && instance.on) {
+    event.preventDefault();
+    instance.pos1 = instance.pos3 - event.clientX;
+    instance.pos2 = instance.pos4 - event.clientY;
+    instance.pos3 = event.clientX;
+    instance.pos4 = event.clientY;
+    instance.dragElem.css({
+      top: `${instance.dragElem.get(0).offsetTop - instance.pos2}px`,
+      left: `${instance.dragElem.get(0).offsetLeft - instance.pos1}px`
+    });
+    tail(instanceId);  
+  }
+}
+
+function tail(instanceId) {
+  const instance = instances[instanceId];
+  const dragElem = instance.dragElem;
+  const svg = dragElem.find('path');
+  if (instance) {
+    const map = instance.overlay.getMap();
+    const coordinate = instance.overlay.getPosition();
+    const position = map.getPixelFromCoordinate(coordinate);
+    const box = getBox(dragElem);
+    const distance = [];
+    Object.keys(box).forEach(corner => {
+      const length = new LineString([position, box[corner]]).getLength();
+      distance.push({corner, length});
+    })
+    distance.sort((a, b) => {
+      if (a.length < b.length) return -1;
+      if (a.length > a.length) return 1;
+      return 0;
+    });    
+    adjustTail(instance, svg, box, position, distance[0].corner);
+  }
+}
+
+function getBox(dragElem) {
+  const popup = dragElem.find('.popup');
+  const box = popup.get(0).getBoundingClientRect();
+  return {
+    ll: [box.left, box.bottom],
+    lr: [box.right, box.bottom],
+    ur: [box.right, box.top],
+    ul: [box.left, box.top]
+  }
+}
+
+function adjustTail(instance, svg, box, position, cr) {
+  const path = svg.attr('d');
+  const parts = path.split(' ');
+  const w = Math.floor(box.lr[0] - box.ll[0]);
+  const h = Math.floor(box.ll[1] - box.ul[1]);
+  let start;
+  let end;
+
+  if (cr === 'll' && box.ll[1] < position[1]) {
+    start = 'M40 0';
+    end = 'L20 0';
+  }
+  if (cr === 'lr' && box.ll[1] < position[1]) {
+    start = `M${w - 19} 0`;
+    end = `L${w - 39} 0`;
+  }
+
+  if (cr === 'll' && box.ll[1] >= position[1]) {
+    start = 'M1 -20';
+    end = 'L1 -40';
+  }
+  if (cr === 'lr' && box.ll[1] >= position[1]) {
+    start = `M${w - 1} -20`;
+    end = `L${w - 1} -40`;
+  }
+
+  if (cr === 'ul' && box.ul[1] < position[1]) {
+    start = `M1 -${h - 39}`;
+    end = `L1 -${h - 19}`;
+  }
+  if (cr === 'ur' && box.ul[1] < position[1]) {
+    start = `M${w - 1} -${h - 39}`;
+    end = `L${w - 1} -${h - 19}`;
+  }
+
+  if (cr === 'ul' && box.ul[1] >= position[1]) {
+    start = `M20 -${h - 2}`;
+    end = `L40 -${h - 2}`;
+  }
+  if (cr === 'ur' && box.ul[1] >= position[1]) {
+    start = `M${w - 19} -${h - 2}`;
+    end = `L${w - 39} -${h - 2}`;
+  }
+
+  const mid = `L${(parts[2].substring(1) * 1) + instance.pos1} ${(parts[3] * 1) + instance.pos2}`;
+  svg.attr('d', `${start} ${mid} ${end}`);
+}
+
+
+function up(event) {
+  Object.values(instances).forEach(instance => instance.on = false)
+}
+
+function down(event) {
+  const instanceId = $(event.target).data('instanceId');
+  const instance = instances[instanceId];
+  event.preventDefault();
+  if (instance) {
+    instance.on = true;
+    instance.pos3 = event.clientX;
+    instance.pos4 = event.clientY;
+    $(document).one('mouseup', up);
+    $(document).on('mousemove', drag);
+  }
+}
+
+class Drag {
+  constructor(overlay) {
+    const instanceId = nextId('drag');
+    this.overlay = overlay;
+    this.dragElem = $(overlay.getElement()).parent().data('instanceId', instanceId);
+    this.dragHandle = $(overlay.getElement()).find('h2').data('instanceId', instanceId);
+    this.pos1 = 0;
+    this.pos2 = 0;
+    this.pos3 = 0;
+    this.pos4 = 0;
+    instances[instanceId] = this;
+    this.dragHandle.on('mousedown', down);
+  }
+}
 
 const layerFilter = function(layer) {
   return layer.get('name') !== 'highlight';
@@ -65,6 +199,7 @@ function createPopup(map, coordinate, name, html, highlight) {
   const popup = $(HTML);
   const title = popup.find('h2');
   const css = name.replace(/ /g, '-').replace(/\./g, '-');
+
   title.attr('data-i18n', `layer.${name}`);
   popup.find('.popup-content').html(html).addClass(css);
   popup.localize();
@@ -75,9 +210,10 @@ function createPopup(map, coordinate, name, html, highlight) {
     autoPan: {animation: {duration: 250}},
     className: 'ol ol-overlay-container ol-selectable'
   });
+
   overlay.highlight = highlight;
   map.addOverlay(overlay);
-  new Drag(popup.parent(), title);
+  new Drag(overlay);
 
   popup.parent().css('z-index', $('.popup-overlay').length);
   popup.on('mousedown', bringToTop);

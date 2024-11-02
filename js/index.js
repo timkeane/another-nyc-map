@@ -29,7 +29,7 @@ initI18n().then(() => {
   $('#map .ol-zoom-in').attr('data-i18n', '[title]map.zoom.out;[aria-label]map.zoom.out');
 
   new Form({map, geocode});
-  new Legend({target: 'body', map, layers});
+  new Legend({map, layers});
 
   map.on('rendercomplete', () => {
     $('body').removeClass('loading');

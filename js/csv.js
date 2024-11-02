@@ -12,11 +12,8 @@ const HTML = `<div class="csv-table">
 function compare(f0, f1) {
   const status0 = f0.get('status');
   const status1 = f1.get('status');
-  if (status0 < status1) {
-    return -1;
-  } else if (status0 > status1) {
-    return 1;
-  }
+  if (status0 < status1) return -1;
+  if (status0 > status1) return 1;
   return 0;
 }
 
@@ -175,5 +172,3 @@ export default function csvTable(event) {
   tbody.find('input[data-prop="longitude"], input[data-prop="latitude"]').prop('readonly', true);
   $('body').append(html.localize());
 }
-
-window.$=$

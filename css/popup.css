@@ -4,6 +4,7 @@
 
 .popup-overlay {
   position: absolute;
+  width: 0;
   inset-block-end: -10px;
   inset-inline-start: -30px;
 }
