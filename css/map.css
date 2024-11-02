@@ -55,12 +55,13 @@ button.ol-control  {
 }
 
 .ol-scale-bar {
+  position: fixed;
   inset-inline-start: 2em;
   bottom: .25em;
 }
 
 .north-arrow {
-  position: absolute;
+  position: fixed;
   bottom: .25em;
   inset-inline-start: -.25em;
   width: 36px;

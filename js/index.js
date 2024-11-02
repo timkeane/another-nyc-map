@@ -30,7 +30,19 @@ initI18n().then(() => {
   new Form({map, geocode});
   new Legend({map, layers});
 
-  map.on('rendercomplete', () => {
+  function ready() {
     $('body').removeClass('loading');
+    setTimeout(() => $('h1.banner').slideUp(), 20000);
+    map.un('rendercomplete', ready);
+  }
+  map.on('rendercomplete', ready);
+
+  $(document).on('mousemove', event => {
+    if (event.clientY === 0) {
+      $('h1.banner')
+        .on('click', () => $('h1.banner').slideUp())
+        .slideDown(() => setTimeout(() => $('h1.banner').slideUp(), 5000));
+
+    }
   });
 });
