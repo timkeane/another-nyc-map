@@ -3,10 +3,6 @@ import createMenu from './csvMenu';
 import {nextId} from './util';
 
 const HTML = `<div class="csv-table">
-  <a class="btn-close corner white csv-table" href="#" aria-role="button"
-    data-i18n="[title]close;[aria-label]close">
-  </a>
-  <br>
   <table>
     <thead><tr></tr></thead>
     <tbody></tbody>
@@ -166,15 +162,15 @@ export default function csvTable(event) {
   const source = layer.getSource();
   const legend = $(event.target).data('legend');
   const features = source.getFeatures();
-  const table = $(HTML);
+  const html = $(HTML);
+  const table = html.find('table');
   const header = table.find('thead tr');
   const tbody = table.find('tbody');
-  const close = table.find('a.btn-close');
+  const close = html.find('a.btn-close');
 
   legend.close();
   
-  const form = createMenu(columnsMenu(table, features[0]));
-  close.on('click', () => form.fadeOut(() => table.fadeOut()));
+  const form = createMenu(html, columnsMenu(table, features[0]));
 
   headerRow(header, features[0]);
 
@@ -187,7 +183,7 @@ export default function csvTable(event) {
   setColumnVisibility(table);
 
   tbody.find('input[data-prop="longitude"], input[data-prop="latitude"]').prop('readonly', true);
-  $('body').append(table.localize());
+  $('body').append(html.localize());
 }
 
 window.$=$

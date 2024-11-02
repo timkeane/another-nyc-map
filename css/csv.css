@@ -10,6 +10,13 @@ div.csv-table {
   padding: 0;
 }
 
+div.csv-table h2 {
+  text-align: end;
+  overflow: visible;
+  margin: 0;
+  height: 2em;
+}
+
 div.csv-table table {
   border-collapse: collapse;
   background-color: var(--popupBg);
@@ -89,7 +96,7 @@ div.csv-table input[data-prop="longitude"],
 div.csv-table input[data-prop="latitude"] {
   text-align: end;
 }
-
+/* 
 a.btn-close.csv-table {
   background-color: var(--cPrimary);
   width: 20px;
@@ -100,7 +107,7 @@ a.btn-close.csv-table {
   inset-inline-end: 0;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-}
+} */
 
  div.csv-table th.map,
 div.csv-table td.map {

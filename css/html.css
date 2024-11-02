@@ -3,20 +3,6 @@ html, body {
   inset: 0;
 }
 
-::-webkit-scrollbar {
-  inline-size: 15px;
-  block-size: 15px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--scrollbarBg);
-  border-radius: 0.25em;
-  border-left: 2px solid var(--cOnPrimary);
-  border-right: 2px solid var(--cOnPrimary);
-  max-block-size: 50px !important;
-  visibility: hidden;
-}
-
 h1, h2, h3, h4, h5, h6 {
   border-radius: .25em;
   font-size: 16px;

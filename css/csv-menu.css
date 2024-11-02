@@ -1,15 +1,11 @@
 form.csv-menu {
   position: fixed;
-  top: calc(50% - 1em);
+  top: calc(50% - 2.5em);
   inset-inline-start: 0.2em;
-  width: 200px;
+  width: 130px;
   z-index: 100000;
   display: block;
-  background-color: transparent;
-}
-
-form.csv-menu button {
-  float: inline-start;
+  border-radius: .25em;
 }
 
 form.csv-menu ul {
@@ -26,3 +22,13 @@ form.csv-menu li {
 form.csv-menu label {
   padding-inline-start: .5em;
 }
+
+form.csv-menu a.btn-close {
+  float: none;
+  display: inline-block;
+}
+
+form.csv-menu .dropdown {
+  display: inline-block;
+}
+
