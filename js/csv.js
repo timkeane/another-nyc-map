@@ -170,7 +170,7 @@ export default function csvTable(event) {
 
   legend.close();
   
-  const form = createMenu(html, columnsMenu(table, features[0]));
+  const form = createMenu(layer.get('name') || layer.get('file'), html, columnsMenu(table, features[0]));
 
   headerRow(header, features[0]);
 
