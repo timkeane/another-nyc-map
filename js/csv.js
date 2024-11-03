@@ -1,7 +1,6 @@
 import $ from 'jquery';
-import createMenu from './csvMenu';
+import {create as createMenu, setColumnVisibility} from './csvMenu';
 import {nextId} from './util';
-import { Feature } from 'ol';
 
 const HTML = `<div class="csv-table">
   <table>
@@ -16,35 +15,6 @@ function compare(f0, f1) {
   if (status0 < status1) return -1;
   if (status0 > status1) return 1;
   return 0;
-}
-
-let columnState;
-function columnsMenu(table, feature) {
-  const ul = $('<ul></ul>');
-  const row = feature.getCsvRow();
-  columnState = {};
-  Object.keys(row).forEach(column => {
-    const id = nextId('column');
-    const label = $(`<label for="${id}">${column}</label>`);
-    const checked = ['longitude', 'latitude'].indexOf(column) === -1 ? 'checked' : '';
-    const check = $(`<input id="${id}" name="${id}" type="checkbox" class="form-check-input" ${checked}>`)
-      .data('csv-table', table)
-      .data('csv-column', column)
-      .on('change', showHideColumn);
-    ul.append($(`<li></li>`).append(check).append(label));
-    columnState[column] = checked;
-  });
-  return ul;
-}
-
-function showHideColumn(event) {
-  const check = $(event.target);
-  const checked = check.is(':checked');
-  const table = check.data('csv-table');
-  const prop = check.data('csv-column');
-  event.preventDefault();
-  columnState[prop] = checked;
-  table.find(`th[data-prop="${prop}"], td[data-prop="${prop}"]`).css('display', checked ? 'table-cell' : 'none');
 }
 
 function newFeature(layer, tbody) {
@@ -165,15 +135,6 @@ function featureRow(feature) {
   return tr;
 }
 
-function setColumnVisibility(node) {
-  Object.entries(columnState).forEach(entry => {
-    if (!entry[1]) {
-      const selector = `[data-prop="${entry[0]}"]`;
-      node.find(`th${selector}, td${selector}`).hide()
-    }
-  });
-}
-
 export default function csvTable(event) {
   const target = $(event.target);
   const view = target.data('legend').view;
@@ -189,17 +150,15 @@ export default function csvTable(event) {
 
   legend.close();
   
-  const form = createMenu(layer, html, columnsMenu(table, features[0]), newFeature);
-
   headerRow(header, features[0]);
 
   features.sort(compare);
+  createMenu(html, layer, features[features.length - 1], newFeature);
   features.forEach(feature => {
     feature.set('__source', source);
     feature.set('__view', view);
     tbody.append(featureRow(feature));
   });
-
   setColumnVisibility(table);
 
   tbody.find('input[data-prop="longitude"], input[data-prop="latitude"]').prop('readonly', true);

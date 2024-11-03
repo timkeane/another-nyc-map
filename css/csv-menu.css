@@ -30,8 +30,12 @@ form.csv-menu a.btn-close {
 
 form.csv-menu ul {
   padding: 0;
-  max-height: 200px;
+}
+
+form.csv-menu .visibility ul,
+form.csv-menu .append ul {
   overflow: auto;
+  max-height: 200px;
 }
 
 form.csv-menu li {
@@ -46,7 +50,7 @@ form.csv-menu label {
 
 form.csv-menu .save,
 form.csv-menu .add,
-form.csv-menu .dropdown-toggle,
+form.csv-menu .dropdown-toggle.columns,
 form.csv-menu .dropdown,
 form.csv-menu .dropdown button {
   height: 33px;
@@ -64,7 +68,7 @@ form.csv-menu .dropdown button {
 
 form.csv-menu .save,
 form.csv-menu .add,
-form.csv-menu .dropdown-toggle {
+form.csv-menu .dropdown-toggle.columns {
   background-position: center;
   background-repeat: no-repeat;
 }
@@ -88,18 +92,29 @@ form.csv-menu .add:hover {
   background-image: url(../img/add-hover.svg);
 }
 
+form.csv-menu .visibility ul,
+form.csv-menu .append ul {
+  margin-inline-start: 100px;
+}
 
+.dropend .dropdown-toggle::after {
+  float: inline-end;
+  margin-top: 7px;
+}
 
-
-form.csv-menu .dropdown-toggle {
+form.csv-menu .dropdown-toggle.columns {
   background-image: url(../img/column.svg);
   background-size: 60%;
 }
 
-form.csv-menu .dropdown-toggle:hover {
+form.csv-menu .dropdown-toggle.columns:hover {
   background-image: url(../img/column-hover.svg);
 }
 
-form.csv-menu .dropdown-toggle::after {
+form.csv-menu .dropdown-toggle.columns:after {
   display: none;
+}
+
+form.csv-menu a.dropdown-item.dropdown-toggle {
+  padding: 0 .25em 0 0;
 }

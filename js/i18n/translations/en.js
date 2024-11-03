@@ -56,6 +56,8 @@ export const translation = {
   "csv.add": "Add row",
   "csv.delete": "Delete row",
   "csv.map": "Zoom to location",
+  "csv.visibility": "Visibility",
+  "csv.append": "Append",
   "translate": "Translate",
   "translate.en": "Translate",
   "translate.es": "Traducir",
