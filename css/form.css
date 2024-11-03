@@ -1,7 +1,7 @@
 form.locate-form {
   position: absolute;
   top: calc(.25em + 1px);
-  inset-inline-start: 39px;
+  inset-inline-start: calc(38px + .25em);
   display: grid;
 }
 
@@ -98,11 +98,18 @@ form.locate-form .form-control.lot {
 form.locate-form ul.possible {
   display: none;
   background-color: transparent;
+  position: absolute;
+  top: 32px;
+  width: 324px;
+  inset-inline-start: 32px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 form.locate-form ul.possible li.list-group-item {
   padding: 3px .5em;
   cursor: pointer;
+  background-color: var(--tipBg);
 }
 
 form.locate-form ul.possible li:hover {

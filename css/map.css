@@ -24,24 +24,21 @@ button.ol-control  {
   outline: none;
 }
 
-.ol-zoom-in {
-  background-image: url(../img/zoom-in.svg);  
+button.ol-zoom-in {
+  background-image: url(../img/zoom-in.svg);
 }
 
-.ol-zoom-in:hover {
-  background-image: url(../img/zoom-in-hover.svg);  
+button.ol-zoom-in:hover {
+  background-image: url(../img/zoom-in-hover.svg);
 }
 
-.ol-zoom-out {
-  background-image: url(../img/zoom-out.svg);  
+button.ol-zoom-out {
+  background-image: url(../img/zoom-out.svg);
+  margin-top: calc(.25em - 1px);
 }
 
-.ol-zoom-out:hover {
-  background-image: url(../img/zoom-out-hover.svg);  
-}
-
-.ol-zoom button div {
-  display: none;
+button.ol-zoom-out:hover {
+  background-image: url(../img/zoom-out-hover.svg);
 }
 
 .ol-zoom {
