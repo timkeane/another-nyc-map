@@ -110,8 +110,15 @@ function loadLayer(event) {
 }
 
 function getColumns(event) {
+  const columns = {};
   event.preventDefault();
-  returnColumns(templateForm);
+  templateForm.find('select').each((i, select) => {
+    const column = select.value;
+    if (column !== '0') {
+      columns[select.name] = column;
+    }
+  });
+  returnColumns(columns);
   dialog.hide();
 }
 

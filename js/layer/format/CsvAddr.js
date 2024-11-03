@@ -69,14 +69,7 @@ class CsvAddr extends CsvPoint {
     }
     feature.dispatchEvent('change', {target: feature});
   }
-  createTemplate(form) {
-    const columns = {};
-    $(form).find('select').each((i, select) => {
-      const column = select.value;
-      if (column !== '0') {
-        columns[select.name] = column;
-      }
-    });
+  createTemplate(columns) {
     this.templateColumns = columns;
     this.locationTemplate = `\${${columns.address}},\${${columns.city || columns.borough}}`;
     if (columns.zip) this.locationTemplate = `${this.locationTemplate} \${${columns.zip}}`;

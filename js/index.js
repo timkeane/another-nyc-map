@@ -42,7 +42,6 @@ initI18n().then(() => {
       $('h1.banner')
         .on('click', () => $('h1.banner').slideUp())
         .slideDown(() => setTimeout(() => $('h1.banner').slideUp(), 5000));
-
     }
   });
 });
