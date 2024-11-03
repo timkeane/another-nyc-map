@@ -1,5 +1,5 @@
 .feature-tip {
-  border-radius: 3px;
+  border-radius: var(--bs-border-radius);
   padding: 3px;
   min-inline-size: 50px;
   background-color: var(--tipBg);

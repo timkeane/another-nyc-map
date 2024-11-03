@@ -3,7 +3,7 @@
 }
 
 #dialog .modal-content {
-  border-radius: .25em;
+  border-radius: var(--bs-border-radius);
 }
 
 #dialog input.form-check-input {

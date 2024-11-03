@@ -6,7 +6,7 @@ div.legend {
   background-color: var(--cOnPrimary);
   display: none;
   border: 1px solid var(--cPrimary);
-  border-radius: .25em;
+  border-radius: var(--bs-border-radius);
   background-color: var(--tipBg);
   padding-bottom: 40px;
 }
@@ -86,7 +86,7 @@ div.legend li button.edit {
   border: 1px solid black;
   background-image: url(/img/edit.svg);
   float: right;
-  border-radius: .25em;
+  border-radius: var(--bs-border-radius);
   background-size: 17px;
   background-position: center;
   background-repeat: no-repeat;

@@ -15,7 +15,6 @@ const geocode = new Geocode({
   appKey: env.VITE_GEOCLIENT_KEY
 });
 
-
 initI18n().then(() => {
   const map = new Basemap({target: 'map'});
 

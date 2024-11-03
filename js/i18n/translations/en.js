@@ -1,6 +1,7 @@
 export const translation = {
   "app.title": "Another NYC Map",
   "close": "Close",
+  "search": "Search",
   "boro": "Borough",
   "input.file": "File",
   "input.url": "URL",

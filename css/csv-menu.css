@@ -3,7 +3,7 @@ form.csv-menu {
   top: calc(60% - 2.95em);
   inset-inline-start: .25em;
   z-index: 100000;
-  border-radius: .25em;
+  border-radius: var(--bs-border-radius);
   background-color: var(--formBg);
   padding: .25em 0 .25em .25em;
   display: grid;
@@ -55,7 +55,7 @@ form.csv-menu .dropdown button {
 }
 
 form.csv-menu ul {
-  border-radius: .25em;
+  border-radius: var(--bs-border-radius);
 }
 
 form.csv-menu .dropdown button {

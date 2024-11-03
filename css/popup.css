@@ -25,7 +25,7 @@
   border: 1px solid var(--popupBorder);
   color: var(--cPrimary);
   padding: .5em;
-  border-radius: .25em;
+  border-radius: var(--bs-border-radius);
 }
 
 .popup h2 {

@@ -8,6 +8,10 @@ import {highlightByBbl} from '../info/pluto';
 const env = import.meta.env;
 
 const HTML = `<form class="locate-form location" style="pointer-events: auto;">
+  <select name="type" class="form-control form-select btn type" data-i18n="[title]search.type;[aria-label]search.type">
+    <option value="location" data-i18n="[prepend]search.location">&nbsp;&nbsp;&nbsp;&nbsp;</option>
+    <option value="bbl" data-i18n="search.bbl"></option>
+  </select>
   <input name="location" class="form-control location" data-i18n="[placeholder]placeholder.location" autocomplete="on">
   <select name="boro" class="form-control form-select bbl boro" data-i18n="[title]boro;[aria-label]boro" autocomplete="on">
     <option value="0" data-i18n="[prepend]boro">...</option>
@@ -19,10 +23,7 @@ const HTML = `<form class="locate-form location" style="pointer-events: auto;">
   </select>
   <input name="block" class="form-control bbl block" data-i18n="[placeholder]placeholder.block" autocomplete="on">
   <input name="lot" class="form-control bbl lot" data-i18n="[placeholder]placeholder.lot" autocomplete="on">
-  <select name="type" class="form-control form-select btn type" data-i18n="[title]search.type;[aria-label]search.type">
-    <option value="location" data-i18n="[prepend]search.location">&nbsp;&nbsp;&nbsp;&nbsp;</option>
-    <option value="bbl" data-i18n="search.bbl"></option>
-  </select>
+  <button class="btn btn-primary search" name="submit" data-i18n="[title]search;[aria-label]search"></button>
   <div id="location"></div>
   <ul class="list-group possible"></ul>
 </form>`;
@@ -34,6 +35,7 @@ class Form {
     if (options.target) {
       $(options.target).append(form);
     };
+    form.on('submit ', this.search.bind(this));
     form.on('keyup', this.search.bind(this));
     this.searchType = form.find('select.type');
     this.searchType.on('change', this.setSearchType.bind(this));
@@ -76,9 +78,9 @@ class Form {
     return '';
   }
   search(event) {
-    if (event.key === 'Enter') {
+    event.preventDefault();
+    if (!event.key || event.key === 'Enter') {
       const input = this.val();
-      event.preventDefault();
       if (input.length > 0) {
         this.geocode.locate(input).then(result => {
           if (result.type !== 'ambiguous') {

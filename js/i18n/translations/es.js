@@ -1,6 +1,7 @@
 export const translation = {
   "app.title": "Otro Mapa de NYC",
   "close": "Cerrar",
+  "search": "Buscar",
   "boro": "Condado",
   "input.file": "Archivo",
   "input.url": "URL",
