@@ -48,6 +48,19 @@
   max-width: 320px;
 }
 
+.popup-content .feature-html.generic td {
+  padding: 1px 2px;
+}
+
+.popup-content .feature-html.generic td.field {
+  max-width: 150px;
+  overflow-x: auto;
+}
+
+.popup-content .feature-html.generic tr.geo {
+  background-color: rgba(0,0,0,0.07);
+}
+
 .popup-content td {
   white-space: nowrap;
 }
@@ -74,3 +87,4 @@
   padding: 1px;
   border-radius: 50%;
 }
+

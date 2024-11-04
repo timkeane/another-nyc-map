@@ -177,9 +177,17 @@ function generic(feature) {
     const prop = entry[0];
     if (prop.substring(0, 2) !== '__') {
       const value = getValue(prop, entry[1]);
-      tbody.append(`<tr class="${prop}"><td class="field">${prop}</td><td class="value">${value}</td></tr>`);
+      tbody.append(`<tr class="${prop.replace(/ /g, '-')}"><td class="field">${prop}</td><td class="value">${value}</td></tr>`);
     }
   });
+  const geocode = feature.get('__geocode')?.data;
+  if (geocode) {
+    Object.entries(geocode).forEach(entry => {
+      const prop = entry[0];
+      const value = entry[1];
+      tbody.append(`<tr class="geo ${prop}"><td class="field">${prop}</td><td class="value">${value}</td></tr>`);
+    });
+    }
   return $(`<div class="feature-html generic"></div>`).append(table);
 }
 

@@ -1,0 +1,53 @@
+@media (max-width: 520px) {
+
+  select.translate {
+    top: calc(.5em + 33px);
+  }
+
+  form.locate-form .form-control.location {
+    width: calc(100vw - 106px - .25em);
+  }
+
+  form.locate-form .form-control.boro,
+  form.locate-form .form-control.block,
+  form.locate-form .form-control.lot {
+    width: calc((100vw - 106px) / 3  - .25em);
+  }
+}
+
+@media (max-width: 490px) {
+
+  form.locate-form .form-control.boro,
+  form.locate-form .form-control.block,
+  form.locate-form .form-control.lot {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  form.locate-form .form-control.boro {
+    min-width: 100px;
+    background-position-x: calc(100% - 3px);
+  }
+
+  form.locate-form .form-control.block {
+    min-width: 62px;
+  }
+
+  form.locate-form .form-control.lot {
+    min-width: 52px;
+  }
+
+}
+
+@media (max-width: 416px) {
+
+  form.locate-form .form-control.boro {
+    width: 95px;
+  }
+
+  form.locate-form .form-control.block,
+  form.locate-form .form-control.lot {
+    width: calc((100vw - 205px) / 2 - .5em);
+  }
+
+}
