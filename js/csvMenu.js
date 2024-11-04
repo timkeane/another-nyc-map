@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import Storage from './Storage';
 import {nextId} from './util';
+import GEOCLIENT from './locate/geoclient';
 
 const FORM = `<form class="csv-menu">
   <h2></h2>
@@ -34,24 +35,36 @@ const FORM = `<form class="csv-menu">
 function save(layer) {
   const source = layer.getSource();
   const format = source.getFormat();
-  const csv = format.writeFeatures(source.getFeatures());
+  const csv = format.writeFeatures(source.getFeatures(), {append: columnState});
   Storage.saveCsv(`geocoded.${layer.get('file')}`, csv);
 }
 
+function menuCheck(table, column, append) {
+  const id = nextId('column');
+  const label = $(`<label for="${id}" data-prop="${column}">${column}</label>`);
+  const checked = !append && ['longitude', 'latitude'].indexOf(column) === -1 ? true : false;
+  const check = $(`<input id="${id}" name="${id}" data-prop="${column}" type="checkbox" class="form-check-input" ${checked ? 'checked' : ''}>`)
+    .data('csv-table', table)
+    .data('csv-column', column)
+    .data('geocode-prop', append)
+    .on('change', showHideColumn);
+  return {check, label};
+}
+
 let columnState;
-function columnsMenu(table, row, selected) {
+let geocodeColumns;
+function columnsMenu(table, columns, append) {
   const ul = $('<ul class="dropdown-menu"></ul>');
-  columnState = {};
-  Object.keys(row).forEach(column => {
+  window.columnState=columnState
+  window.geocodeColumns=geocodeColumns
+  Object.keys(columns).forEach(column => {
     const id = nextId('column');
     const label = $(`<label for="${id}">${column}</label>`);
-    const checked = selected && ['longitude', 'latitude'].indexOf(column) === -1 ? 'checked' : '';
-    const check = $(`<input id="${id}" name="${id}" type="checkbox" class="form-check-input" ${checked}>`)
-      .data('csv-table', table)
-      .data('csv-column', column)
-      .on('change', showHideColumn);
-    ul.append($(`<li></li>`).append(check).append(label));
+    const checked = !append && ['longitude', 'latitude'].indexOf(column) === -1 ? true : false;
+    const check = menuCheck(table, column, append);
+    ul.append($(`<li data-prop="${column}"></li>`).append(check.check).append(check.label));
     columnState[column] = checked;
+    if (append) geocodeColumns[column] = true;
   });
   return ul;
 }
@@ -61,9 +74,25 @@ function showHideColumn(event) {
   const checked = check.is(':checked');
   const table = check.data('csv-table');
   const prop = check.data('csv-column');
+  const geo = check.data('geocode-prop');
   event.preventDefault();
   columnState[prop] = checked;
+  if (geo) {
+    const ul = $('.csv-menu .visibility ul');
+    if (checked) {
+      const newCheck = menuCheck(table, prop);
+      const li = $(`<li data-prop="${prop}"></li>`).append(newCheck.check).append(newCheck.label);
+      ul.append(li);
+    } else {
+      ul.find(`li[data-prop="${prop}"]`).remove();
+    }
+    refreshCallback();
+  }
   table.find(`th[data-prop="${prop}"], td[data-prop="${prop}"]`).css('display', checked ? 'table-cell' : 'none');
+}
+
+export function getColumnState() {
+  return columnState;
 }
 
 export function setColumnVisibility(node) {
@@ -75,11 +104,15 @@ export function setColumnVisibility(node) {
   });
 }
 
-export function create(parent, layer, feature, addCallback) {
+let refreshCallback;
+export function create(parent, layer, feature, addRowCallback, refreshTableCallback) {
   const form = $(FORM);
   const table = parent.find('table');
-  const visibilityUl = columnsMenu(table, feature.getCsvRow(), true);
-  const appendUl = columnsMenu(table, feature.get('__geocode').data, false);
+  columnState = {};
+  geocodeColumns = {};
+  refreshCallback = refreshTableCallback;
+  const visibilityUl = columnsMenu(table, feature.getCsvRow());
+  const appendUl = columnsMenu(table, GEOCLIENT, true);
   form.find('h2').html(layer.get('file'));
   form.find('.visibility').append(visibilityUl);
   form.find('.append').append(appendUl);
@@ -93,7 +126,7 @@ export function create(parent, layer, feature, addCallback) {
   });
   form.find('button.add').on('click', event => {
     event.preventDefault();
-    addCallback(layer, parent.find('tbody'));
+    addRowCallback(layer, parent.find('tbody'));
   });
   $('body').append(form.localize());
   return form;

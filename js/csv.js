@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import {create as createMenu, setColumnVisibility} from './csvMenu';
+import {create as createMenu, getColumnState, setColumnVisibility} from './csvMenu';
 import {nextId} from './util';
 
 const HTML = `<div class="csv-table">
@@ -20,7 +20,7 @@ function compare(f0, f1) {
 function newFeature(layer, tbody) {
   const source = layer.getSource();
   const existing = source.getFeatures()[3];
-  const row = existing.getCsvRow(); // find a good one?
+  const row = existing.getCsvRow(getColumnState());
   const format = source.getFormat();
 
   Object.keys(row).forEach(prop => {
@@ -84,10 +84,9 @@ function appendStatus(tr, feature) {
   tr.append(td);
 }
 
-function headerRow(header, feature) {
-  const row = feature.getCsvRow();
+function headerRow(header) {
   header.append('<th class="delete">&nbsp</th><th class="map">&nbsp</th><th class="status" data-i18n="csv.status"></th>');
-  Object.keys(row).forEach(prop => {
+  Object.keys(getColumnState()).forEach(prop => {
       header.append(`<th data-prop="${prop}">${prop}</th>`);
   });
 }
@@ -117,12 +116,13 @@ function featureRow(feature) {
   const name = nextId('prop');
   const format = feature.get('__format');
   const templateColumns = format.templateColumns;
-  const row = feature.getCsvRow();
+  const row = feature.getCsvRow(getColumnState());
   const tr = startRow(feature);
   feature.set('__htmlRow', tr);
   appendStatus(tr, feature);
   feature.set('__templateColumns', templateColumns);
-  Object.keys(row).forEach(prop => {
+  Object.keys(getColumnState()).forEach(prop => {
+    // console.warn(prop,row[prop]);
     const templateAddress = prop === templateColumns[0] ? 'template-address' : '';
     const templateCity = prop === templateColumns[1] ? 'template-city' : '';
     const input = $(`<input class="${templateAddress} ${templateCity}" name="${name}" data-prop="${prop}" type="text" value="${row[prop] || ''}" autocomplete="off"></input>`)
@@ -130,9 +130,22 @@ function featureRow(feature) {
       .on('focus', () => input.trigger('select'))
       .on('change', updateFeature);
     tr.append($(`<td data-prop="${prop}"></td>`).append(input));
+    return tr;
   });
   setColumnVisibility(tr);
   return tr;
+}
+
+function refresh(tbody, view, source) {
+  const features = source.getFeatures();
+  tbody.empty();
+  features.sort(compare);
+  features.forEach(feature => {
+    feature.set('__source', source);
+    feature.set('__view', view);
+    tbody.append(featureRow(feature));
+  });
+  setColumnVisibility(tbody.parent());
 }
 
 export default function csvTable(event) {
@@ -146,14 +159,12 @@ export default function csvTable(event) {
   const table = html.find('table');
   const header = table.find('thead tr');
   const tbody = table.find('tbody');
-  const close = html.find('a.btn-close');
 
   legend.close();
-  
-  headerRow(header, features[0]);
 
   features.sort(compare);
-  createMenu(html, layer, features[features.length - 1], newFeature);
+  createMenu(html, layer, features[features.length - 1], newFeature, () => refresh(tbody, view, source));
+  headerRow(header);
   features.forEach(feature => {
     feature.set('__source', source);
     feature.set('__view', view);

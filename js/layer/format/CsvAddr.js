@@ -4,6 +4,7 @@ import Point from 'ol/geom/Point'
 import {replace} from '../../util';
 import {showLocationTemplate} from '../../dialog';
 import papa from 'papaparse';
+import GEOCLIENT from '../../locate/geoclient';
 
 const geoclientProps = {
   borough: 'firstBoroughName',
@@ -15,15 +16,26 @@ function getAddress(location) {
   return `${location.houseNumber || ''} ${location.firstStreetNameNormalized}`.trim();
 }
 
-function getCsvRow() {
+function getCsvRow(append) {
   const row = {};
-  Object.keys(this.getProperties()).forEach(prop => {
+  const props = this.getProperties();
+  Object.keys(props).forEach(prop => {
     if (prop !== 'geometry' && prop.substring(0, 2) !== '__') {
       row[prop] = this.get(prop);
+      console.warn(prop,this.get(prop));
+      
     }
   });
+  if (append) {
+    const geocode = this.get('__geocode')?.data || {};
+    Object.entries(append).forEach(entry => {
+      if (entry[1] && !(entry[0] in props)) {
+        row[entry[0]] = geocode[entry[0]];
+      }
+    });
+  }
   return row;
-}  
+}
 
 class CsvAddr extends CsvPoint {
   constructor(options) {
@@ -37,7 +49,7 @@ class CsvAddr extends CsvPoint {
   writeFeatures(features, options) {
     const rows = [];
     features.forEach(feature => {
-      rows.push(feature.getCsvRow());
+      rows.push(feature.getCsvRow(options.append));
     });
     return papa.unparse(rows, {header: true});
   }
