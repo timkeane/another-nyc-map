@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import {create as createMenu, getColumnState, setColumnVisibility} from './csvMenu';
+import {create as createMenu, getColumnState, getGeocodeColumns, setColumnVisibility} from './csvMenu';
 import {nextId} from './util';
 
 const HTML = `<div class="csv-table">
@@ -117,15 +117,19 @@ function featureRow(feature) {
   const format = feature.get('__format');
   const templateColumns = format.templateColumns;
   const row = feature.getCsvRow(getColumnState());
+  const geoColumns = getGeocodeColumns();
   const tr = startRow(feature);
   feature.set('__htmlRow', tr);
   appendStatus(tr, feature);
   feature.set('__templateColumns', templateColumns);
   Object.keys(getColumnState()).forEach(prop => {
-    // console.warn(prop,row[prop]);
+    const geo = prop in geoColumns ? 'geo' : '';
     const templateAddress = prop === templateColumns[0] ? 'template-address' : '';
     const templateCity = prop === templateColumns[1] ? 'template-city' : '';
-    const input = $(`<input class="${templateAddress} ${templateCity}" name="${name}" data-prop="${prop}" type="text" value="${row[prop] || ''}" autocomplete="off"></input>`)
+    const css = `${geo} ${templateAddress} ${templateCity}`.trim();
+    const readonly = geo || prop === 'longitude' || prop === 'latitude';
+    const input = $(`<input class="${css}" name="${name}" data-prop="${prop}" type="text" value="${row[prop] || ''}" autocomplete="off"></input>`)
+      .prop('readonly', readonly)
       .data('feature', feature)
       .on('focus', () => input.trigger('select'))
       .on('change', updateFeature);
@@ -172,6 +176,5 @@ export default function csvTable(event) {
   });
   setColumnVisibility(table);
 
-  tbody.find('input[data-prop="longitude"], input[data-prop="latitude"]').prop('readonly', true);
   $('body').append(html.localize());
 }

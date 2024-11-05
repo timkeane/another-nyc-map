@@ -51,12 +51,8 @@ function menuCheck(table, column, append) {
   return {check, label};
 }
 
-let columnState;
-let geocodeColumns;
 function columnsMenu(table, columns, append) {
   const ul = $('<ul class="dropdown-menu"></ul>');
-  window.columnState=columnState
-  window.geocodeColumns=geocodeColumns
   Object.keys(columns).forEach(column => {
     const id = nextId('column');
     const label = $(`<label for="${id}">${column}</label>`);
@@ -95,6 +91,10 @@ export function getColumnState() {
   return columnState;
 }
 
+export function getGeocodeColumns() {
+  return geocodeColumns;
+}
+
 export function setColumnVisibility(node) {
   Object.entries(columnState).forEach(entry => {
     if (!entry[1]) {
@@ -104,6 +104,8 @@ export function setColumnVisibility(node) {
   });
 }
 
+let columnState;
+let geocodeColumns;
 let refreshCallback;
 export function create(parent, layer, feature, addRowCallback, refreshTableCallback) {
   const form = $(FORM);
