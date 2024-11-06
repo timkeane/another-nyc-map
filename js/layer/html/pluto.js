@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import {boroughName, enAlphabet} from '../../util';
-import {links, parameterizeLink} from '../../info/links';
+import {urls, parameterize} from '../../urls';
 import elected from '../../info/elected';
 import {replace} from '../../util';
 
@@ -21,11 +21,11 @@ function nameForUrl(name, stateOrFedral, chamber) {
   return enAlphabet(name.toLowerCase());
 }
 
-function zoningLinks(s, linkId) {
+function zoningurls(s, linkId) {
   const result = [];
   const values = noNulls(s);
   values.forEach(value => {
-    const a = parameterizeLink(links.zone[linkId], value, [value.split('-')[0].toLowerCase()]);
+    const a = parameterize(urls.zone[linkId], value, [value.split('-')[0].toLowerCase()]);
     result.push(a);
   });
   return result.join(', ');
@@ -33,12 +33,12 @@ function zoningLinks(s, linkId) {
 
 function getZoning(p) {
   const map = p.ZoneMap;
-  const a = parameterizeLink(links.zone.map, `${map}`, [map]);
+  const a = parameterize(urls.zone.map, `${map}`, [map]);
 
   const h3 = $('<h3 data-i18n="zoning"></h3>');
   const ul = $(`<ul><li><strong data-i18n="[prepend]map">:</strong> ${a}</li></ul>`);
 
-  const zone = zoningLinks([p.ZoneDist1, p.ZoneDist2, p.ZoneDist3, p.ZoneDist4], 'district');
+  const zone = zoningurls([p.ZoneDist1, p.ZoneDist2, p.ZoneDist3, p.ZoneDist4], 'district');
   ul.append(`<li><strong data-i18n="[prepend]district">:</strong> ${zone}</li>`);
 
   const overlay = noNulls([p.Overlay1, p.Overlay2]).join(', ');
@@ -65,10 +65,10 @@ function getOfficial(types, district, ul) {
   const memberName = member.name;
   let link;
   if (types.length == 1) {
-    link = parameterizeLink(links.political.person[types[0]], memberName, {district});
+    link = parameterize(urls.political.person[types[0]], ` ${memberName}`, {district});
   } else {
     const name = nameForUrl(member.lastname || memberName, types[0], types[1]);
-    link = parameterizeLink(links.political.person[types[0]][types[1]], ` ${memberName}`, {name});
+    link = parameterize(urls.political.person[types[0]][types[1]], ` ${memberName}`, {name});
   }
   
   const official = $(link);
@@ -113,14 +113,14 @@ function getAddress(p) {
 function getCommunityBoard(p) {
   const boro = boroughName(p.Borough);
   const board = p.communityDistrictNumber * 1;
-  const url = replace(links.district.community, {boro: boro.toLowerCase(), board});
+  const url = replace(urls.district.community, {boro: boro.toLowerCase(), board});
   return `<h3><a href="${url}" target="_blank" rel="noopener">${boro} <span data-i18n="community.board"></span> ${board}</a></h3>`;
 }
 
 function getElectionDistrict(p) {
   return $(`<li></li>`)
     .append(`<strong data-i18n="[prepend]election.district"> ${p.electionDistrict}</strong><br>`)
-    .append(`<a href="${replace(links.political.pollsite, p)}" target="_blank" rel="noopener" data-i18n="election.poll"></a>`);
+    .append(`<a href="${replace(urls.political.pollsite, p)}" target="_blank" rel="noopener" data-i18n="election.poll"></a>`);
 }
 
 export function bbl(feature) {

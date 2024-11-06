@@ -92,16 +92,16 @@ FeatureTip.Label;
 FeatureTip.Options;
 
 function generic(feature) {
-  const properties = feature.getProperties();
-  let property = Object.keys(properties)[1];
-  property = Object.keys(properties).find(prop => {
-    if (prop.toLowerCase().indexOf('name') > -1 ||
-        prop.toLowerCase().indexOf('label') > -1 ||
-        prop.toLowerCase().indexOf('lbl') > -1 ||
-        prop.toLowerCase().indexOf('addr') > -1
-      ) return prop;
+  const props = feature.getProperties();
+  let prop = Object.keys(props)[1];
+  prop = Object.keys(props).find(p => {
+    if (p.toLowerCase().indexOf('name') > -1 ||
+        p.toLowerCase().indexOf('label') > -1 ||
+        p.toLowerCase().indexOf('lbl') > -1 ||
+        p.toLowerCase().indexOf('addr') > -1
+      ) return p;
   });
-  return {html: $(`<div><strong>${property}:</strong> ${properties[property]}</div>`)};
+  return {html: $(`<div><strong>${prop}:</strong> ${props[prop]}</div>`)};
 }
 
 export default function createFeatureTips(map) {

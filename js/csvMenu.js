@@ -32,10 +32,12 @@ const FORM = `<form class="csv-menu">
   </a>
 </form>`;
 
+const columnState = {vivible: {}, append: {}};
+
 function save(layer) {
   const source = layer.getSource();
   const format = source.getFormat();
-  const csv = format.writeFeatures(source.getFeatures(), {append: columnState});
+  const csv = format.writeFeatures(source.getFeatures(), columnState);
   Storage.saveCsv(`geocoded.${layer.get('file')}`, csv);
 }
 
@@ -59,8 +61,8 @@ function columnsMenu(table, columns, append) {
     const checked = !append && ['longitude', 'latitude'].indexOf(column) === -1 ? true : false;
     const check = menuCheck(table, column, append);
     ul.append($(`<li data-prop="${column}"></li>`).append(check.check).append(check.label));
-    columnState[column] = checked;
-    if (append) geocodeColumns[column] = true;
+    columnState.vivible[column] = checked;
+    if (append) columnState.append[column] = false;
   });
   return ul;
 }
@@ -72,9 +74,10 @@ function showHideColumn(event) {
   const prop = check.data('csv-column');
   const geo = check.data('geocode-prop');
   event.preventDefault();
-  columnState[prop] = checked;
+  columnState.vivible[prop] = checked;
   if (geo) {
     const ul = $('.csv-menu .visibility ul');
+    columnState.append[prop] = checked;
     if (checked) {
       const newCheck = menuCheck(table, prop);
       const li = $(`<li data-prop="${prop}"></li>`).append(newCheck.check).append(newCheck.label);
@@ -91,12 +94,8 @@ export function getColumnState() {
   return columnState;
 }
 
-export function getGeocodeColumns() {
-  return geocodeColumns;
-}
-
 export function setColumnVisibility(node) {
-  Object.entries(columnState).forEach(entry => {
+  Object.entries(columnState.vivible).forEach(entry => {
     if (!entry[1]) {
       const selector = `[data-prop="${entry[0]}"]`;
       node.find(`th${selector}, td${selector}`).hide()
@@ -104,14 +103,12 @@ export function setColumnVisibility(node) {
   });
 }
 
-let columnState;
-let geocodeColumns;
 let refreshCallback;
 export function create(parent, layer, feature, addRowCallback, refreshTableCallback) {
   const form = $(FORM);
   const table = parent.find('table');
-  columnState = {};
-  geocodeColumns = {};
+  columnState.vivible = {};
+  columnState.append = {};
   refreshCallback = refreshTableCallback;
   const visibilityUl = columnsMenu(table, feature.getCsvRow());
   const appendUl = columnsMenu(table, GEOCLIENT, true);

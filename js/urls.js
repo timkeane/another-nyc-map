@@ -1,10 +1,20 @@
-import {replace} from '../util';
+import {replace} from './util';
 
 const env = import.meta.env;
 const year = new Date().getFullYear();
 
-export const links = {
+
+export const urls = {
   layer: {
+    sirLine: "https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/ArcGIS/rest/services/Subway/FeatureServer/0/query?f=pgeojson&outFields=*&where=NAME%3D'Staten%20Island%20Rwy'",
+    subwayLine: 'https://data.cityofnewyork.us/api/geospatial/3qz8-muuu?method=export&format=GeoJSON',
+    subwayStation: 'https://data.ny.gov/api/views/39hk-dx4f/rows.geojson?accessType=DOWNLOAD',
+  },
+  info: {
+    pluto: {
+      intersect: 'https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/MAPPLUTO/FeatureServer/0/query?f=geojson&where=1%3D1&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=3857&inSR=3857&geometryType=esriGeometryPoint&geometry=',
+      bbl: 'https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/MAPPLUTO/FeatureServer/0/query?f=geojson&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=3857&where=BBL%3D'
+    },
     subwayLine: 'https://new.mta.info/maps/subway-line-maps/${subway}-line',
     sirLine: 'https://new.mta.info/agency/staten-island-railway'
   },
@@ -38,7 +48,7 @@ export const links = {
 
 };
 
-export function parameterizeLink(link, text, parameters) {
+export function parameterize(link, text, parameters) {
   const url = replace(link, parameters || {});
   return `<a href="${url}" target="_blank" rel="noopener">${text}</a>`;
 }

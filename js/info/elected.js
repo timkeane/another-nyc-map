@@ -1,5 +1,4 @@
-import {replace} from '../util';
-import {links} from '../info/links';
+import {urls} from '../urls';
 
 const officials = {};
 
@@ -20,7 +19,7 @@ function flip(name) {
   return `${parts[1].trim()} ${parts[0].trim()}`
 }
 
-fetch(links.political.service.city).then(response => response.json().then(data => {
+fetch(urls.political.service.city).then(response => response.json().then(data => {
   const members = {};
   data.rows.forEach(row => {
     const district = row.district;
@@ -32,7 +31,7 @@ fetch(links.political.service.city).then(response => response.json().then(data =
   officials.city = members;
 }));
 
-fetch(links.political.service.state).then(response => response.json().then(data => {
+fetch(urls.political.service.state).then(response => response.json().then(data => {
   const senate = {};
   const assembly = {};
   data.result.items.forEach(row => {
@@ -51,7 +50,7 @@ fetch(links.political.service.state).then(response => response.json().then(data 
   officials.state.senate = senate;
 }));
 
-fetch(links.political.service.federal).then(response => response.json().then(data => {
+fetch(urls.political.service.federal).then(response => response.json().then(data => {
   const house = {};
   const senate = {};
   data.objects.forEach(row => {;

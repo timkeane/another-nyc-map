@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import{links, parameterizeLink} from '../../info/links';
+import{urls, parameterize} from '../../urls';
 
 export function subwayLineHtml(feature) {
   const html = $('<div></div>');
@@ -19,7 +19,7 @@ function appendRouteIcons(html, subways, linkId) {
     const img = `<img src="img/subway-${subway}.svg" alt="${subway}">`;
     if (linkId) {
       const id = subway === 'SIR' ? 'sirLine' : linkId;
-      const a = parameterizeLink(links.layer[id], img, {subway});
+      const a = parameterize(urls.layer[id], img, {subway});
       html.append(a);
     } else {
       html.append(img);

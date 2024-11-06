@@ -4,6 +4,7 @@ import WebGLVectorLayer from './WebGL';
 import {sirLineStyle, subwayLineStyle, subwayStationStyle} from './style/subway';
 import {sirLineHtml, subwayLineHtml, subwayStationHtml, sirLineTip, subwayLineTip, subwayStationTip} from './html/subway';
 import LayerGroup from 'ol/layer/Group';
+import {urls} from '../urls';
 
 const env = import.meta.env;
 
@@ -15,7 +16,7 @@ const format = new GeoJSON({
 const sirLine = new WebGLVectorLayer({
   source: new Source({
     format,
-    url: env.VITE_SIR_LINE_URL
+    url: urls.layer.sirLine
   }),
   style: sirLineStyle
 });
@@ -26,7 +27,7 @@ sirLine.set('tip', sirLineTip);
 const subwayLine = new WebGLVectorLayer({
   source: new Source({
     format,
-    url: env.VITE_SUBWAY_LINE_URL
+    url: urls.layer.subwayLine
   }),
   style: subwayLineStyle
 });
@@ -38,7 +39,7 @@ subwayLine.set('tip', subwayLineTip);
 const subwayStation = new WebGLVectorLayer({
   source: new Source({
     format,
-    url: env.VITE_SUBWAY_STATION_URL
+    url: urls.layer.subwayStation
   }),
   style: subwayStationStyle
 });

@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import {create as createMenu, getColumnState, getGeocodeColumns, setColumnVisibility} from './csvMenu';
+import {create as createMenu, getColumnState, setColumnVisibility} from './csvMenu';
 import {nextId} from './util';
 
 const HTML = `<div class="csv-table">
@@ -20,7 +20,7 @@ function compare(f0, f1) {
 function newFeature(layer, tbody) {
   const source = layer.getSource();
   const existing = source.getFeatures()[3];
-  const row = existing.getCsvRow(getColumnState());
+  const row = existing.getCsvRow(getColumnState().vivible);
   const format = source.getFormat();
 
   Object.keys(row).forEach(prop => {
@@ -86,7 +86,7 @@ function appendStatus(tr, feature) {
 
 function headerRow(header) {
   header.append('<th class="delete">&nbsp</th><th class="map">&nbsp</th><th class="status" data-i18n="csv.status"></th>');
-  Object.keys(getColumnState()).forEach(prop => {
+  Object.keys(getColumnState().vivible).forEach(prop => {
       header.append(`<th data-prop="${prop}">${prop}</th>`);
   });
 }
@@ -115,15 +115,15 @@ function startRow(feature) {
 function featureRow(feature) {
   const name = nextId('prop');
   const format = feature.get('__format');
+  const columnState = getColumnState();
   const templateColumns = format.templateColumns;
-  const row = feature.getCsvRow(getColumnState());
-  const geoColumns = getGeocodeColumns();
+  const row = feature.getCsvRow(columnState.vivible);
   const tr = startRow(feature);
   feature.set('__htmlRow', tr);
   appendStatus(tr, feature);
   feature.set('__templateColumns', templateColumns);
-  Object.keys(getColumnState()).forEach(prop => {
-    const geo = prop in geoColumns ? 'geo' : '';
+  Object.keys(columnState.vivible).forEach(prop => {
+    const geo = prop in columnState.append ? 'geo' : '';
     const templateAddress = prop === templateColumns[0] ? 'template-address' : '';
     const templateCity = prop === templateColumns[1] ? 'template-city' : '';
     const css = `${geo} ${templateAddress} ${templateCity}`.trim();

@@ -1,5 +1,6 @@
 import GeoJSON from 'ol/format/GeoJSON';
 import highlightLayer from '../layer/highlight';
+import {urls} from '../urls';
 
 const env = import.meta.env;
 const format = new GeoJSON();
@@ -19,7 +20,7 @@ export function removeHighlight(feature) {
 }
 
 function fromBbl(bbl, callback) {
-  fetch(`${env.VITE_PLUTO_BBL_URL}${bbl}`)
+  fetch(`${urls.info.pluto.bbl}${bbl}`)
   .then(response => response.json().then(json => {
     if (json.features.length > 0) {
       const feature = format.readFeature(json.features[0]);
@@ -31,7 +32,7 @@ function fromBbl(bbl, callback) {
 }
 
 function fromCoordinate(coordinate, callback) {
-  fetch(`${env.VITE_PLUTO_INTERSECT_URL}${coordinate.join()}`)
+  fetch(`${urls.info.pluto.intersect}${coordinate.join()}`)
   .then(response => response.json().then(json => {
     if (json.features.length > 0) {
       const feature = format.readFeature(json.features[0]);
