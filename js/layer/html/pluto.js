@@ -133,7 +133,7 @@ export function bbl(feature) {
 
 export function plutoHtml(feature) {
   const p = feature.getProperties();
-  return $('<div class="feature-html"></div>')
+  return $('<div class="feature-html pluto"></div>')
     .append(getAddress(p))
     .append(getOwner(p))
     .append(getCommunityBoard(p))

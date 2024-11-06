@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import $, { event } from 'jquery';
 import GeoJSON from 'ol/format/GeoJSON';
 import Overlay from 'ol/Overlay';
 import {plutoHtml, bbl} from '../layer/html/pluto';
@@ -10,6 +10,9 @@ const HTML = `<div class="popup-overlay">
   <div class="popup">
     <a class="btn-close corner" href="#" aria-role="button"
       data-i18n="[title]close;[aria-label]close">
+    </a>
+    <a class="btn-min min corner" href="#" aria-role="button"
+      data-i18n="[title]min;[aria-label]min">
     </a>
     <h2></h2>
     <div class="popup-content"></div>
@@ -204,12 +207,15 @@ function bringToTop(event) {
 }
 
 function createPopup(map, coordinate, name, html, highlight) {
+  console.warn(html,html.hasClass('pluto'));
+  
   const popup = $(HTML);
   const title = popup.find('h2');
-  const css = name.replace(/ /g, '-').replace(/\./g, '-');
+
+  popup.find('.popup').addClass(html.hasClass('pluto') ? 'min' : '');
 
   title.attr('data-i18n', `layer.${name}`);
-  popup.find('.popup-content').html(html).addClass(css);
+  popup.find('.popup-content').html(html);
   popup.localize();
   if (title.html() === '') title.html(name);
 
@@ -233,6 +239,15 @@ function createPopup(map, coordinate, name, html, highlight) {
       map.removeOverlay(overlay);
       popup.remove();
     });
+  });
+
+  popup.find('.btn-min').on('click', event => {
+    const btn = $(event.target);
+    const minMax = btn.hasClass('min') ? 'max' : 'min';
+    btn.removeClass('min').removeClass('max').addClass(minMax)
+      .attr('data-i18n', `[title]${minMax};[aria-label]${minMax}`)
+      .localize();
+    popup.find('.popup-content')[minMax === 'min' ? 'slideDown' : 'slideUp']();
   });
 }
 

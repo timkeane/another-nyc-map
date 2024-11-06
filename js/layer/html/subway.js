@@ -2,14 +2,14 @@ import $ from 'jquery';
 import{urls, parameterize} from '../../urls';
 
 export function subwayLineHtml(feature) {
-  const html = $('<div></div>');
+  const html = $('<div class="feature-html subway-line"></div>');
   const subways = feature.get('name').split('-');
   appendRouteIcons(html, subways, 'subwayLine');
   return html;
 }
 
 export function sirLineHtml(feature) {
-  const html = $('<div></div>');
+  const html = $('<div class="feature-html sir-line"></div>');
   appendRouteIcons(html, ['SIR'], 'sirLine');
   return html;
 }
@@ -48,7 +48,7 @@ function appendAda(html, north, south, notes) {
 
 export function subwayStationHtml(feature) {
   const p = feature.getProperties();
-  const html = $(`<div><div><strong>${p.stop_name}</strong></div></div>`);
+  const html = $(`<div class="feature-html subway-station"><div><strong>${p.stop_name}</strong></div></div>`);
   const icons = $('<span></span>');
   const subways = p.daytime_routes.split(' ');
   html.append(icons)

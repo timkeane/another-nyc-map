@@ -1,0 +1,37 @@
+a.btn-min {
+  color: #000;
+  background-image: url(../img/down-hover.svg);
+  --bs-btn-close-focus-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  box-sizing: content-box;
+  width: 1em;
+  height: 1em;
+  border: 0;
+  border-radius: .375rem;
+  background-repeat: no-repeat;
+  background-size: 12px;
+}
+
+a.btn-min:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+a.btn-close.corner,
+a.btn-min.corner {
+  float: inline-end;
+  font-size: .75em;
+  padding: .5em .5em 0 0;
+  opacity: 1;
+}
+
+a.btn-min.corner {
+  padding: .25em;
+  background-position: center;
+}
+
+a.btn-close.corner.white {
+  background-image: url(../img/close-white.svg);
+}
+
+a.btn-min.corner.max {
+  transform: rotate(180deg);
+}
