@@ -6,6 +6,7 @@ import Geocode from './locate/Geocode';
 import Form from './locate/Form';
 import layers from './layer/layers';
 import Legend from './Legend';
+import createPrint from './print';
 
 const env = import.meta.env;
 
@@ -17,8 +18,9 @@ const geocode = new Geocode({
 
 initI18n().then(() => {
   const map = new Basemap({target: 'map'});
-
+  
   createTranslate(map);
+  createPrint(map);
 
   layers.forEach(layer => map.addLayer(layer));
 

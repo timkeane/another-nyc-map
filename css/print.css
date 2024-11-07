@@ -1,0 +1,35 @@
+div.wtf {display: none;}
+
+@media print {
+
+  body {
+    margin: 0;
+    padding: 0;
+    width: 725px;
+    overflow: scroll;
+  }
+
+  div.wtf {display: block;}
+
+  h1.banner,
+  #map .ol-control,
+  #map form.locate-form,
+  .btn.translate {
+    display: none;
+  }
+
+  .print-info {
+    margin-top: 1em;
+  }
+
+  .print-info .corner {
+    display: none;
+  }
+
+  .print-info .popup-content {
+    max-height: unset;
+    display: block;
+  }
+
+}
+

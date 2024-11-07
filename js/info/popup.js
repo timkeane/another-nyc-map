@@ -5,6 +5,8 @@ import {plutoHtml, bbl} from '../layer/html/pluto';
 import {embelishWithGeoclient, highlightByCoordinate, removeHighlight} from './pluto';
 import {nextId} from '../util';
 import LineString from 'ol/geom/LineString';
+import {outerWidth, outerHeight} from 'ol/dom';
+import {containsExtent} from 'ol/extent';
 
 const HTML = `<div class="popup-overlay">
   <div class="popup">
@@ -25,6 +27,67 @@ const HTML = `<div class="popup-overlay">
 const env = import.meta.env;
 const format = new GeoJSON();
 const instances = {};
+
+function panIntoView(panIntoViewOptions) {
+  const map = this.getMap();
+
+  if (!map || !map.getTargetElement() || !this.getPosition()) {
+    return;
+  }
+
+  const mapRect = this.getRect(map.getTargetElement(), map.getSize());
+  const element = this.getElement();
+  const overlayRect = this.getRect(element, [
+    outerWidth($(element).find('.popup-content').get(0)),
+    outerHeight(element),
+  ]);
+
+  panIntoViewOptions = panIntoViewOptions || {};
+
+  const myMargin =
+    panIntoViewOptions.margin === undefined ? 20 : panIntoViewOptions.margin;
+  if (!containsExtent(mapRect, overlayRect)) {
+    // the overlay is not completely inside the viewport, so pan the map
+    const offsetLeft = overlayRect[0] - mapRect[0];
+    const offsetRight = mapRect[2] - overlayRect[2];
+    const offsetTop = overlayRect[1] - mapRect[1];
+    const offsetBottom = mapRect[3] - overlayRect[3];
+
+    const delta = [0, 0];
+    if (offsetLeft < 0) {
+      // move map to the left
+      delta[0] = offsetLeft - myMargin;
+    } else if (offsetRight < 0) {
+      // move map to the right
+      delta[0] = Math.abs(offsetRight) + myMargin;
+    }
+    if (offsetTop < 0) {
+      // move map up
+      delta[1] = offsetTop - myMargin;
+    } else if (offsetBottom < 0) {
+      // move map down
+      delta[1] = Math.abs(offsetBottom) + myMargin;
+    }
+
+    if (delta[0] !== 0 || delta[1] !== 0) {
+      const center = /** @type {import("./coordinate.js").Coordinate} */ (
+        map.getView().getCenterInternal()
+      );
+      const centerPx = map.getPixelFromCoordinateInternal(center);
+      if (!centerPx) {
+        return;
+      }
+      const newCenterPx = [centerPx[0] + delta[0], centerPx[1] + delta[1]];
+
+      const panOptions = panIntoViewOptions.animation || {};
+      map.getView().animateInternal({
+        center: map.getCoordinateFromPixelInternal(newCenterPx),
+        duration: panOptions.duration,
+        easing: panOptions.easing,
+      });
+    }
+  }
+}
 
 function drag(event) {
   const instanceId = $(event.target).data('instanceId');
@@ -207,8 +270,6 @@ function bringToTop(event) {
 }
 
 function createPopup(map, coordinate, name, html, highlight) {
-  console.warn(html,html.hasClass('pluto'));
-  
   const popup = $(HTML);
   const title = popup.find('h2');
 
@@ -224,6 +285,8 @@ function createPopup(map, coordinate, name, html, highlight) {
     autoPan: {animation: {duration: 250}},
     className: 'ol ol-overlay-container ol-selectable'
   });
+
+  overlay.panIntoView = panIntoView.bind(overlay);
 
   overlay.highlight = highlight;
   map.addOverlay(overlay);

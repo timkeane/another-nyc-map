@@ -2,7 +2,6 @@
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;
 }
 
 .ol-control button,
@@ -52,17 +51,23 @@ button.ol-zoom-out:hover {
 }
 
 .ol-scale-bar {
-  position: fixed;
-  inset-inline-start: 2em;
-  bottom: .25em;
+  left: -.25em;
+  display: grid;
+  grid-template-columns: fit-content(1px) fit-content(1px);
 }
 
 .north-arrow {
-  position: fixed;
-  bottom: .25em;
-  inset-inline-start: -.25em;
+  font-weight: bold;
   width: 36px;
   height: 36px;
+}
+
+.ol-scale-bar-inner {
+  margin-top: 1em;
+}
+
+.print-scale {
+  display: none;
 }
 
 #location {
@@ -71,4 +76,9 @@ button.ol-zoom-out:hover {
   background-position: center bottom;
   background-size: 48px;
   background-image: var(--locationPin);
+}
+
+#map.print {
+  width: 750px;
+  height: 750px;
 }

@@ -84,7 +84,7 @@ class Basemap extends Map {
     });
     this.addControl(scaleControl);
 
-    $(this.getTargetElement()).append('<img class="north-arrow" alt="North" src="img/north.svg">');
+    $(this.getTargetElement()).find('.ol-scale-bar').prepend('<img class="north-arrow" alt="North" src="img/north.svg">');
   }
   getBaseLayers() {
     return {
