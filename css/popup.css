@@ -100,3 +100,11 @@
   border-radius: 50%;
 }
 
+#map.print a.btn-close,
+#map.print a.btn-min {
+  display: none !important;
+}
+
+#map.print .popup.min h2 {
+  padding-inline-end: 0;
+}

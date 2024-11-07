@@ -51,6 +51,7 @@ button.ol-zoom-out:hover {
 }
 
 .ol-scale-bar {
+  position: fixed;
   left: -.25em;
   display: grid;
   grid-template-columns: fit-content(1px) fit-content(1px);

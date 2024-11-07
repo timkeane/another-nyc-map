@@ -1,5 +1,3 @@
-div.wtf {display: none;}
-
 @media print {
 
   body {
@@ -9,8 +7,6 @@ div.wtf {display: none;}
     overflow: scroll;
   }
 
-  div.wtf {display: block;}
-
   h1.banner,
   #map .ol-control,
   #map form.locate-form,
@@ -18,12 +14,17 @@ div.wtf {display: none;}
     display: none;
   }
 
+  .ol-scale-bar {
+    position: absolute;
+  }
+
   .print-info {
     margin-top: 1em;
   }
 
-  .print-info .corner {
-    display: none;
+  a.btn-close,
+  a.btn-min {
+    display: none !important;
   }
 
   .print-info .popup-content {
@@ -31,5 +32,8 @@ div.wtf {display: none;}
     display: block;
   }
 
+  .print-info h2 {
+    border-bottom: 1px solid var(--cPrimary);
+  }
 }
 

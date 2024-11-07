@@ -298,6 +298,11 @@ function createPopup(map, coordinate, name, html, highlight) {
 
   popup.find('.btn-close').on('click', () => {
     popup.fadeOut(() => {
+      Object.keys(instances).forEach(instanceId => {
+        if (instances[instanceId].overlay === overlay) {
+          delete instances[instanceId];
+        }
+      });
       removeHighlight(overlay.highlight);
       map.removeOverlay(overlay);
       popup.remove();
@@ -312,6 +317,10 @@ function createPopup(map, coordinate, name, html, highlight) {
       .localize();
     popup.find('.popup-content')[minMax === 'min' ? 'slideDown' : 'slideUp']();
   });
+}
+
+export function adjustForPrint() {
+  Object.keys(instances).forEach(instanceId => tail(instanceId));
 }
 
 export default function show(event) {

@@ -1,11 +1,13 @@
 import $ from 'jquery';
 import ScaleLine from 'ol/control/ScaleLine';
+import {adjustForPrint} from './info/popup';
 
 export default function(map) {
   const view = map.getView();
   $(window).on('beforeprint', () => {
     $('#map').addClass('print');
     view.fit(view.calculateExtent(map.getSize()));
+    adjustForPrint();
     $('.popup-overlay').each((i, overlay) => {
       $(overlay).find('.popup.min').each((i, popup) => {
         if ($(popup).find('.btn-min.max').length === 1) {
@@ -17,8 +19,9 @@ export default function(map) {
     });
   });
   $(window).on('afterprint', () => {
+    $('div.print-info').remove();
     $('#map').removeClass('print');
     view.fit(view.calculateExtent(map.getSize()));
-    $('div.print-info').remove();
+    adjustForPrint();
   });
 }
