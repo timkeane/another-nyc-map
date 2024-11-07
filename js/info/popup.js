@@ -188,7 +188,6 @@ function adjustTail(instance, svg, box, position, cr) {
   svg.attr('d', `${start} ${mid} ${end}`);
 }
 
-
 function up(event) {
   Object.values(instances).forEach(instance => instance.on = false)
 }
@@ -332,8 +331,13 @@ export default function show(event) {
     return true;
   },  {layerFilter});
   if (!hit) {
-    highlightByCoordinate(coordinate, feature => embelishWithGeoclient(feature, embelished => {
-      createPopup(map, coordinate, bbl(embelished), html(embelished, plutoHtml), embelished);
+    highlightByCoordinate(coordinate, feature => embelishWithGeoclient(feature, response => {
+      const embellishedFeature = response.feature;
+      if (response.embellished) {
+        createPopup(map, coordinate, bbl(embellishedFeature), html(embellishedFeature, plutoHtml), embellishedFeature);
+      } else {
+        removeHighlight(embellishedFeature);
+      }
     }));
   }
 }
