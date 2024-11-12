@@ -35,6 +35,7 @@ initI18n().then(() => {
     $('h1.banner').slideUp(() => $('html').css('overflow', 'visible'));
   }
 
+  $('h1.banner img').on('click', () => window.location.reload());
   function ready() {
     $('html').css('overflow', 'hidden');
     $('body').removeClass('loading');
@@ -48,8 +49,7 @@ initI18n().then(() => {
     if (event.clientY === 3) {
       $('html').css('overflow', 'hidden');
       $('h1.banner').slideDown(() => setTimeout(hideBanner, 5000))
-        .one('click', hideBanner)
-        .one('mouseout', hideBanner);
+        .one('click', hideBanner);
     }
   });
 });

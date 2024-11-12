@@ -16,7 +16,7 @@ export default function create(map) {
   }));
 
   select.on('change', () => {
-    window.location = `${window.location.href.split('?')[0]}?locale=${select.val()}`;
+    window.location.search = `?locale=${select.val()}`;
   });
 
   languages.forEach(lang => {
