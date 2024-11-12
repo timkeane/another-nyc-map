@@ -10,11 +10,9 @@ export default function(map) {
     adjustForPrint();
     $('.popup-overlay').each((i, overlay) => {
       $(overlay).find('.popup.min').each((i, popup) => {
-        if ($(popup).find('.btn-min.max').length === 1) {
-          const info = $('<div class="print-info"></div>').html($(popup).html());
-          $('body').append(info);
-          info.find('.popup-content').show();
-        }
+      const info = $('<div class="print-info"></div>').html($(popup).html());
+      $('body').append(info);
+      info.find('.popup-content').show();
       });
     });
   });

@@ -26,23 +26,30 @@ initI18n().then(() => {
 
   $('#map .ol-control button').addClass('btn btn-primary form-control').empty();
   $('#map .ol-zoom-in').attr('data-i18n', '[title]map.zoom.in;[aria-label]map.zoom.in');
-  $('#map .ol-zoom-in').attr('data-i18n', '[title]map.zoom.out;[aria-label]map.zoom.out');
+  $('#map .ol-zoom-out').attr('data-i18n', '[title]map.zoom.out;[aria-label]map.zoom.out');
 
   new Form({map, geocode});
   new Legend({map, layers});
 
+  function hideBanner() {
+    $('h1.banner').slideUp(() => $('html').css('overflow', 'visible'));
+  }
+
   function ready() {
+    $('html').css('overflow', 'hidden');
     $('body').removeClass('loading');
-    setTimeout(() => $('h1.banner').slideUp(), 20000);
+    setTimeout(hideBanner, 20000);
     map.un('rendercomplete', ready);
   }
+
   map.on('rendercomplete', ready);
 
   $(document).on('mousemove', event => {
-    if (event.clientY === 0) {
-      $('h1.banner')
-        .on('click', () => $('h1.banner').slideUp())
-        .slideDown(() => setTimeout(() => $('h1.banner').slideUp(), 5000));
+    if (event.clientY === 3) {
+      $('html').css('overflow', 'hidden');
+      $('h1.banner').slideDown(() => setTimeout(hideBanner, 5000))
+        .one('click', hideBanner)
+        .one('mouseout', hideBanner);
     }
   });
 });
