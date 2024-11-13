@@ -28,12 +28,24 @@ const HTML = `<div id="dialog" class="modal fade" data-bs-keyboard="false" data-
           </div>
         </form>
         <form class="load-form">
+          <div>
+            <input id="load-csv" class="form-check-input" name="load" type="radio" value="csv" checked>
+            <label for="load-csv" data-i18n="input.file.csv"></label>
+          </div>
+          <div>
+            <input id="load-shp" class="form-check-input" name="load" type="radio" value="shp">
+            <label for="load-shp" data-i18n="input.file.shp"></label>
+          </div>
+          <div>
+            <input id="load-geo" class="form-check-input" name="load" type="radio" value="geo">
+            <label for="load-geo" data-i18n="input.file.geo"></label>
+          </div>
+          <div>
+            <input id="load-url" class="form-check-input" name="load" type="radio" value="url">
+            <label for="load-url" data-i18n="input.url.geo"></label>
+          </div>
           <input class="form-control name" name="name" type="text" data-i18n="[placeholder]placeholder.layer.name" autocomplete="on">
-          <input id="load-file" class="form-check-input" name="load" type="radio" value="file" checked>
-          <label for="load-file" data-i18n="input.file"></label>
-          <input id="load-url" class="form-check-input" name="load" type="radio" value="url">
-          <label for="load-url" data-i18n="input.url"></label>
-          <input class="form-control file" name="file" type="file" multiple accept=".shp,.dbf,.prj,.json,.geojson,.csv">
+          <input class="form-control csv shp geo" name="file" type="file" accept=".csv">
           <input class="form-control url" name="url" type="text" data-i18n="[placeholder]placeholder.url" autocomplete="on">
           <div class="submit">
             <button class="btn btn-primary load" data-i18n="load.layer" name="submit"></button>
@@ -85,8 +97,12 @@ function close(event) {
 }
 
 loadForm.find('input[type="radio"]').on('click', () => {
-  $('#dialog input.url, #dialog input.file').hide();
-  $(`#dialog input.${loadForm.get(0).load.value}`).show();
+  const type = loadForm.get(0).load.value;
+  const accept = {csv: '.csv', shp: '.shp,.dbf,.prj', geo: '.json,.geojson'};
+  $('#dialog input.url, #dialog input[type="file"]').hide();
+  $('#dialog input[type="file"]').attr('accept', accept[type])
+    .prop('multiple', type === 'shp');
+  $(`#dialog input.${type}`).show();
 });
 
 $('#dialog .btn-close').on('click', hide);

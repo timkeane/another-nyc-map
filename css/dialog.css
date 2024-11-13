@@ -7,14 +7,18 @@
 }
 
 #dialog input.form-check-input {
-  margin: 1em 0;
+  margin: .5em 0;
 }
 #dialog label {
-  margin: 1em 1em 1em .25em;
+  margin: .5em .25em;
 }
 
 #dialog .url {
   display: none;
+}
+
+#dialog .name {
+  margin: .5em 0 1em 0;
 }
 
 #dialog .submit {
