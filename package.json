@@ -38,7 +38,7 @@
     "terser": "^5.30.2",
     "typescript": "^5.3.3",
     "vite": "^5.0.10",
-    "vite-plugin-cp": "^4.0.1",
+    "vite-plugin-static-copy": "^2.1.0",
     "vitest": "^0.34.6"
   },
   "knip": {

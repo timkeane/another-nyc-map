@@ -27,6 +27,10 @@ form.locate-form select.form-control.form-select.type {
   color: transparent;
 }
 
+form.locate-form select.form-control.form-select.type option {
+  text-align: left;
+}
+
 form.locate-form select.form-control.form-select.type:hover {
   background-image: url(../img/down-hover.svg);
 }

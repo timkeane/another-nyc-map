@@ -9,7 +9,7 @@ const env = import.meta.env;
 
 const HTML = `<form class="locate-form location" style="pointer-events: auto;">
   <select name="type" class="form-control form-select btn type" data-i18n="[title]search.type;[aria-label]search.type">
-    <option value="location" data-i18n="[prepend]search.location">&nbsp;&nbsp;&nbsp;&nbsp;</option>
+    <option value="location" data-i18n="[prepend]search.location"></option>
     <option value="bbl" data-i18n="search.bbl"></option>
   </select>
   <input name="location" class="form-control location" data-i18n="[placeholder]placeholder.location" autocomplete="on">

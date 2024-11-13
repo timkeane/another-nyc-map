@@ -1,9 +1,13 @@
 import {defineConfig, splitVendorChunkPlugin} from 'vite';
 import {visualizer} from 'rollup-plugin-visualizer';
+import {viteStaticCopy} from 'vite-plugin-static-copy'
 import dotenv from 'dotenv';
 
 dotenv.config();
+dotenv.config({override: true, path: `.env.${process.env.APP_ENV}`});
 
+const state = process.env.VITE_STATE;
+console.warn(state);
 export default defineConfig({
   base: '',
   server: {
@@ -15,7 +19,14 @@ export default defineConfig({
   },
   plugins: [
     splitVendorChunkPlugin(),
-    visualizer()
+    visualizer(),
+    viteStaticCopy({
+      targets: [
+        {src: 'img/*.*', dest: `./dist/img/`},
+        {src: `./data/${state}.json`, dest: './dist/data'},
+        {src: `./img/${state}/*`, dest: `./dist/img/${state}/`}
+      ]
+    })
   ],
   test: {
     setupFiles: ['/__tests__/setup.js'],
