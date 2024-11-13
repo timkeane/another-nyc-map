@@ -31,11 +31,12 @@ initI18n().then(() => {
   new Form({map, geocode});
   new Legend({map, layers});
 
+  $('h1.banner img').on('click', () => window.location.reload());
+
   function hideBanner() {
     $('h1.banner').slideUp(() => $('html').css('overflow', 'visible'));
   }
 
-  $('h1.banner img').on('click', () => window.location.reload());
   function ready() {
     $('html').css('overflow', 'hidden');
     $('body').removeClass('loading');

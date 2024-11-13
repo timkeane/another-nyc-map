@@ -116,10 +116,10 @@ function loadLayer(event) {
       if (name) layer.set('name', form.name.value);
       maplegend.addLayer(layer);
     }
-    if (form.load.value === 'file') {
-      basemap.loadFile(form.file.files, callback);
-    } else {
+    if (form.load.value === 'url') {
       basemap.loadUrl(form.url.value, callback);
+    } else {
+      basemap.loadFile(form.file.files, callback);
     }
     dialog.hide();
   }
